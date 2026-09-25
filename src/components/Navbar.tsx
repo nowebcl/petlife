@@ -6,14 +6,25 @@ interface NavbarProps {
   cartCount: number;
   onOpenCart?: () => void;
   onSearch?: (query: string) => void;
+  activeTab?: string;
+  onSelectTab?: (tab: string) => void;
 }
 
 export const Navbar: FC<NavbarProps> = ({
   cartCount,
   onOpenCart,
   onSearch,
+  activeTab: activeTabProp,
+  onSelectTab,
 }) => {
-  const [activeTab, setActiveTab] = useState('Inicio');
+  const [internalActiveTab, setInternalActiveTab] = useState('Inicio');
+  const activeTab = activeTabProp !== undefined ? activeTabProp : internalActiveTab;
+
+  const handleTabChange = (tab: string) => {
+    setInternalActiveTab(tab);
+    if (onSelectTab) onSelectTab(tab);
+  };
+
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,7 +44,10 @@ export const Navbar: FC<NavbarProps> = ({
       {/* ======================================================== */}
       <nav className="md:hidden bg-white rounded-3xl px-4 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100/80 flex items-center justify-between transition-all">
         {/* Left: Brand Logo (Restored Previous Illustrated Logo) */}
-        <div className="flex items-center cursor-pointer select-none pl-1">
+        <div
+          onClick={() => handleTabChange('Inicio')}
+          className="flex items-center cursor-pointer select-none pl-1"
+        >
           <Logo className="h-11 sm:h-12 w-auto -my-1.5" />
         </div>
 
@@ -112,9 +126,12 @@ export const Navbar: FC<NavbarProps> = ({
       <nav className="hidden md:flex bg-white/95 backdrop-blur-md rounded-full px-6 md:px-8 py-2.5 md:py-3 shadow-pill border border-slate-100/80 items-center justify-between transition-all duration-300">
         {/* Left: Brand Logo */}
         <div className="flex items-center pl-1 sm:pl-2">
-          <a href="#" className="flex items-center focus:outline-none focus:ring-2 focus:ring-[#FF5200] rounded-full">
+          <button
+            onClick={() => handleTabChange('Inicio')}
+            className="flex items-center focus:outline-none focus:ring-2 focus:ring-[#FF5200] rounded-full cursor-pointer bg-transparent border-0 p-0"
+          >
             <Logo className="h-14 sm:h-16 md:h-20 lg:h-[76px] -my-2.5 sm:-my-4" />
-          </a>
+          </button>
         </div>
 
         {/* Center: Desktop Navigation Links */}
@@ -124,8 +141,8 @@ export const Navbar: FC<NavbarProps> = ({
             return (
               <button
                 key={item}
-                onClick={() => setActiveTab(item)}
-                className={`relative py-1 font-semibold transition-colors duration-200 ${
+                onClick={() => handleTabChange(item)}
+                className={`relative py-1 font-semibold transition-colors duration-200 cursor-pointer ${
                   isActive
                     ? 'text-[#061F3D]'
                     : 'text-[#637792] hover:text-[#061F3D]'
@@ -141,19 +158,49 @@ export const Navbar: FC<NavbarProps> = ({
         </div>
 
         {/* Right: Actions (Search, Cart) */}
-        <div className="flex items-center space-x-3 sm:space-x-4">
-          <button
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-            aria-label="Buscar productos"
-            className="w-10 h-10 rounded-full bg-[#EAF9FD] text-[#061F3D] hover:bg-[#D4F3FB] active:scale-95 transition-all duration-200 flex items-center justify-center focus:outline-none"
-          >
-            <Search className="w-[18px] h-[18px] stroke-[2.2]" />
-          </button>
+        <div className="flex items-center space-x-3 sm:space-x-4 relative">
+          {/* Desktop Search Dropdown/Input */}
+          {isSearchOpen ? (
+            <form
+              onSubmit={handleSearchSubmit}
+              className="absolute right-12 bg-white shadow-xl rounded-full pl-4 pr-1.5 py-1.5 flex items-center border border-slate-200 z-50 w-72 animate-in fade-in zoom-in-95 duration-200"
+            >
+              <input
+                type="text"
+                placeholder="Buscar alimentos, marcas..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
+                className="w-full text-xs outline-none bg-transparent text-[#061F3D] placeholder:text-slate-400"
+              />
+              <button
+                type="submit"
+                className="p-1.5 text-white bg-[#FF5200] hover:bg-[#FF6508] rounded-full transition-colors cursor-pointer"
+              >
+                <Search className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsSearchOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-full cursor-pointer ml-0.5"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </form>
+          ) : (
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              aria-label="Buscar productos"
+              className="w-10 h-10 rounded-full bg-[#EAF9FD] text-[#061F3D] hover:bg-[#D4F3FB] active:scale-95 transition-all duration-200 flex items-center justify-center focus:outline-none cursor-pointer"
+            >
+              <Search className="w-[18px] h-[18px] stroke-[2.2]" />
+            </button>
+          )}
 
           <button
             onClick={onOpenCart}
             aria-label={`Carrito de compras con ${cartCount} productos`}
-            className="relative p-2 rounded-full hover:bg-slate-100 active:scale-95 transition-all duration-200 flex items-center justify-center text-[#061F3D] focus:outline-none"
+            className="relative p-2 rounded-full hover:bg-slate-100 active:scale-95 transition-all duration-200 flex items-center justify-center text-[#061F3D] focus:outline-none cursor-pointer"
           >
             <ShoppingCart className="w-6 h-6 stroke-[2]" />
             <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#FF5200] text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-sm">
@@ -173,10 +220,10 @@ export const Navbar: FC<NavbarProps> = ({
                 <button
                   key={item}
                   onClick={() => {
-                    setActiveTab(item);
+                    handleTabChange(item);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`text-left px-4 py-2.5 rounded-xl font-bold text-sm transition-colors ${
+                  className={`text-left px-4 py-2.5 rounded-xl font-bold text-sm transition-colors cursor-pointer ${
                     isActive
                       ? 'bg-[#FFF2EA] text-[#FF5200]'
                       : 'text-[#637792] hover:bg-slate-50 hover:text-[#061F3D]'

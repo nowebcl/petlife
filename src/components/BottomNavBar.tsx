@@ -7,6 +7,8 @@ interface BottomNavBarProps {
   onScrollToTop: () => void;
   onScrollToProducts: () => void;
   onFavoritesClick: () => void;
+  activeTab?: 'inicio' | 'catalogo' | 'carrito' | 'favoritos';
+  onSelectTab?: (tab: 'inicio' | 'catalogo' | 'carrito' | 'favoritos') => void;
 }
 
 export const BottomNavBar: FC<BottomNavBarProps> = ({
@@ -15,11 +17,15 @@ export const BottomNavBar: FC<BottomNavBarProps> = ({
   onScrollToTop,
   onScrollToProducts,
   onFavoritesClick,
+  activeTab: activeTabProp,
+  onSelectTab,
 }) => {
-  const [activeTab, setActiveTab] = useState<'inicio' | 'catalogo' | 'carrito' | 'favoritos'>('inicio');
+  const [internalActiveTab, setInternalActiveTab] = useState<'inicio' | 'catalogo' | 'carrito' | 'favoritos'>('inicio');
+  const activeTab = activeTabProp !== undefined ? activeTabProp : internalActiveTab;
 
   const handleTabClick = (tab: 'inicio' | 'catalogo' | 'carrito' | 'favoritos') => {
-    setActiveTab(tab);
+    setInternalActiveTab(tab);
+    if (onSelectTab) onSelectTab(tab);
     if (tab === 'inicio') onScrollToTop();
     if (tab === 'catalogo') onScrollToProducts();
     if (tab === 'carrito') onOpenCart();

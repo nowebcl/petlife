@@ -20,16 +20,19 @@
 
 /* Responsive Hero Canvas Background */
 .hero-canvas-bg {
-  background-image: url('/Imagen de ChatGPT 24 sept 2026, 08_32_46 p.m.png'), url('/mobile-bg.png');
-  background-size: cover;
+  background-color: #EBF9FD;
+  background-image: url('/mobile-bg.png');
+  background-size: 100% auto;
   background-position: center top;
   background-repeat: no-repeat;
 }
 
 @media (min-width: 768px) {
   .hero-canvas-bg {
-    background-image: url('/8e648cf2-08c7-489a-aff4-7ad270b02a91.png'), url('/hero-bg.png');
-    background-position: center bottom;
+    background-image: url('/hero-bg.png');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
   }
 }
 

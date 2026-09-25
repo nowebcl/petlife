@@ -142,3 +142,44 @@ export const TitleSparkles: FC<{ className?: string }> = ({ className = '' }) =>
     />
   </svg>
 );
+
+// Cyan Cat SVG Icon (No emoji, vector SVG with cyan gradient)
+export const CatSvgIcon: FC<{ className?: string }> = ({ className = '' }) => (
+  <svg
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={`inline-block ${className}`}
+  >
+    <defs>
+      <linearGradient id="cyanCatGrad" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stopColor="#55D1FA" />
+        <stop offset="100%" stopColor="#2BB0DC" />
+      </linearGradient>
+    </defs>
+    {/* Cat Face & Pointy Ears Silhouette */}
+    <path
+      d="M 16 6 C 12 6 8.5 7.8 6.5 10 L 4.2 5.5 C 3.7 4.5 2.2 4.9 2.5 6 L 3.8 12.5 C 2.7 14.3 2 16.5 2 19 C 2 24.5 7.8 28.5 16 28.5 C 24.2 28.5 30 24.5 30 19 C 30 16.5 29.3 14.3 28.2 12.5 L 29.5 6 C 29.8 4.9 28.3 4.5 27.8 5.5 L 25.5 10 C 23.5 7.8 20 6 16 6 Z"
+      fill="url(#cyanCatGrad)"
+      className="filter drop-shadow-[0_2px_6px_rgba(55,191,234,0.4)]"
+    />
+    {/* Inner Ears */}
+    <polygon points="6.8,9.5 5,6.5 6,11" fill="#EAF9FD" opacity="0.9" />
+    <polygon points="25.2,9.5 27,6.5 26,11" fill="#EAF9FD" opacity="0.9" />
+    {/* Cat Eyes */}
+    <ellipse cx="11.5" cy="18" rx="1.8" ry="2.4" fill="#061F3D" />
+    <ellipse cx="20.5" cy="18" rx="1.8" ry="2.4" fill="#061F3D" />
+    {/* Eye Sparkles */}
+    <circle cx="10.8" cy="17" r="0.7" fill="#FFFFFF" />
+    <circle cx="19.8" cy="17" r="0.7" fill="#FFFFFF" />
+    {/* Cute Orange Nose */}
+    <polygon points="16,21 14.7,22.4 17.3,22.4" fill="#FF5200" />
+    {/* Whiskers */}
+    <path
+      d="M 2.5 18 L 8 19 M 2 21 L 8 21 M 30 18 L 24 19 M 30 21 L 24 21"
+      stroke="#061F3D"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);

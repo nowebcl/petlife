@@ -1,10 +1,10 @@
-import { useState, type FC, type MouseEvent, type TouchEvent } from 'react';
-import { ChevronRight, ArrowRight } from 'lucide-react';
+import { useState, useEffect, type FC, type MouseEvent, type TouchEvent } from 'react';
+import { ShoppingCart, ChevronRight } from 'lucide-react';
 import { TitleSparkles } from './Decorations.tsx';
 
 interface HeroProps {
   onBuyClick: () => void;
-  onExploreCategories: () => void;
+  onExploreCategories?: () => void;
 }
 
 interface FloatingHeart {
@@ -13,11 +13,35 @@ interface FloatingHeart {
   y: number;
 }
 
+const ROTATING_WORDS = [
+  'tu mascota',
+  'tu perrito',
+  'tu gatito',
+  'tu regalón',
+  'tu peludo',
+];
+
 export const Hero: FC<HeroProps> = ({
   onBuyClick,
   onExploreCategories,
 }) => {
   const [hearts, setHearts] = useState<FloatingHeart[]>([]);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length);
+        setIsTransitioning(false);
+      }, 350);
+    }, 3200);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const currentWord = ROTATING_WORDS[wordIndex];
 
   // Spawn ONLY hearts when clicking with mouse or tapping with finger
   const triggerHeartBurst = (clientX: number, clientY: number, target: HTMLElement) => {
@@ -59,30 +83,30 @@ export const Hero: FC<HeroProps> = ({
       {/* ========================================================= */}
       <div className="md:hidden w-full flex-1 flex flex-col justify-between pt-4 pb-0 text-center z-20">
 
-        {/* Text & CTAs Container (padded) */}
-        <div className="w-full px-4 flex flex-col items-center">
-          {/* Mobile Headline (Centered with side decorations) */}
-          <div className="relative mb-2 flex flex-col items-center">
-            <h1 className="text-[38px] sm:text-[44px] font-black tracking-tight leading-[1.05] text-[#061F3D]">
+        {/* Text & CTAs Container - Centered in canvas, moved lower down */}
+        <div className="w-full px-4 flex flex-col items-center justify-center my-auto pt-16 min-[380px]:pt-20 min-[410px]:pt-24 pb-2">
+          {/* Mobile Headline (Fixed 'Todo para' + rotating word with stable height) */}
+          <div className="relative mb-2.5 flex flex-col items-center justify-center">
+            <h1 className="text-[44px] min-[360px]:text-[50px] min-[390px]:text-[56px] font-black tracking-tight leading-[0.98] text-[#061F3D]">
               Todo para
             </h1>
 
-            <div className="relative inline-flex items-center justify-center mt-0.5">
-              {/* Left Cyan Speed / Splash Strokes */}
-              <div className="absolute -left-9 sm:-left-11 top-1/2 -translate-y-1/2 flex flex-col items-end space-y-1 select-none pointer-events-none">
-                <span className="w-5 h-2 bg-[#37BFEA] rounded-full -rotate-12 transform" />
-                <span className="w-4 h-2 bg-[#37BFEA] rounded-full rotate-3 transform mr-1" />
-              </div>
-
-              {/* Word "tu mascota" in vibrant orange (Matches media_1790297970888.jpg) */}
-              <span className="text-[44px] sm:text-[52px] font-black tracking-tight text-[#FF5200] leading-none whitespace-nowrap">
-                tu mascota
+            <div className="relative inline-flex items-center justify-center h-[52px] min-[360px]:h-[58px] min-[390px]:h-[66px] mt-1">
+              {/* Rotating highlighted phrase in vibrant orange with subtle cross-fade */}
+              <span className="text-[48px] min-[360px]:text-[56px] min-[390px]:text-[64px] font-black tracking-tight text-[#FF5200] leading-none whitespace-nowrap">
+                <span
+                  className={`inline-block transition-opacity duration-400 ease-in-out ${
+                    isTransitioning ? 'opacity-0' : 'opacity-100'
+                  }`}
+                >
+                  {currentWord}
+                </span>
               </span>
 
-              {/* Right Orange Heart + Accent Stroke */}
-              <div className="absolute -right-9 sm:-right-11 top-1/2 -translate-y-1/2 flex flex-col items-center select-none pointer-events-none">
+              {/* Right Orange Heart + Accent Stroke (DEJA SOLO EL CORAZON) */}
+              <div className="absolute -right-8 min-[370px]:-right-9 min-[410px]:-right-10 top-1/2 -translate-y-1/2 flex flex-col items-center select-none pointer-events-none">
                 <svg
-                  className="w-7 h-7 sm:w-8 sm:h-8 text-[#FF5200] fill-current transform rotate-[18deg]"
+                  className="w-7 h-7 min-[370px]:w-8 min-[370px]:h-8 text-[#FF5200] fill-current transform rotate-[18deg]"
                   viewBox="0 0 24 24"
                 >
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -101,36 +125,26 @@ export const Hero: FC<HeroProps> = ({
             </div>
           </div>
 
-          {/* Mobile Subtitle (Centered, exact wording from media_1790297970888.jpg) */}
-          <p className="text-sm font-semibold text-[#061F3D] max-w-[280px] mx-auto leading-snug mb-5">
+          {/* Mobile Subtitle */}
+          <p className="text-xs min-[380px]:text-sm font-semibold text-[#061F3D] max-w-[290px] mx-auto leading-snug mb-4">
             Alimentos, accesorios y cuidados
             <br />
             para una vida más feliz.
           </p>
 
-          {/* Mobile CTA Buttons (Stacked vertically - Matches media_1790297970888.jpg) */}
-          <div className="relative w-full max-w-[270px] mx-auto flex flex-col space-y-3 mb-2">
-            {/* Button 1: Comprar ahora → */}
+          {/* Single CTA Button: Comprar + Carrito */}
+          <div className="relative w-full max-w-[210px] mx-auto flex justify-center mb-1">
             <button
               onClick={onBuyClick}
-              className="w-full py-3.5 px-6 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-bold text-sm shadow-md active:scale-95 transition-all flex items-center justify-center space-x-2 cursor-pointer"
+              className="w-full py-3.5 px-6 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-black text-sm min-[380px]:text-base shadow-orange-glow active:scale-95 transition-all flex items-center justify-center space-x-2.5 cursor-pointer"
             >
-              <span>Comprar ahora</span>
-              <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-            </button>
-
-            {/* Button 2: Ver categorías → */}
-            <button
-              onClick={onExploreCategories}
-              className="w-full py-3 px-6 rounded-full bg-white text-[#061F3D] border-2 border-[#061F3D] font-bold text-sm active:scale-95 transition-all flex items-center justify-center space-x-2 cursor-pointer"
-            >
-              <span>Ver categorías</span>
-              <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+              <ShoppingCart className="w-5 h-5 stroke-[2.5]" />
+              <span>Comprar</span>
             </button>
           </div>
         </div>
 
-        {/* Mobile Pets Image - Full Width Edge-to-Edge using ALL space (Matches media_1790297970888.jpg) */}
+        {/* Mobile Pets Image - Full Width Edge-to-Edge using ALL space */}
         <div className="w-full mt-auto -mb-1 flex justify-center items-end select-none overflow-hidden">
           <div
             onMouseDown={handlePointerDown}
