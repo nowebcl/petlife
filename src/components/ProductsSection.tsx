@@ -228,19 +228,14 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
                         }}
                       />
 
-                      {/* Top Badges (Discount + Promo Badge) */}
-                      <div className="absolute top-2 left-2 flex flex-col space-y-1 z-10">
-                        {hasDiscount && (
+                      {/* Top Badges (Discount only if applicable) */}
+                      {hasDiscount && (
+                        <div className="absolute top-2 left-2 z-10">
                           <span className="px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black bg-rose-500 text-white shadow-xs">
                             -{discountPercent}% OFF
                           </span>
-                        )}
-                        {product.badge && (
-                          <span className="px-1.5 sm:px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-black uppercase bg-[#FF5200] text-white shadow-xs truncate max-w-[110px]">
-                            {product.badge}
-                          </span>
-                        )}
-                      </div>
+                        </div>
+                      )}
 
                       {/* Floating Wishlist Heart Button Top Right */}
                       <button

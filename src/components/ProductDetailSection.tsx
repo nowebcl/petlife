@@ -8,7 +8,6 @@ import {
   Truck,
   ShieldCheck,
   RotateCcw,
-  Sparkles,
   ChevronLeft,
   ArrowRight,
 } from 'lucide-react';
@@ -121,20 +120,14 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                   }}
                 />
 
-                {/* Badges Overlay */}
-                <div className="absolute top-4 left-4 flex flex-col space-y-1.5 z-10">
-                  {product.badge && (
-                    <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-[#FF5200] text-white shadow-sm">
-                      <Sparkles className="w-3 h-3" />
-                      <span>{product.badge}</span>
-                    </span>
-                  )}
-                  {hasDiscount && (
+                {/* Badges Overlay (Discount only if applicable) */}
+                {hasDiscount && (
+                  <div className="absolute top-4 left-4 z-10">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-500 text-white shadow-xs">
                       -{discountPercent}% OFF
                     </span>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* Wishlist Button */}
                 <button

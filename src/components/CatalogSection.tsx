@@ -600,10 +600,10 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                             }}
                           />
 
-                          {/* Top Badges */}
-                          {product.badge && (
-                            <span className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase bg-[#FF5200] text-white shadow-xs">
-                              {product.badge}
+                          {/* Top Discount Badge if applicable */}
+                          {product.originalPrice && product.originalPrice > product.price && (
+                            <span className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black bg-rose-500 text-white shadow-xs">
+                              -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
                             </span>
                           )}
 
