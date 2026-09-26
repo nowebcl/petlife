@@ -1,5 +1,5 @@
 import { useState, type FC, type FormEvent } from 'react';
-import { Search, ShoppingCart, Menu, X } from 'lucide-react';
+import { Search, ShoppingCart, X } from 'lucide-react';
 import { Logo } from './Logo.tsx';
 
 interface NavbarProps {
@@ -14,228 +14,83 @@ export const Navbar: FC<NavbarProps> = ({
   cartCount,
   onOpenCart,
   onSearch,
-  activeTab: activeTabProp,
   onSelectTab,
 }) => {
-  const [internalActiveTab, setInternalActiveTab] = useState('Inicio');
-  const activeTab = activeTabProp !== undefined ? activeTabProp : internalActiveTab;
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleTabChange = (tab: string) => {
-    setInternalActiveTab(tab);
     if (onSelectTab) onSelectTab(tab);
   };
 
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const navItems = ['Inicio', 'Productos', 'Servicios', 'Nosotros', 'Contacto'];
-
   const handleSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (onSearch) onSearch(searchQuery);
-    setIsSearchOpen(false);
+    if (onSearch && searchQuery.trim()) {
+      onSearch(searchQuery.trim());
+    }
   };
 
   return (
     <header className="w-full pt-2 sm:pt-4 md:pt-6 px-3 sm:px-6 md:px-8 max-w-7xl mx-auto relative z-30">
-      {/* ======================================================== */}
-      {/* MOBILE TOP BAR (Exactly matching media_1790293110059.png) */}
-      {/* ======================================================== */}
-      <nav className="md:hidden bg-white rounded-3xl px-4 py-3 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100/80 flex items-center justify-between transition-all">
-        {/* Left: Brand Logo (Restored Previous Illustrated Logo) */}
-        <div
-          onClick={() => handleTabChange('Inicio')}
-          className="flex items-center cursor-pointer select-none pl-1"
-        >
-          <Logo className="h-11 sm:h-12 w-auto -my-1.5" />
-        </div>
-
-        {/* Right Actions: Search button, Cart with badge, Hamburger Menu */}
-        <div className="flex items-center space-x-2">
-          {/* Search Toggle / Input */}
-          <div className="relative">
-            {isSearchOpen ? (
-              <form
-                onSubmit={handleSearchSubmit}
-                className="absolute right-0 -top-2 bg-white shadow-xl rounded-full pl-3 pr-1 py-1 flex items-center border border-slate-200 z-50 w-56 animate-in fade-in zoom-in-95 duration-200"
-              >
-                <input
-                  type="text"
-                  placeholder="Buscar..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                  className="w-full text-xs outline-none bg-transparent text-[#061F3D] placeholder:text-slate-400"
-                />
-                <button
-                  type="submit"
-                  className="p-1 text-white bg-[#FF5200] hover:bg-[#FF6508] rounded-full transition-colors"
-                >
-                  <Search className="w-3 h-3" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsSearchOpen(false)}
-                  className="p-1 text-slate-400 hover:text-slate-600 rounded-full"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </form>
-            ) : (
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                aria-label="Buscar productos"
-                className="w-9 h-9 rounded-full bg-slate-100/90 text-[#061F3D] hover:bg-slate-200 active:scale-90 transition-all flex items-center justify-center focus:outline-none"
-              >
-                <Search className="w-4 h-4 stroke-[2.2]" />
-              </button>
-            )}
-          </div>
-
-          {/* Cart Button with circular orange badge */}
-          <button
-            onClick={onOpenCart}
-            aria-label={`Carrito de compras con ${cartCount} productos`}
-            className="relative w-9 h-9 rounded-full flex items-center justify-center text-[#061F3D] hover:bg-slate-100 active:scale-90 transition-all"
-          >
-            <ShoppingCart className="w-5 h-5 stroke-[2]" />
-            <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-0.5 bg-[#FF5200] text-white text-[10px] font-black rounded-full flex items-center justify-center shadow-xs">
-              {cartCount}
-            </span>
-          </button>
-
-          {/* Hamburger Menu Toggle */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="w-9 h-9 rounded-full flex items-center justify-center text-[#061F3D] hover:bg-slate-100 active:scale-90 transition-all"
-            aria-label="Abrir menú"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-5 h-5 stroke-[2.2]" />
-            ) : (
-              <Menu className="w-5 h-5 stroke-[2.2]" />
-            )}
-          </button>
-        </div>
-      </nav>
-
-      {/* ======================================================== */}
-      {/* DESKTOP TOP BAR (Wide navigation pill)                   */}
-      {/* ======================================================== */}
-      <nav className="hidden md:flex bg-white/95 backdrop-blur-md rounded-full px-6 md:px-8 py-2.5 md:py-3 shadow-pill border border-slate-100/80 items-center justify-between transition-all duration-300">
-        {/* Left: Brand Logo */}
-        <div className="flex items-center pl-1 sm:pl-2">
+      <nav className="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-full px-3 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 shadow-pill border border-slate-100/80 flex items-center justify-between transition-all duration-300">
+        {/* Left: Brand Logo (Untouched, same position and style) */}
+        <div className="flex items-center pl-0.5 sm:pl-1 shrink-0">
           <button
             onClick={() => handleTabChange('Inicio')}
             className="flex items-center focus:outline-none focus:ring-2 focus:ring-[#FF5200] rounded-full cursor-pointer bg-transparent border-0 p-0"
+            aria-label="Ir a inicio PetLife"
           >
-            <Logo className="h-14 sm:h-16 md:h-20 lg:h-[76px] -my-2.5 sm:-my-4" />
+            <Logo className="h-10 sm:h-14 md:h-16 lg:h-[72px] w-auto -my-1 sm:-my-2.5 md:-my-3.5" />
           </button>
         </div>
 
-        {/* Center: Desktop Navigation Links */}
-        <div className="flex items-center space-x-7 text-[15px]">
-          {navItems.map((item) => {
-            const isActive = activeTab === item;
-            return (
-              <button
-                key={item}
-                onClick={() => handleTabChange(item)}
-                className={`relative py-1 font-semibold transition-colors duration-200 cursor-pointer ${
-                  isActive
-                    ? 'text-[#061F3D]'
-                    : 'text-[#637792] hover:text-[#061F3D]'
-                }`}
-              >
-                {item}
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#FF5200] rounded-full" />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Right: Actions (Search, Cart) */}
-        <div className="flex items-center space-x-3 sm:space-x-4 relative">
-          {/* Desktop Search Dropdown/Input */}
-          {isSearchOpen ? (
-            <form
-              onSubmit={handleSearchSubmit}
-              className="absolute right-12 bg-white shadow-xl rounded-full pl-4 pr-1.5 py-1.5 flex items-center border border-slate-200 z-50 w-72 animate-in fade-in zoom-in-95 duration-200"
-            >
-              <input
-                type="text"
-                placeholder="Buscar alimentos, marcas..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus
-                className="w-full text-xs outline-none bg-transparent text-[#061F3D] placeholder:text-slate-400"
-              />
-              <button
-                type="submit"
-                className="p-1.5 text-white bg-[#FF5200] hover:bg-[#FF6508] rounded-full transition-colors cursor-pointer"
-              >
-                <Search className="w-3.5 h-3.5" />
-              </button>
+        {/* Center: Elongated Search Bar ("Busca tu producto") */}
+        <form
+          onSubmit={handleSearchSubmit}
+          className="flex-1 mx-2 sm:mx-6 md:mx-10 max-w-2xl"
+        >
+          <div className="relative w-full flex items-center">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Busca tu producto"
+              className="w-full pl-8 sm:pl-11 pr-8 sm:pr-10 py-1.5 sm:py-2.5 md:py-3 bg-slate-100/60 hover:bg-slate-100/90 focus:bg-white text-xs sm:text-sm md:text-[15px] font-medium text-[#061F3D] placeholder:text-slate-400/60 focus:placeholder:text-slate-400/80 border border-slate-200/70 focus:border-[#FF5200] rounded-full outline-none transition-all duration-200 shadow-inner focus:shadow-xs focus:ring-2 focus:ring-[#FF5200]/20"
+            />
+            <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-slate-400/70 absolute left-2.5 sm:left-4 pointer-events-none" />
+            {searchQuery && (
               <button
                 type="button"
-                onClick={() => setIsSearchOpen(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-full cursor-pointer ml-0.5"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 sm:right-3.5 p-1 text-slate-400 hover:text-slate-600 rounded-full cursor-pointer transition-colors"
+                aria-label="Limpiar búsqueda"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </button>
-            </form>
-          ) : (
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              aria-label="Buscar productos"
-              className="w-10 h-10 rounded-full bg-[#EAF9FD] text-[#061F3D] hover:bg-[#D4F3FB] active:scale-95 transition-all duration-200 flex items-center justify-center focus:outline-none cursor-pointer"
-            >
-              <Search className="w-[18px] h-[18px] stroke-[2.2]" />
-            </button>
-          )}
+            )}
+          </div>
+        </form>
 
+        {/* Right: Solamente el carrito (No servicios, no nosotros) */}
+        <div className="flex items-center shrink-0 pr-0.5 sm:pr-1">
           <button
             onClick={onOpenCart}
             aria-label={`Carrito de compras con ${cartCount} productos`}
-            className="relative p-2 rounded-full hover:bg-slate-100 active:scale-95 transition-all duration-200 flex items-center justify-center text-[#061F3D] focus:outline-none cursor-pointer"
+            className="relative p-2 sm:p-2.5 md:p-3 rounded-full hover:bg-slate-100 active:scale-95 transition-all duration-200 flex items-center justify-center text-[#061F3D] focus:outline-none cursor-pointer"
           >
-            <ShoppingCart className="w-6 h-6 stroke-[2]" />
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#FF5200] text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-sm">
-              {cartCount}
-            </span>
+            <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2]" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] sm:min-w-[20px] h-[18px] sm:h-[20px] px-1 bg-[#FF5200] text-white text-[10px] sm:text-[11px] font-black rounded-full flex items-center justify-center shadow-sm animate-in zoom-in-50 duration-200">
+                {cartCount}
+              </span>
+            )}
+            {cartCount === 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[17px] sm:min-w-[18px] h-[17px] sm:h-[18px] px-0.5 bg-slate-300 text-slate-700 text-[9px] sm:text-[10px] font-bold rounded-full flex items-center justify-center">
+                0
+              </span>
+            )}
           </button>
         </div>
       </nav>
-
-      {/* Mobile Menu Dropdown */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden mt-2 bg-white/98 backdrop-blur-md rounded-2xl p-4 shadow-xl border border-slate-100 animate-in slide-in-from-top-3 duration-200">
-          <div className="flex flex-col space-y-2">
-            {navItems.map((item) => {
-              const isActive = activeTab === item;
-              return (
-                <button
-                  key={item}
-                  onClick={() => {
-                    handleTabChange(item);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className={`text-left px-4 py-2.5 rounded-xl font-bold text-sm transition-colors cursor-pointer ${
-                    isActive
-                      ? 'bg-[#FFF2EA] text-[#FF5200]'
-                      : 'text-[#637792] hover:bg-slate-50 hover:text-[#061F3D]'
-                  }`}
-                >
-                  {item}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </header>
   );
 };
