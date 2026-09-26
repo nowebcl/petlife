@@ -7,7 +7,6 @@ import {
   Cat,
   Cookie,
   HeartPulse,
-  Gamepad2,
   Check,
   Plus,
   Heart,
@@ -21,13 +20,13 @@ export type { Product } from '../data/products.ts';
 const PRODUCTS: Product[] = PRODUCTS_DATABASE;
 
 const CATEGORIES = [
-  { id: 'todos', label: 'Todos', icon: LayoutGrid, count: 9 },
-  { id: 'perros', label: 'Perros', icon: Dog, count: 3 },
-  { id: 'gatos', label: 'Gatos', icon: Cat, count: 2 },
-  { id: 'higiene', label: 'Salud', icon: HeartPulse, count: 4 },
-  { id: 'snacks', label: 'Snacks', icon: Cookie, count: 2 },
-  { id: 'juguetes', label: 'Juguetes', icon: Gamepad2, count: 1 },
+  { id: 'todos', label: 'Todos', icon: LayoutGrid, count: PRODUCTS.length },
+  { id: 'perros', label: 'Perros', icon: Dog, count: PRODUCTS.filter((p) => p.category === 'perros').length },
+  { id: 'gatos', label: 'Gatos', icon: Cat, count: PRODUCTS.filter((p) => p.category === 'gatos').length },
+  { id: 'higiene', label: 'Higiene', icon: HeartPulse, count: PRODUCTS.filter((p) => p.category === 'higiene').length },
+  { id: 'snacks', label: 'Roedores & Snacks', icon: Cookie, count: PRODUCTS.filter((p) => p.category === 'snacks').length },
 ];
+
 
 interface ProductsSectionProps {
   onAddToCart: (product: Product) => void;
