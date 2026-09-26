@@ -51,7 +51,7 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(6);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(40);
 
   // Action states
   const [addedIds, setAddedIds] = useState<Record<string, boolean>>({});
@@ -538,15 +538,15 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
 
                 <div className="flex items-center space-x-1 text-slate-400">
                   <span>Por página:</span>
-                  {[6, 9, 12].map((num) => (
+                  {[12, 24, 40].map((num) => (
                     <button
                       key={num}
                       onClick={() => setItemsPerPage(num)}
-                      className={`px-1.5 py-0.5 rounded text-xs font-bold ${
-                        itemsPerPage === num ? 'bg-[#FF5200] text-white' : 'hover:text-[#061F3D]'
+                      className={`px-2 py-0.5 rounded text-xs font-bold transition-colors cursor-pointer ${
+                        itemsPerPage === num ? 'bg-[#FF5200] text-white shadow-xs' : 'hover:text-[#061F3D]'
                       }`}
                     >
-                      {num}
+                      {num === 40 ? 'Todos' : num}
                     </button>
                   ))}
                 </div>

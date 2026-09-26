@@ -3853,3 +3853,21 @@ export const ALL_CATEGORIES = [
   { id: 'higiene', label: 'Arenas & Higiene', count: PRODUCTS_DATABASE.filter(p => p.category === 'higiene').length },
   { id: 'snacks', label: 'Pequeñas Mascotas & Snacks', count: PRODUCTS_DATABASE.filter(p => p.category === 'snacks').length },
 ];
+
+export const FEATURED_PRODUCT_IDS: string[] = [
+  'prod-30', // Purina Pro Plan Puppy Razas Pequeñas Optistart
+  'prod-6',  // Bravery Herring Adult Large Medium Breeds 12kg
+  'prod-14', // Fit Formula Perro Adulto 20kg
+  'prod-38', // Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg
+  'prod-28', // Purina Pro Plan Adult Gatos Optiprebio
+  'prod-8',  // Bravery Salmon Adult Cat 7kg
+  'prod-34', // Taste of the Wild Rocky Mountain Feline Recipe
+  'prod-10', // Diamond Naturals Indoor Cat Chicken and Rice Formula
+  'prod-18', // Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg
+  'prod-15', // Happypets Healthy Rodents Conejos y Cuyes 500g
+];
+
+export const FEATURED_PRODUCTS: Product[] = FEATURED_PRODUCT_IDS
+  .map(id => PRODUCTS_DATABASE.find(p => p.id === id))
+  .filter((p): p is Product => Boolean(p));
+

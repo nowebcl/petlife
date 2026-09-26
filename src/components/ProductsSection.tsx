@@ -14,10 +14,10 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
-import { PRODUCTS_DATABASE, type Product } from '../data/products.ts';
+import { FEATURED_PRODUCTS, type Product } from '../data/products.ts';
 export type { Product } from '../data/products.ts';
 
-const PRODUCTS: Product[] = PRODUCTS_DATABASE;
+const PRODUCTS: Product[] = FEATURED_PRODUCTS;
 
 const CATEGORIES = [
   { id: 'todos', label: 'Todos', icon: LayoutGrid, count: PRODUCTS.length },
@@ -81,11 +81,11 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
     <section id="productos" className="w-full bg-white rounded-t-[32px] sm:rounded-t-[40px] pt-7 pb-12 sm:pb-24 shadow-[0_-10px_30px_rgba(0,0,0,0.03)] border-t border-slate-100 relative z-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
 
-        {/* Top Badge & Link (Matches media_1790293110059.png) */}
+        {/* Top Badge & Link */}
         <div className="flex items-center justify-between mb-2">
           <div className="inline-flex items-center space-x-1.5 text-[11px] font-black tracking-wider uppercase text-[#FF5200] bg-[#FFF2EA] px-3 py-1 rounded-full border border-orange-200/50">
             <span>🐾</span>
-            <span>TIENDA PETLIFE</span>
+            <span>PRODUCTOS DESTACADOS</span>
           </div>
 
           <button
@@ -98,7 +98,7 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
             }}
             className="text-xs font-bold text-[#FF5200] hover:text-[#FF6508] flex items-center space-x-1 active:scale-95 transition-all cursor-pointer"
           >
-            <span>Ver catálogo completo</span>
+            <span>Ver catálogo completo (40)</span>
             <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
           </button>
         </div>
@@ -106,10 +106,10 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
         {/* Section Heading */}
         <div className="mb-4 sm:mb-6">
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-[#061F3D] tracking-tight leading-tight">
-            Catálogo de Alimentos & Cuidados
+            10 Productos Destacados
           </h2>
           <p className="text-[#637792] text-xs sm:text-base mt-1 max-w-xl font-medium">
-            Nutrición premium, premios y accesorios seleccionados para tu mascota.
+            Selección exclusiva con nuestros alimentos, arenas y snacks favoritos para tu mascota.
           </p>
         </div>
 
@@ -337,7 +337,7 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
               ¿Buscas más opciones para tu regalón?
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-              Descubre más de 20 productos con filtros por etapa, tipo de mascota, marca y ofertas exclusivas.
+              Descubre nuestro catálogo completo de 40 productos con filtros por etapa, tipo de mascota, marca y precio.
             </p>
           </div>
 
@@ -345,7 +345,7 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
             onClick={() => onViewAll?.()}
             className="shrink-0 inline-flex items-center space-x-2 px-6 sm:px-8 py-3.5 rounded-full bg-[#061F3D] hover:bg-[#FF5200] text-white font-black text-xs sm:text-sm shadow-sm hover:shadow-md transition-all active:scale-95 cursor-pointer"
           >
-            <span>Ver Catálogo Completo</span>
+            <span>Ver Catálogo Completo (40)</span>
             <ChevronRight className="w-4 h-4 stroke-[2.5]" />
           </button>
         </div>
