@@ -83,17 +83,17 @@ export const Hero: FC<HeroProps> = ({
       {/* ========================================================= */}
       <div className="md:hidden w-full flex-1 flex flex-col justify-between pt-4 pb-0 text-center z-20">
 
-        {/* Text & CTAs Container - Centered in canvas, moved lower down */}
-        <div className="w-full px-4 flex flex-col items-center justify-center my-auto pt-16 min-[380px]:pt-20 min-[410px]:pt-24 pb-2">
+        {/* Text & CTAs Container - Perfectly balanced in upper canvas */}
+        <div className="w-full px-4 flex flex-col items-center justify-center pt-2 min-[380px]:pt-4 pb-1">
           {/* Mobile Headline (Fixed 'Todo para' + rotating word with stable height) */}
-          <div className="relative mb-2.5 flex flex-col items-center justify-center">
-            <h1 className="text-[44px] min-[360px]:text-[50px] min-[390px]:text-[56px] font-black tracking-tight leading-[0.98] text-[#061F3D]">
+          <div className="relative mb-2 flex flex-col items-center justify-center">
+            <h1 className="text-[34px] min-[360px]:text-[40px] min-[390px]:text-[46px] font-black tracking-tight leading-[1] text-[#061F3D]">
               Todo para
             </h1>
 
-            <div className="relative inline-flex items-center justify-center h-[52px] min-[360px]:h-[58px] min-[390px]:h-[66px] mt-1">
+            <div className="relative inline-flex items-center justify-center h-[44px] min-[360px]:h-[50px] min-[390px]:h-[56px] mt-0.5">
               {/* Rotating highlighted phrase in vibrant orange with subtle cross-fade */}
-              <span className="text-[48px] min-[360px]:text-[56px] min-[390px]:text-[64px] font-black tracking-tight text-[#FF5200] leading-none whitespace-nowrap">
+              <span className="text-[38px] min-[360px]:text-[44px] min-[390px]:text-[50px] font-black tracking-tight text-[#FF5200] leading-none whitespace-nowrap">
                 <span
                   className={`inline-block transition-opacity duration-400 ease-in-out ${
                     isTransitioning ? 'opacity-0' : 'opacity-100'
@@ -104,15 +104,15 @@ export const Hero: FC<HeroProps> = ({
               </span>
 
               {/* Right Orange Heart + Accent Stroke (DEJA SOLO EL CORAZON) */}
-              <div className="absolute -right-8 min-[370px]:-right-9 min-[410px]:-right-10 top-1/2 -translate-y-1/2 flex flex-col items-center select-none pointer-events-none">
+              <div className="absolute -right-7 min-[370px]:-right-8 min-[410px]:-right-9 top-1/2 -translate-y-1/2 flex flex-col items-center select-none pointer-events-none">
                 <svg
-                  className="w-7 h-7 min-[370px]:w-8 min-[370px]:h-8 text-[#FF5200] fill-current transform rotate-[18deg]"
+                  className="w-6 h-6 min-[370px]:w-7 min-[370px]:h-7 text-[#FF5200] fill-current transform rotate-[18deg]"
                   viewBox="0 0 24 24"
                 >
                   <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                 </svg>
                 <svg
-                  className="w-4 h-2 text-[#FF5200] mt-0.5 ml-2"
+                  className="w-3.5 h-1.5 text-[#FF5200] mt-0.5 ml-1.5"
                   viewBox="0 0 16 8"
                   fill="none"
                   stroke="currentColor"
@@ -126,17 +126,17 @@ export const Hero: FC<HeroProps> = ({
           </div>
 
           {/* Mobile Subtitle */}
-          <p className="text-xs min-[380px]:text-sm font-semibold text-[#061F3D] max-w-[290px] mx-auto leading-snug mb-4">
+          <p className="text-xs min-[380px]:text-[13px] font-semibold text-[#061F3D] max-w-[280px] mx-auto leading-snug mb-3">
             Alimentos, accesorios y cuidados
             <br />
             para una vida más feliz.
           </p>
 
           {/* Single CTA Button: Comprar + Carrito */}
-          <div className="relative w-full max-w-[210px] mx-auto flex justify-center mb-1">
+          <div className="relative w-full max-w-[200px] mx-auto flex justify-center mb-1">
             <button
               onClick={onBuyClick}
-              className="w-full py-3.5 px-6 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-black text-sm min-[380px]:text-base shadow-orange-glow active:scale-95 transition-all flex items-center justify-center space-x-2.5 cursor-pointer"
+              className="w-full py-3 px-6 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-black text-sm min-[380px]:text-base shadow-orange-glow active:scale-95 transition-all flex items-center justify-center space-x-2.5 cursor-pointer"
             >
               <ShoppingCart className="w-5 h-5 stroke-[2.5]" />
               <span>Comprar</span>
@@ -144,22 +144,22 @@ export const Hero: FC<HeroProps> = ({
           </div>
         </div>
 
-        {/* Mobile Pets Image - Full Width Edge-to-Edge using ALL space */}
-        <div className="w-full mt-auto -mb-1 flex justify-center items-end select-none overflow-hidden">
+        {/* Mobile Pets Image - Fully visible above the bottom navbar */}
+        <div className="w-full mt-auto flex justify-center items-end select-none overflow-hidden pb-16 md:pb-0">
           <div
             onMouseDown={handlePointerDown}
             onTouchStart={handleTouchStart}
-            className="relative w-full cursor-pointer select-none"
+            className="relative w-full max-w-[380px] flex justify-center cursor-pointer select-none px-2"
             title="Tócame con el dedo ❤️"
           >
             <img
-              src="/Imagen de ChatGPT 24 sept 2026, 08_30_21 p.m.png"
+              src="/mobile-pets.png"
               onError={(e) => {
                 e.currentTarget.src = '/mobile-pets.png';
               }}
               alt="Perro y gato en cama tejida"
               fetchPriority="high"
-              className="w-full h-auto object-contain select-none scale-[1.08] sm:scale-100 origin-bottom"
+              className="w-full max-h-[36vh] min-[380px]:max-h-[42vh] object-contain select-none origin-bottom drop-shadow-sm"
             />
 
             {/* Floating Hearts only */}
