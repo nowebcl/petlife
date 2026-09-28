@@ -144,12 +144,12 @@ export const Hero: FC<HeroProps> = ({
           </div>
         </div>
 
-        {/* Mobile Pets Image - Fully visible above the bottom navbar */}
-        <div className="w-full mt-auto flex justify-center items-end select-none overflow-hidden pb-16 md:pb-0">
+        {/* Mobile Pets Image - Full Width Edge-to-Edge, completely visible */}
+        <div className="w-full mt-auto flex justify-center items-end select-none overflow-hidden">
           <div
             onMouseDown={handlePointerDown}
             onTouchStart={handleTouchStart}
-            className="relative w-full max-w-[380px] flex justify-center cursor-pointer select-none px-2"
+            className="relative w-full cursor-pointer select-none"
             title="Tócame con el dedo ❤️"
           >
             <img
@@ -159,7 +159,7 @@ export const Hero: FC<HeroProps> = ({
               }}
               alt="Perro y gato en cama tejida"
               fetchPriority="high"
-              className="w-full max-h-[36vh] min-[380px]:max-h-[42vh] object-contain select-none origin-bottom drop-shadow-sm"
+              className="w-full h-auto object-contain select-none origin-bottom scale-100"
             />
 
             {/* Floating Hearts only */}
