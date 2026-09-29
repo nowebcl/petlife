@@ -204,10 +204,6 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
             {filteredProducts.map((product) => {
               const isAdded = addedIds[product.id];
               const isFav = favoriteIds[product.id];
-              const hasDiscount = Boolean(product.originalPrice && product.originalPrice > product.price);
-              const discountPercent = hasDiscount && product.originalPrice
-                ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-                : 0;
 
               return (
                 <article
@@ -227,15 +223,6 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
                           e.currentTarget.style.display = 'none';
                         }}
                       />
-
-                      {/* Top Badges (Discount only if applicable) */}
-                      {hasDiscount && (
-                        <div className="absolute top-2 left-2 z-10">
-                          <span className="px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black bg-rose-500 text-white shadow-xs">
-                            -{discountPercent}% OFF
-                          </span>
-                        </div>
-                      )}
 
                       {/* Floating Wishlist Heart Button Top Right */}
                       <button
@@ -281,16 +268,9 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
                   {/* Bottom Price & Add CTA (Always aligned to bottom) */}
                   <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between gap-1.5">
                     <div>
-                      <div className="flex items-baseline space-x-1">
-                        <span className="text-sm sm:text-base font-black text-[#061F3D]">
-                          {formatPrice(product.price)}
-                        </span>
-                        {product.originalPrice && (
-                          <span className="text-[10px] text-slate-400 line-through">
-                            {formatPrice(product.originalPrice)}
-                          </span>
-                        )}
-                      </div>
+                      <span className="text-sm sm:text-base font-black text-[#061F3D]">
+                        {formatPrice(product.price)}
+                      </span>
                     </div>
 
                     {/* Compact Add Button */}

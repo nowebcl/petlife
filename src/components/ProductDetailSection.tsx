@@ -40,13 +40,6 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
 
   // Price calculations based on selected variant
   const currentPrice = selectedVariant ? selectedVariant.price : product.price;
-  const currentOriginalPrice = selectedVariant
-    ? selectedVariant.originalPrice
-    : product.originalPrice;
-  const hasDiscount = Boolean(currentOriginalPrice && currentOriginalPrice > currentPrice);
-  const discountPercent = hasDiscount && currentOriginalPrice
-    ? Math.round(((currentOriginalPrice - currentPrice) / currentOriginalPrice) * 100)
-    : 0;
 
   // Related products from the same category or petType
   const relatedProducts = allProducts
@@ -120,15 +113,6 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                   }}
                 />
 
-                {/* Badges Overlay (Discount only if applicable) */}
-                {hasDiscount && (
-                  <div className="absolute top-4 left-4 z-10">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-500 text-white shadow-xs">
-                      -{discountPercent}% OFF
-                    </span>
-                  </div>
-                )}
-
                 {/* Wishlist Button */}
                 <button
                   onClick={() => setIsFavorite(!isFavorite)}
@@ -199,28 +183,15 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
               </div>
 
               {/* Price Banner */}
-              <div className="bg-slate-50/90 rounded-2xl p-4 sm:p-5 border border-slate-100 mb-6 flex flex-wrap items-baseline justify-between gap-3">
-                <div>
-                  <div className="flex items-baseline space-x-2.5">
-                    <span className="text-3xl sm:text-4xl font-black text-[#061F3D]">
-                      {formatPrice(currentPrice)}
-                    </span>
-                    {currentOriginalPrice && (
-                      <span className="text-base sm:text-lg text-slate-400 line-through">
-                        {formatPrice(currentOriginalPrice)}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs text-[#637792] font-medium block mt-0.5">
-                    Impuestos incluidos. Envío calculado en el checkout.
+              <div className="bg-slate-50/90 rounded-2xl p-4 sm:p-5 border border-slate-100 mb-6">
+                <div className="flex items-baseline space-x-2.5">
+                  <span className="text-3xl sm:text-4xl font-black text-[#061F3D]">
+                    {formatPrice(currentPrice)}
                   </span>
                 </div>
-
-                {hasDiscount && currentOriginalPrice && (
-                  <div className="px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
-                    Ahorras {formatPrice(currentOriginalPrice - currentPrice)}
-                  </div>
-                )}
+                <span className="text-xs text-[#637792] font-medium block mt-1">
+                  Impuestos incluidos. Envío calculado en el checkout.
+                </span>
               </div>
 
               {/* Variants Selector (Weight / Presentation) */}

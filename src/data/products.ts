@@ -62,7 +62,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 47900,
-    "originalPrice": 52900,
     "rating": 4.8,
     "reviewsCount": 86,
     "weightOrSize": "15 kg",
@@ -90,7 +89,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 15 kg",
         "weightOrSize": "15 kg",
         "price": 47900,
-        "originalPrice": 52900,
         "inStock": true
       }
     ],
@@ -159,7 +157,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "todas",
     "price": 16900,
-    "originalPrice": 19900,
     "rating": 4.9,
     "reviewsCount": 112,
     "weightOrSize": "15 kg",
@@ -180,7 +177,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 15 kg",
         "weightOrSize": "15 kg",
         "price": 16900,
-        "originalPrice": 19900,
         "inStock": true
       },
       {
@@ -188,7 +184,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 20 kg",
         "weightOrSize": "20 kg",
         "price": 20900,
-        "originalPrice": 24900,
         "inStock": true
       }
     ],
@@ -253,7 +248,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 29900,
-    "originalPrice": 34900,
     "rating": 4.9,
     "reviewsCount": 78,
     "weightOrSize": "4 kg",
@@ -281,7 +275,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 4 kg",
         "weightOrSize": "4 kg",
         "price": 29900,
-        "originalPrice": 34900,
         "inStock": true
       },
       {
@@ -357,7 +350,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 52900,
-    "originalPrice": 54900,
     "rating": 5,
     "reviewsCount": 145,
     "weightOrSize": "7 kg",
@@ -385,7 +377,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7 kg",
         "weightOrSize": "7 kg",
         "price": 52900,
-        "originalPrice": 54900,
         "inStock": true
       }
     ],
@@ -454,7 +445,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "cachorro",
     "price": 21900,
-    "originalPrice": 25900,
     "rating": 4.9,
     "reviewsCount": 94,
     "weightOrSize": "2 kg",
@@ -475,7 +465,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 2 kg",
         "weightOrSize": "2 kg",
         "price": 21900,
-        "originalPrice": 25900,
         "inStock": true
       },
       {
@@ -551,7 +540,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 69900,
-    "originalPrice": 79900,
     "rating": 5,
     "reviewsCount": 160,
     "weightOrSize": "12 kg",
@@ -579,7 +567,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 12 kg",
         "weightOrSize": "12 kg",
         "price": 69900,
-        "originalPrice": 79900,
         "inStock": true
       }
     ],
@@ -650,7 +637,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "senior",
     "price": 72900,
-    "originalPrice": 84900,
     "rating": 4.9,
     "reviewsCount": 88,
     "weightOrSize": "12 kg",
@@ -678,7 +664,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 12 kg",
         "weightOrSize": "12 kg",
         "price": 72900,
-        "originalPrice": 84900,
         "inStock": true
       }
     ],
@@ -748,7 +733,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 48900,
-    "originalPrice": 56900,
     "rating": 5,
     "reviewsCount": 132,
     "weightOrSize": "7 kg",
@@ -776,7 +760,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7 kg",
         "weightOrSize": "7 kg",
         "price": 52900,
-        "originalPrice": 56900,
         "inStock": true
       }
     ],
@@ -845,7 +828,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "todas",
     "price": 12900,
-    "originalPrice": 16500,
     "rating": 4.8,
     "reviewsCount": 110,
     "weightOrSize": "10 kg",
@@ -866,7 +848,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 10 kg",
         "weightOrSize": "10 kg",
         "price": 12900,
-        "originalPrice": 15900,
         "inStock": true
       }
     ],
@@ -932,7 +913,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 38900,
-    "originalPrice": 44900,
     "rating": 4.9,
     "reviewsCount": 124,
     "weightOrSize": "7.5 kg",
@@ -960,7 +940,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
         "price": 38900,
-        "originalPrice": 44900,
         "inStock": true
       }
     ],
@@ -1030,7 +1009,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 19900,
-    "originalPrice": 22900,
     "rating": 4.8,
     "reviewsCount": 76,
     "weightOrSize": "2.7 kg",
@@ -1051,7 +1029,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 2.7 kg",
         "weightOrSize": "2.7 kg",
         "price": 19900,
-        "originalPrice": 22900,
         "inStock": true
       }
     ],
@@ -1120,7 +1097,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "todas",
     "price": 14900,
-    "originalPrice": 17900,
     "rating": 4.9,
     "reviewsCount": 95,
     "weightOrSize": "24 pcs (60x60cm)",
@@ -1141,7 +1117,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Paquete 24 pcs",
         "weightOrSize": "24 pcs",
         "price": 14900,
-        "originalPrice": 17900,
         "inStock": true
       },
       {
@@ -1215,7 +1190,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "todas",
     "price": 9900,
-    "originalPrice": 12000,
     "rating": 4.8,
     "reviewsCount": 64,
     "weightOrSize": "12 pcs (33x45cm)",
@@ -1236,7 +1210,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Paquete 12 pcs",
         "weightOrSize": "12 pcs",
         "price": 9900,
-        "originalPrice": 12000,
         "inStock": true
       }
     ],
@@ -1303,7 +1276,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 39900,
-    "originalPrice": 46900,
     "rating": 4.8,
     "reviewsCount": 180,
     "weightOrSize": "20 kg",
@@ -1324,7 +1296,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 20 kg",
         "weightOrSize": "20 kg",
         "price": 39900,
-        "originalPrice": 46900,
         "inStock": true
       }
     ],
@@ -1393,7 +1364,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "ambos",
     "lifeStage": "todas",
     "price": 3000,
-    "originalPrice": 3900,
     "rating": 4.9,
     "reviewsCount": 42,
     "weightOrSize": "500 g",
@@ -1414,7 +1384,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 500 g",
         "weightOrSize": "500 g",
         "price": 3000,
-        "originalPrice": 3900,
         "inStock": true
       }
     ],
@@ -1483,7 +1452,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "ambos",
     "lifeStage": "todas",
     "price": 3000,
-    "originalPrice": 3900,
     "rating": 4.9,
     "reviewsCount": 38,
     "weightOrSize": "500 g",
@@ -1504,7 +1472,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 500 g",
         "weightOrSize": "500 g",
         "price": 3000,
-        "originalPrice": 3900,
         "inStock": true
       }
     ],
@@ -1573,7 +1540,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 49900,
-    "originalPrice": 58000,
     "rating": 5,
     "reviewsCount": 68,
     "weightOrSize": "7.5 kg",
@@ -1601,7 +1567,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
         "price": 49900,
-        "originalPrice": 58000,
         "inStock": true
       }
     ],
@@ -1670,7 +1635,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "todas",
     "price": 12900,
-    "originalPrice": 15500,
     "rating": 4.8,
     "reviewsCount": 82,
     "weightOrSize": "9 kg",
@@ -1691,7 +1655,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 9 kg",
         "weightOrSize": "9 kg",
         "price": 12900,
-        "originalPrice": 15500,
         "inStock": true
       }
     ],
@@ -1757,7 +1720,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 42900,
-    "originalPrice": 49900,
     "rating": 4.9,
     "reviewsCount": 215,
     "weightOrSize": "20 kg",
@@ -1778,7 +1740,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 20 kg",
         "weightOrSize": "20 kg",
         "price": 42900,
-        "originalPrice": 49900,
         "inStock": true
       }
     ],
@@ -1847,7 +1808,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "todas",
     "price": 14500,
-    "originalPrice": 17500,
     "rating": 4.8,
     "reviewsCount": 90,
     "weightOrSize": "10 kg",
@@ -1868,7 +1828,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 10 kg",
         "weightOrSize": "10 kg",
         "price": 14500,
-        "originalPrice": 17500,
         "inStock": true
       }
     ],
@@ -1933,7 +1892,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 31900,
-    "originalPrice": 36900,
     "rating": 4.8,
     "reviewsCount": 135,
     "weightOrSize": "10 kg",
@@ -1954,7 +1912,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 10 kg",
         "weightOrSize": "10 kg",
         "price": 31900,
-        "originalPrice": 36900,
         "inStock": true
       }
     ],
@@ -2023,7 +1980,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 26900,
-    "originalPrice": 31900,
     "rating": 4.7,
     "reviewsCount": 58,
     "weightOrSize": "8 kg",
@@ -2044,7 +2000,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 8 kg",
         "weightOrSize": "8 kg",
         "price": 26900,
-        "originalPrice": 31900,
         "inStock": true
       }
     ],
@@ -2113,7 +2068,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 42900,
-    "originalPrice": 48900,
     "rating": 4.7,
     "reviewsCount": 72,
     "weightOrSize": "15 kg",
@@ -2134,7 +2088,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 15 kg",
         "weightOrSize": "15 kg",
         "price": 47900,
-        "originalPrice": 48900,
         "inStock": true
       }
     ],
@@ -2203,7 +2156,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 28900,
-    "originalPrice": 33900,
     "rating": 4.8,
     "reviewsCount": 190,
     "weightOrSize": "8 kg",
@@ -2231,7 +2183,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 8 kg",
         "weightOrSize": "8 kg",
         "price": 28900,
-        "originalPrice": 33900,
         "inStock": true
       }
     ],
@@ -2300,7 +2251,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 18900,
-    "originalPrice": 22000,
     "rating": 4.9,
     "reviewsCount": 104,
     "weightOrSize": "2 kg",
@@ -2321,7 +2271,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 2 kg",
         "weightOrSize": "2 kg",
         "price": 18900,
-        "originalPrice": 22000,
         "inStock": true
       }
     ],
@@ -2391,7 +2340,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 52900,
-    "originalPrice": 61900,
     "rating": 4.9,
     "reviewsCount": 128,
     "weightOrSize": "15 kg",
@@ -2419,7 +2367,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 15 kg",
         "weightOrSize": "15 kg",
         "price": 47900,
-        "originalPrice": 61900,
         "inStock": true
       }
     ],
@@ -2488,7 +2435,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 34900,
-    "originalPrice": 39900,
     "rating": 4.9,
     "reviewsCount": 115,
     "weightOrSize": "7.5 kg",
@@ -2516,7 +2462,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
         "price": 34900,
-        "originalPrice": 39900,
         "inStock": true
       }
     ],
@@ -2585,7 +2530,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 54900,
-    "originalPrice": 63900,
     "rating": 5,
     "reviewsCount": 175,
     "weightOrSize": "7.5 kg",
@@ -2613,7 +2557,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
         "price": 54900,
-        "originalPrice": 63900,
         "inStock": true
       }
     ],
@@ -2682,7 +2625,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "cachorro",
     "price": 29900,
-    "originalPrice": 35000,
     "rating": 5,
     "reviewsCount": 130,
     "weightOrSize": "3 kg",
@@ -2710,7 +2652,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
         "price": 29900,
-        "originalPrice": 35000,
         "inStock": true
       }
     ],
@@ -2778,7 +2719,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "cachorro",
     "price": 49900,
-    "originalPrice": 58000,
     "rating": 5,
     "reviewsCount": 154,
     "weightOrSize": "7.5 kg",
@@ -2806,7 +2746,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
         "price": 49900,
-        "originalPrice": 58000,
         "inStock": true
       }
     ],
@@ -2875,7 +2814,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 56900,
-    "originalPrice": 65900,
     "rating": 5,
     "reviewsCount": 165,
     "weightOrSize": "7.5 kg",
@@ -2903,7 +2841,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
         "price": 56900,
-        "originalPrice": 65900,
         "inStock": true
       }
     ],
@@ -2972,7 +2909,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 58900,
-    "originalPrice": 67900,
     "rating": 5,
     "reviewsCount": 140,
     "weightOrSize": "7.5 kg",
@@ -3000,7 +2936,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
         "price": 58900,
-        "originalPrice": 67900,
         "inStock": true
       }
     ],
@@ -3069,7 +3004,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 24900,
-    "originalPrice": 29900,
     "rating": 4.7,
     "reviewsCount": 75,
     "weightOrSize": "10 kg",
@@ -3090,7 +3024,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 10 kg",
         "weightOrSize": "10 kg",
         "price": 24900,
-        "originalPrice": 29900,
         "inStock": true
       }
     ],
@@ -3159,7 +3092,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "todas",
     "price": 59900,
-    "originalPrice": 69900,
     "rating": 5,
     "reviewsCount": 185,
     "weightOrSize": "6.6 kg",
@@ -3187,7 +3119,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 6.6 kg",
         "weightOrSize": "6.6 kg",
         "price": 59900,
-        "originalPrice": 69900,
         "inStock": true
       }
     ],
@@ -3258,7 +3189,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 27900,
-    "originalPrice": 32500,
     "rating": 4.8,
     "reviewsCount": 65,
     "weightOrSize": "9 kg",
@@ -3279,7 +3209,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 9 kg",
         "weightOrSize": "9 kg",
         "price": 27900,
-        "originalPrice": 32500,
         "inStock": true
       }
     ],
@@ -3348,7 +3277,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 22900,
-    "originalPrice": 26900,
     "rating": 4.7,
     "reviewsCount": 54,
     "weightOrSize": "10 kg",
@@ -3369,7 +3297,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 10 kg",
         "weightOrSize": "10 kg",
         "price": 22900,
-        "originalPrice": 26900,
         "inStock": true
       }
     ],
@@ -3438,7 +3365,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 21900,
-    "originalPrice": 25900,
     "rating": 4.8,
     "reviewsCount": 60,
     "weightOrSize": "9 kg",
@@ -3459,7 +3385,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 9 kg",
         "weightOrSize": "9 kg",
         "price": 21900,
-        "originalPrice": 25900,
         "inStock": true
       }
     ],
@@ -3528,7 +3453,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 57900,
-    "originalPrice": 66900,
     "rating": 4.9,
     "reviewsCount": 138,
     "weightOrSize": "17 kg",
@@ -3556,7 +3480,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 17 kg",
         "weightOrSize": "17 kg",
         "price": 57900,
-        "originalPrice": 66900,
         "inStock": true
       }
     ],
@@ -3625,7 +3548,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 36900,
-    "originalPrice": 42900,
     "rating": 5,
     "reviewsCount": 92,
     "weightOrSize": "7.5 kg",
@@ -3653,7 +3575,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
         "price": 36900,
-        "originalPrice": 42900,
         "inStock": true
       }
     ],
@@ -3721,7 +3642,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 49900,
-    "originalPrice": 57900,
     "rating": 4.9,
     "reviewsCount": 110,
     "weightOrSize": "15 kg",
@@ -3749,7 +3669,6 @@ export const PRODUCTS_DATABASE: Product[] = [
         "label": "Saco 15 kg",
         "weightOrSize": "15 kg",
         "price": 47900,
-        "originalPrice": 57900,
         "inStock": true
       }
     ],

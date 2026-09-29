@@ -40,7 +40,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
   const [selectedPetType, setSelectedPetType] = useState<'todos' | 'perro' | 'gato'>('todos');
   const [selectedLifeStage, setSelectedLifeStage] = useState<'todas' | 'cachorro' | 'adulto' | 'senior'>('todas');
   const [priceRange, setPriceRange] = useState<'all' | 'under-20' | '20-50' | 'over-50'>('all');
-  const [onlyDiscount, setOnlyDiscount] = useState<boolean>(false);
   const [onlyInStock, setOnlyInStock] = useState<boolean>(false);
   const [onlyTopRated, setOnlyTopRated] = useState<boolean>(false);
 
@@ -75,7 +74,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
     selectedPetType,
     selectedLifeStage,
     priceRange,
-    onlyDiscount,
     onlyInStock,
     onlyTopRated,
     sortBy,
@@ -117,7 +115,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
         if (priceRange === 'over-50') matchPrice = p.price > 50000;
 
         // Toggles
-        const matchDiscount = !onlyDiscount || Boolean(p.originalPrice && p.originalPrice > p.price);
         const matchStock = !onlyInStock || p.inStock;
         const matchRating = !onlyTopRated || p.rating >= 4.9;
 
@@ -127,7 +124,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
           matchPet &&
           matchStage &&
           matchPrice &&
-          matchDiscount &&
           matchStock &&
           matchRating
         );
@@ -146,7 +142,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
     selectedPetType,
     selectedLifeStage,
     priceRange,
-    onlyDiscount,
     onlyInStock,
     onlyTopRated,
     sortBy,
@@ -164,7 +159,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
     selectedPetType !== 'todos',
     selectedLifeStage !== 'todas',
     priceRange !== 'all',
-    onlyDiscount,
     onlyInStock,
     onlyTopRated,
     Boolean(searchQuery.trim()),
@@ -176,7 +170,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
     setSelectedPetType('todos');
     setSelectedLifeStage('todas');
     setPriceRange('all');
-    setOnlyDiscount(false);
     setOnlyInStock(false);
     setOnlyTopRated(false);
   };
@@ -345,16 +338,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
               </h4>
 
               <label className="flex items-center justify-between text-xs font-semibold text-slate-700 cursor-pointer">
-                <span>🔥 Solo en oferta</span>
-                <input
-                  type="checkbox"
-                  checked={onlyDiscount}
-                  onChange={(e) => setOnlyDiscount(e.target.checked)}
-                  className="accent-[#FF5200] w-4 h-4 rounded cursor-pointer"
-                />
-              </label>
-
-              <label className="flex items-center justify-between text-xs font-semibold text-slate-700 cursor-pointer">
                 <span>📦 Solo con stock</span>
                 <input
                   type="checkbox"
@@ -495,14 +478,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                       </button>
                     </span>
                   )}
-                  {onlyDiscount && (
-                    <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 font-bold text-[11px]">
-                      <span>En oferta</span>
-                      <button onClick={() => setOnlyDiscount(false)}>
-                        <X className="w-3 h-3 ml-0.5" />
-                      </button>
-                    </span>
-                  )}
                   {onlyInStock && (
                     <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">
                       <span>En stock</span>
@@ -600,13 +575,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                             }}
                           />
 
-                          {/* Top Discount Badge if applicable */}
-                          {product.originalPrice && product.originalPrice > product.price && (
-                            <span className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black bg-rose-500 text-white shadow-xs">
-                              -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
-                            </span>
-                          )}
-
                           {/* Wishlist Button */}
                           <button
                             onClick={(e) => {
@@ -648,16 +616,9 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                       {/* Price & Action Button */}
                       <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-1.5">
                         <div>
-                          <div className="flex items-baseline space-x-1">
-                            <span className="text-sm sm:text-lg font-black text-[#061F3D]">
-                              {formatPrice(product.price)}
-                            </span>
-                            {product.originalPrice && (
-                              <span className="text-[10px] text-slate-400 line-through">
-                                {formatPrice(product.originalPrice)}
-                              </span>
-                            )}
-                          </div>
+                          <span className="text-sm sm:text-lg font-black text-[#061F3D]">
+                            {formatPrice(product.price)}
+                          </span>
                         </div>
 
                         {/* Add to Cart Button */}
@@ -755,11 +716,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                           <span className="text-xl sm:text-2xl font-black text-[#061F3D] block">
                             {formatPrice(product.price)}
                           </span>
-                          {product.originalPrice && (
-                            <span className="text-xs text-slate-400 line-through block text-right">
-                              {formatPrice(product.originalPrice)}
-                            </span>
-                          )}
                         </div>
 
                         <button
@@ -920,15 +876,6 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
 
               {/* Mobile Quick Toggles */}
               <div className="space-y-3 pt-4 border-t border-slate-100 text-xs">
-                <label className="flex items-center justify-between font-bold text-slate-700">
-                  <span>🔥 Solo en oferta</span>
-                  <input
-                    type="checkbox"
-                    checked={onlyDiscount}
-                    onChange={(e) => setOnlyDiscount(e.target.checked)}
-                    className="accent-[#FF5200] w-4 h-4"
-                  />
-                </label>
                 <label className="flex items-center justify-between font-bold text-slate-700">
                   <span>📦 Solo en stock</span>
                   <input
