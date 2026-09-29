@@ -20,6 +20,7 @@ import {
   Phone,
   Mail,
   MapPin,
+  ArrowLeft,
 } from 'lucide-react';
 import type { Product } from '../data/products.ts';
 import { formatPrice } from '../data/products.ts';
@@ -413,18 +414,20 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   // =========================================================================
   if (!isAuthenticated) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#061F3D]/80 backdrop-blur-md animate-fade-in">
+      <div className="w-full min-h-screen bg-[#061F3D] flex flex-col items-center justify-center p-4 sm:p-6 animate-fade-in">
+        <div className="mb-4">
+          <button
+            onClick={onClose}
+            className="inline-flex items-center space-x-2 text-xs font-bold text-slate-300 hover:text-white transition-colors cursor-pointer bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700/80 shadow-sm"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Volver a la Tienda</span>
+          </button>
+        </div>
+
         <div className="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 overflow-hidden">
           {/* Top banner decor */}
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#FF5200] via-[#FF7A00] to-[#FFA611]" />
-
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
 
           <div className="text-center mb-6 pt-2">
             <div className="w-14 h-14 mx-auto rounded-2xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center mb-3 shadow-xs">
@@ -507,7 +510,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   // VIEW: ADMIN DASHBOARD PRINCIPAL
   // =========================================================================
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div className="w-full min-h-screen bg-[#F8FAFC] flex flex-col animate-fade-in">
       {/* Toast Notification */}
       {toast && (
         <div
@@ -526,9 +529,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         </div>
       )}
 
-      {/* Main Admin Card */}
-      <div className="bg-[#F8FAFC] w-full max-w-7xl h-[95vh] rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
-        {/* Top Navbar */}
+      {/* Top Navbar */}
         <header className="bg-white px-4 sm:px-6 py-3.5 border-b border-slate-200 flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-3">
             <div className="w-9 h-9 rounded-xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center text-[#FF5200] font-black text-lg">
@@ -1247,7 +1248,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
             </div>
           </div>
         )}
-      </div>
 
       {/* ===================================================================== */}
       {/* MODAL: AGREGAR O EDITAR PRODUCTO                                     */}
