@@ -402,15 +402,15 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   }, [products]);
 
   // =========================================================================
-  // VIEW 1: LOGIN A PANTALLA COMPLETA
+  // VIEW 1: LOGIN A PANTALLA COMPLETA (OPTIMIZADO MÓVIL)
   // =========================================================================
   if (!isAuthenticated) {
     return (
-      <div className="w-full min-h-screen bg-[#061F3D] flex flex-col items-center justify-center p-4 sm:p-6 animate-fade-in">
-        <div className="mb-6">
+      <div className="w-full max-w-full overflow-x-hidden min-h-screen bg-[#061F3D] flex flex-col items-center justify-center p-4 sm:p-6 animate-fade-in">
+        <div className="mb-4 sm:mb-6">
           <button
             onClick={onClose}
-            className="inline-flex items-center space-x-2 text-xs font-bold text-slate-300 hover:text-white transition-colors cursor-pointer bg-slate-800/90 px-4 py-2 rounded-full border border-slate-700 shadow-sm"
+            className="inline-flex items-center space-x-2 text-xs font-bold text-slate-300 hover:text-white transition-colors cursor-pointer bg-slate-800/90 px-4 py-2 rounded-full border border-slate-700 shadow-sm active:scale-95"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Volver a la Tienda</span>
@@ -421,7 +421,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#FF5200] via-[#FF7A00] to-[#FFA611]" />
 
           <div className="text-center mb-6">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center text-2xl shadow-xs mb-3">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-2xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center text-2xl shadow-xs mb-3">
               🐾
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-[#061F3D]">
@@ -433,7 +433,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
           </div>
 
           {loginError && (
-            <div className="mb-5 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2 animate-shake">
+            <div className="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2 animate-shake">
               <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500" />
               <span>{loginError}</span>
             </div>
@@ -450,7 +450,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
                 placeholder="contacto@tiendapetlife.cl"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-base sm:text-sm font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
               />
             </div>
 
@@ -464,7 +464,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-base sm:text-sm font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
               />
             </div>
 
@@ -495,11 +495,11 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   }
 
   // =========================================================================
-  // VIEW 2: EDITOR DE PRODUCTO A PANTALLA COMPLETA (CREAR O EDITAR)
+  // VIEW 2: EDITOR DE PRODUCTO A PANTALLA COMPLETA (CREAR O EDITAR - 100% RESPONSIVE)
   // =========================================================================
   if (activeView === 'product_editor') {
     return (
-      <div className="w-full min-h-screen bg-[#F8FAFC] flex flex-col animate-fade-in pb-20">
+      <div className="w-full max-w-full overflow-x-hidden min-h-screen bg-[#F8FAFC] flex flex-col animate-fade-in pb-28 md:pb-16">
         {/* Toast Notification */}
         {toast && (
           <div
@@ -518,29 +518,30 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
           </div>
         )}
 
-        {/* Top Header / Breadcrumbs Bar */}
-        <header className="bg-white border-b border-slate-200 py-3.5 px-4 sm:px-8 sticky top-0 z-30 shadow-2xs">
-          <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
-            <div className="flex items-center space-x-3">
+        {/* Top Header / Action Bar (Ultra-clean on mobile) */}
+        <header className="bg-white border-b border-slate-200 py-3 px-3 sm:px-8 sticky top-0 z-30 shadow-2xs">
+          <div className="max-w-5xl mx-auto flex items-center justify-between gap-2">
+            <div className="flex items-center space-x-2 min-w-0">
               <button
                 type="button"
                 onClick={() => setActiveView('dashboard')}
-                className="p-2 rounded-xl text-slate-500 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1.5 text-xs font-bold cursor-pointer"
+                className="p-2 rounded-xl text-slate-600 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1 text-xs font-bold shrink-0 cursor-pointer active:scale-95"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span>Volver a Productos</span>
+                <span className="hidden sm:inline">Volver a Productos</span>
+                <span className="sm:hidden">Volver</span>
               </button>
               <span className="text-slate-300">/</span>
-              <span className="text-xs font-black text-[#FF5200] uppercase tracking-wider">
+              <span className="text-xs font-black text-[#FF5200] uppercase tracking-wider truncate">
                 {editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
               </span>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
               <button
                 type="button"
                 onClick={() => setActiveView('dashboard')}
-                className="px-4 py-2 rounded-full border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                className="hidden sm:inline-block px-4 py-2 rounded-full border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
@@ -548,7 +549,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 type="button"
                 onClick={handleSaveProduct}
                 disabled={isSavingProduct}
-                className="px-5 py-2 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-xs shadow-orange-glow transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center space-x-1.5"
+                className="px-4 sm:px-5 py-2 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-xs shadow-orange-glow transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center space-x-1.5"
               >
                 {isSavingProduct ? (
                   <>
@@ -557,8 +558,8 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                   </>
                 ) : (
                   <>
-                    <Check className="w-3.5 h-3.5" />
-                    <span>{editingProduct ? 'Guardar Cambios' : 'Crear Producto'}</span>
+                    <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <span>{editingProduct ? 'Guardar' : 'Crear'}</span>
                   </>
                 )}
               </button>
@@ -567,29 +568,29 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         </header>
 
         {/* Form Container */}
-        <main className="max-w-5xl mx-auto w-full px-4 sm:px-8 py-6 sm:py-8">
-          <div className="mb-6">
-            <h1 className="text-2xl sm:text-3xl font-black text-[#061F3D]">
+        <main className="max-w-5xl mx-auto w-full px-3 sm:px-8 py-4 sm:py-8">
+          <div className="mb-4 sm:mb-6">
+            <h1 className="text-xl sm:text-3xl font-black text-[#061F3D] truncate">
               {editingProduct ? `Editar: ${formName || 'Producto'}` : 'Crear Nuevo Producto'}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Completa la información esencial. Los datos e imágenes se guardan directamente en PocketBase.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Completa la información esencial. Los datos se guardan directamente en PocketBase.
             </p>
           </div>
 
           {productFormError && (
-            <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm font-semibold flex items-center space-x-3">
-              <AlertTriangle className="w-5 h-5 shrink-0 text-rose-500" />
+            <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2.5">
+              <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 shrink-0 text-rose-500" />
               <span>{productFormError}</span>
             </div>
           )}
 
-          <form onSubmit={handleSaveProduct} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <form onSubmit={handleSaveProduct} className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
             {/* Left Column (8 cols): Main details */}
-            <div className="lg:col-span-8 space-y-6">
+            <div className="lg:col-span-8 space-y-4 sm:space-y-6">
               {/* Card 1: Basic Info */}
-              <div className="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200 shadow-2xs space-y-5">
-                <h3 className="text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
+              <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-slate-200 shadow-2xs space-y-4 sm:space-y-5">
+                <h3 className="text-xs sm:text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
                   <span className="w-2 h-2 rounded-full bg-[#FF5200]" />
                   <span>Información Principal</span>
                 </h3>
@@ -605,18 +606,18 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                     placeholder="Ej: Bravery Salmon Adult Cat 7kg"
-                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-bold text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all placeholder:font-normal"
+                    className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-bold text-sm sm:text-base text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all placeholder:font-normal"
                   />
                 </div>
 
                 {/* Price & Weight/Size Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1.5">
                       Precio de Venta ($ CLP) *
                     </label>
                     <div className="relative flex items-center">
-                      <span className="absolute left-4 text-slate-400 font-black text-sm">$</span>
+                      <span className="absolute left-3.5 sm:left-4 text-slate-400 font-black text-sm">$</span>
                       <input
                         type="number"
                         required
@@ -624,7 +625,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                         value={formPrice}
                         onChange={(e) => setFormPrice(Number(e.target.value))}
                         placeholder="Ej: 47900"
-                        className="w-full pl-8 pr-4 py-3 rounded-2xl border border-slate-200 font-black text-base text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                        className="w-full pl-7 sm:pl-8 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-black text-sm sm:text-base text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
                       />
                     </div>
                   </div>
@@ -638,13 +639,13 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                       value={formWeightOrSize}
                       onChange={(e) => setFormWeightOrSize(e.target.value)}
                       placeholder="Ej: 15 kg, 2 kg, 500 g"
-                      className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-semibold text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-semibold text-sm sm:text-base text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
                     />
                   </div>
                 </div>
 
                 {/* Category & Brand Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1.5">
                       Categoría del Producto *
@@ -652,7 +653,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     <select
                       value={formCategory}
                       onChange={(e) => setFormCategory(e.target.value as any)}
-                      className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-bold text-xs sm:text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all bg-white"
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-bold text-xs sm:text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all bg-white"
                     >
                       <option value="perros">🐕 Alimentos Perros</option>
                       <option value="gatos">🐱 Alimentos Gatos</option>
@@ -671,7 +672,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                       value={formBrand}
                       onChange={(e) => setFormBrand(e.target.value)}
                       placeholder="Ej: Bravery, Belcando, Champion"
-                      className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-semibold text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-semibold text-sm sm:text-base text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
                     />
                   </div>
                 </div>
@@ -682,26 +683,26 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     Descripción del Producto (Opcional)
                   </label>
                   <textarea
-                    rows={4}
+                    rows={3}
                     value={formDescription}
                     onChange={(e) => setFormDescription(e.target.value)}
                     placeholder="Escribe una breve descripción del alimento, beneficios nutricionales o recomendaciones de uso..."
-                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-medium text-xs sm:text-sm text-slate-700 focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                    className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-medium text-xs sm:text-sm text-slate-700 focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
                   />
                 </div>
               </div>
             </div>
 
             {/* Right Column (4 cols): Image, Stock & Status */}
-            <div className="lg:col-span-4 space-y-6">
+            <div className="lg:col-span-4 space-y-4 sm:space-y-6">
               {/* Card 2: Main Image Upload */}
-              <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-2xs space-y-4">
-                <h3 className="text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
+              <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-2xs space-y-3.5">
+                <h3 className="text-xs sm:text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
                   <span className="w-2 h-2 rounded-full bg-[#FF5200]" />
                   <span>Foto Principal</span>
                 </h3>
 
-                <div className="w-full aspect-square max-h-56 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center p-3 relative overflow-hidden group">
+                <div className="w-full aspect-square max-h-48 sm:max-h-56 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center p-3 relative overflow-hidden group mx-auto">
                   {imagePreview ? (
                     <img
                       src={imagePreview}
@@ -710,7 +711,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     />
                   ) : (
                     <div className="text-center p-4">
-                      <ImageIcon className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                      <ImageIcon className="w-8 h-8 sm:w-10 sm:h-10 text-slate-300 mx-auto mb-2" />
                       <p className="text-xs font-bold text-slate-500">Sin imagen seleccionada</p>
                       <p className="text-[10px] text-slate-400 mt-0.5">JPEG, PNG o WEBP</p>
                     </div>
@@ -728,7 +729,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer active:scale-95"
                 >
                   <Upload className="w-4 h-4 text-[#FF5200]" />
                   <span>{imagePreview ? 'Cambiar Imagen' : 'Subir Imagen'}</span>
@@ -736,8 +737,8 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
               </div>
 
               {/* Card 3: Stock & Availability */}
-              <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-2xs space-y-4">
-                <h3 className="text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
+              <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-2xs space-y-3.5">
+                <h3 className="text-xs sm:text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
                   <span className="w-2 h-2 rounded-full bg-[#FF5200]" />
                   <span>Inventario</span>
                 </h3>
@@ -756,7 +757,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                       if (val <= 0) setFormInStock(false);
                       else setFormInStock(true);
                     }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 font-black text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 font-black text-base sm:text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
                   />
                 </div>
 
@@ -768,7 +769,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                   <button
                     type="button"
                     onClick={() => setFormInStock(!formInStock)}
-                    className={`w-full py-3 px-4 rounded-2xl font-bold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer border ${
+                    className={`w-full py-3 px-4 rounded-2xl font-bold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer border active:scale-95 ${
                       formInStock
                         ? 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-xs'
                         : 'bg-rose-50 text-rose-700 border-rose-200'
@@ -777,7 +778,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     {formInStock ? (
                       <>
                         <Check className="w-4 h-4 text-emerald-600 stroke-[3]" />
-                        <span>✓ Producto en Stock (Visible)</span>
+                        <span>✓ En Stock (Visible en tienda)</span>
                       </>
                     ) : (
                       <>
@@ -803,8 +804,8 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 </div>
               </div>
 
-              {/* Save & Cancel Buttons Mobile / Sticky */}
-              <div className="pt-2 flex flex-col space-y-2">
+              {/* Desktop Only Save Button */}
+              <div className="hidden md:flex flex-col space-y-2 pt-2">
                 <button
                   type="submit"
                   disabled={isSavingProduct}
@@ -830,49 +831,78 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
             </div>
           </form>
         </main>
+
+        {/* Mobile Sticky Bottom Action Bar */}
+        <div className="md:hidden fixed bottom-0 left-0 right-0 p-3 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-xl z-40 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setActiveView('dashboard')}
+            className="w-1/3 py-3 rounded-full border border-slate-200 text-xs font-bold text-slate-600 active:bg-slate-100 transition-colors text-center"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={handleSaveProduct}
+            disabled={isSavingProduct}
+            className="flex-1 py-3 rounded-full bg-[#FF5200] active:bg-[#FF6508] text-white font-extrabold text-xs shadow-orange-glow transition-all disabled:opacity-50 flex items-center justify-center space-x-1.5"
+          >
+            {isSavingProduct ? (
+              <>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                <span>Guardando...</span>
+              </>
+            ) : (
+              <>
+                <Check className="w-4 h-4 stroke-[3]" />
+                <span>{editingProduct ? 'Guardar Cambios' : 'Crear Producto'}</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     );
   }
 
   // =========================================================================
-  // VIEW 3: ADMIN DASHBOARD PRINCIPAL (PRODUCTOS, INVENTARIO, PEDIDOS, TRANSBANK)
+  // VIEW 3: ADMIN DASHBOARD PRINCIPAL (100% RESPONSIVE)
   // =========================================================================
   return (
-    <div className="w-full min-h-screen bg-[#F8FAFC] flex flex-col animate-fade-in pb-16">
+    <div className="w-full max-w-full overflow-x-hidden min-h-screen bg-[#F8FAFC] flex flex-col animate-fade-in pb-16">
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-2xl shadow-xl border text-xs font-bold flex items-center space-x-2 animate-bounce-in ${
+          className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-2xl shadow-xl border text-xs font-bold flex items-center space-x-2 animate-bounce-in max-w-[90vw] ${
             toast.type === 'success'
               ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
               : 'bg-rose-50 text-rose-800 border-rose-200'
           }`}
         >
           {toast.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
           ) : (
-            <AlertTriangle className="w-4 h-4 text-rose-500" />
+            <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
           )}
-          <span>{toast.message}</span>
+          <span className="truncate">{toast.message}</span>
         </div>
       )}
 
       {/* Top Navbar */}
-      <header className="bg-white px-4 sm:px-8 py-3.5 border-b border-slate-200 flex items-center justify-between shrink-0 sticky top-0 z-20 shadow-2xs">
-        <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center text-[#FF5200] font-black text-lg">
+      <header className="bg-white px-3 sm:px-8 py-2.5 sm:py-3.5 border-b border-slate-200 flex items-center justify-between shrink-0 sticky top-0 z-20 shadow-2xs">
+        <div className="flex items-center space-x-2.5 sm:space-x-3">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center text-[#FF5200] font-black text-base sm:text-lg">
             🐾
           </div>
           <div>
-            <div className="flex items-center space-x-2">
-              <h1 className="text-base sm:text-lg font-black text-[#061F3D]">
+            <div className="flex items-center space-x-1.5 sm:space-x-2">
+              <h1 className="text-sm sm:text-lg font-black text-[#061F3D]">
                 PetLife Admin
               </h1>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-extrabold text-[10px] border border-emerald-200">
+              <span className="px-1.5 sm:px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-extrabold text-[9px] sm:text-[10px] border border-emerald-200">
                 En Vivo
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 hidden sm:block">
+            <p className="text-[10px] sm:text-[11px] text-slate-400 hidden sm:block">
               Sesión: <span className="font-semibold text-slate-600">{getAdminEmail()}</span>
             </p>
           </div>
@@ -936,10 +966,10 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         </nav>
 
         {/* Actions: View Store & Logout */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1.5 sm:space-x-2">
           <button
             onClick={onClose}
-            className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1.5 cursor-pointer border border-slate-200"
+            className="p-1.5 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1.5 cursor-pointer border border-slate-200 active:scale-95"
             title="Volver a la tienda"
           >
             <ExternalLink className="w-3.5 h-3.5" />
@@ -948,7 +978,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
 
           <button
             onClick={handleLogout}
-            className="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+            className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer active:scale-95"
             title="Cerrar sesión"
           >
             <LogOut className="w-4 h-4" />
@@ -956,141 +986,149 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         </div>
       </header>
 
-      {/* Mobile Navigation Tabs */}
-      <div className="md:hidden flex items-center justify-around bg-white border-b border-slate-200 px-2 py-2 overflow-x-auto">
+      {/* Mobile Navigation Tabs (Scrollable pill bar with zero overflow) */}
+      <div className="md:hidden flex items-center space-x-1.5 bg-white border-b border-slate-200/80 px-3 py-2 overflow-x-auto no-scrollbar">
         <button
           onClick={() => {
             setActiveTab('products');
             setSelectedOrder(null);
           }}
-          className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
-            activeTab === 'products' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+          className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-colors ${
+            activeTab === 'products'
+              ? 'bg-[#FF5200] text-white shadow-xs font-black'
+              : 'bg-slate-100 text-slate-600'
           }`}
         >
-          Productos ({products.length})
+          📦 Productos ({products.length})
         </button>
         <button
           onClick={() => {
             setActiveTab('inventory');
             setSelectedOrder(null);
           }}
-          className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
-            activeTab === 'inventory' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+          className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-colors ${
+            activeTab === 'inventory'
+              ? 'bg-[#FF5200] text-white shadow-xs font-black'
+              : 'bg-slate-100 text-slate-600'
           }`}
         >
-          Inventario
+          📊 Inventario
         </button>
         <button
           onClick={() => setActiveTab('orders')}
-          className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
-            activeTab === 'orders' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+          className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-colors ${
+            activeTab === 'orders'
+              ? 'bg-[#FF5200] text-white shadow-xs font-black'
+              : 'bg-slate-100 text-slate-600'
           }`}
         >
-          Pedidos ({orders.length})
+          🛍️ Pedidos ({orders.length})
         </button>
         <button
           onClick={() => {
             setActiveTab('transbank');
             setSelectedOrder(null);
           }}
-          className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
-            activeTab === 'transbank' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+          className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-colors ${
+            activeTab === 'transbank'
+              ? 'bg-[#FF5200] text-white shadow-xs font-black'
+              : 'bg-slate-100 text-slate-600'
           }`}
         >
-          Transbank
+          💳 Transbank
         </button>
       </div>
 
       {/* Top Stat Summary Cards */}
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 pt-5 pb-2 grid grid-cols-2 lg:grid-cols-4 gap-3 shrink-0">
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+      <div className="max-w-7xl mx-auto w-full px-3 sm:px-8 pt-3 sm:pt-5 pb-2 grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 shrink-0">
+        <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+            <span className="text-[9px] sm:text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block truncate">
               Total Productos
             </span>
-            <p className="text-xl font-black text-[#061F3D]">{products.length}</p>
+            <p className="text-lg sm:text-xl font-black text-[#061F3D]">{products.length}</p>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center text-[#FF5200]">
-            <Package className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-orange-50 flex items-center justify-center text-[#FF5200] shrink-0">
+            <Package className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+        <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+            <span className="text-[9px] sm:text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block truncate">
               Stock Total
             </span>
-            <p className="text-xl font-black text-[#061F3D]">{totalStockCount}</p>
+            <p className="text-lg sm:text-xl font-black text-[#061F3D]">{totalStockCount}</p>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-            <Layers className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+            <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+        <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
-              Stock Crítico (&lt; 5)
+            <span className="text-[9px] sm:text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block truncate">
+              Stock Bajo (&lt; 5)
             </span>
-            <p className={`text-xl font-black ${lowStockCount > 0 ? 'text-rose-600' : 'text-slate-700'}`}>
+            <p className={`text-lg sm:text-xl font-black ${lowStockCount > 0 ? 'text-rose-600' : 'text-slate-700'}`}>
               {lowStockCount}
             </p>
           </div>
           <div
-            className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center shrink-0 ${
               lowStockCount > 0 ? 'bg-rose-50 text-rose-600' : 'bg-slate-50 text-slate-400'
             }`}
           >
-            <AlertTriangle className="w-5 h-5" />
+            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+        <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
           <div>
-            <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+            <span className="text-[9px] sm:text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block truncate">
               Pedidos
             </span>
-            <p className="text-xl font-black text-[#061F3D]">{orders.length}</p>
+            <p className="text-lg sm:text-xl font-black text-[#061F3D]">{orders.length}</p>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-            <ShoppingBag className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+            <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
         </div>
       </div>
 
       {/* Main Content Body */}
-      <main className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-4 flex-1 flex flex-col">
+      <main className="max-w-7xl mx-auto w-full px-3 sm:px-8 py-3 sm:py-4 flex-1 flex flex-col">
         {/* ===================================================================== */}
         {/* TAB 1: PRODUCTOS                                                     */}
         {/* ===================================================================== */}
         {activeTab === 'products' && (
           <div className="flex-1 flex flex-col">
-            {/* Toolbar */}
-            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs">
-              <div className="flex items-center space-x-2 w-full sm:w-auto">
-                <div className="relative flex-1 sm:w-72">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                  <input
-                    type="text"
-                    value={productSearch}
-                    onChange={(e) => setProductSearch(e.target.value)}
-                    placeholder="Buscar por nombre, marca o SKU..."
-                    className="w-full pl-9 pr-8 py-2 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:border-[#FF5200]"
-                  />
-                  {productSearch && (
-                    <button
-                      onClick={() => setProductSearch('')}
-                      className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
+            {/* Toolbar (Responsive) */}
+            <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 mb-3 sm:mb-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 shadow-2xs">
+              <div className="relative w-full sm:w-72">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <input
+                  type="text"
+                  value={productSearch}
+                  onChange={(e) => setProductSearch(e.target.value)}
+                  placeholder="Buscar producto o SKU..."
+                  className="w-full pl-9 pr-8 py-2 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:border-[#FF5200]"
+                />
+                {productSearch && (
+                  <button
+                    onClick={() => setProductSearch('')}
+                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
 
+              <div className="flex items-center justify-between sm:justify-end space-x-2">
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#FF5200] bg-white cursor-pointer"
+                  className="flex-1 sm:flex-initial px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#FF5200] bg-white cursor-pointer"
                 >
                   <option value="all">Todas las categorías</option>
                   <option value="perros">Alimentos Perros</option>
@@ -1098,12 +1136,10 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                   <option value="higiene">Arenas & Higiene</option>
                   <option value="snacks">Snacks & Premios</option>
                 </select>
-              </div>
 
-              <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
                 <button
                   onClick={loadProducts}
-                  className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer shrink-0 active:scale-95"
                   title="Refrescar productos"
                 >
                   <RefreshCw className={`w-4 h-4 ${isLoadingProducts ? 'animate-spin' : ''}`} />
@@ -1111,16 +1147,106 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
 
                 <button
                   onClick={handleOpenNewProduct}
-                  className="py-2 px-4 rounded-xl bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-xs shadow-orange-glow transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
+                  className="py-2 px-3 sm:px-4 rounded-xl bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-xs shadow-orange-glow transition-all active:scale-95 flex items-center space-x-1 shrink-0 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>+ Nuevo Producto</span>
+                  <span>Nuevo</span>
                 </button>
               </div>
             </div>
 
-            {/* Products Table */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+            {/* MOBILE ONLY: Touch-Friendly Product Cards */}
+            <div className="md:hidden space-y-2.5">
+              {filteredProducts.length === 0 ? (
+                <div className="bg-white rounded-2xl p-6 text-center text-slate-400 text-xs font-semibold border border-slate-200">
+                  No se encontraron productos coincidentes.
+                </div>
+              ) : (
+                filteredProducts.map((p) => (
+                  <div
+                    key={p.id}
+                    className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs flex flex-col space-y-2.5"
+                  >
+                    <div className="flex items-start space-x-3">
+                      <div className="w-14 h-14 rounded-xl bg-slate-50 border border-slate-100 p-1 flex items-center justify-center shrink-0 overflow-hidden">
+                        <img
+                          src={p.imageUrl}
+                          alt={p.name}
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            e.currentTarget.src = '/product-dog-food.jpg';
+                          }}
+                        />
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1 mb-0.5">
+                          <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[9px] font-bold capitalize truncate max-w-[120px]">
+                            {p.category}
+                          </span>
+                          <span
+                            className={`text-[9px] font-black px-2 py-0.5 rounded-full ${
+                              (p.stockCount || 0) < 5
+                                ? 'bg-rose-50 text-rose-600'
+                                : 'bg-slate-100 text-slate-700'
+                            }`}
+                          >
+                            Stock: {p.stockCount !== undefined ? p.stockCount : 15}
+                          </span>
+                        </div>
+
+                        <h4 className="font-bold text-xs text-[#061F3D] line-clamp-2 leading-snug">
+                          {p.name}
+                        </h4>
+
+                        <div className="flex items-center justify-between mt-1">
+                          <span className="font-black text-xs text-[#FF5200]">
+                            {formatPrice(p.price)}
+                          </span>
+                          {p.weightOrSize && (
+                            <span className="text-[10px] font-semibold text-slate-400">
+                              {p.weightOrSize}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                      <button
+                        onClick={() => handleToggleInStock(p)}
+                        className={`flex-1 py-1.5 px-2 rounded-xl text-[10px] font-extrabold transition-all text-center active:scale-95 border ${
+                          p.inStock
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : 'bg-rose-50 text-rose-700 border-rose-200'
+                        }`}
+                      >
+                        {p.inStock ? '✓ En Stock' : '✕ Agotado'}
+                      </button>
+
+                      <button
+                        onClick={() => handleOpenEditProduct(p)}
+                        className="py-1.5 px-3 rounded-xl bg-orange-50 active:bg-orange-100 text-[#FF5200] font-bold text-xs flex items-center space-x-1"
+                      >
+                        <Edit2 className="w-3 h-3" />
+                        <span>Editar</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteProduct(p)}
+                        className="p-1.5 rounded-xl text-slate-400 active:text-red-600 active:bg-red-50"
+                        title="Eliminar"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* DESKTOP ONLY: Full Table */}
+            <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-50 border-b border-slate-200 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
@@ -1219,24 +1345,90 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         )}
 
         {/* ===================================================================== */}
-        {/* TAB 2: INVENTARIO RÁPIDO                                             */}
+        {/* TAB 2: INVENTARIO RÁPIDO (100% RESPONSIVE)                           */}
         {/* ===================================================================== */}
         {activeTab === 'inventory' && (
           <div className="flex-1 flex flex-col">
-            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 flex items-center justify-between shadow-2xs">
-              <span className="text-xs font-bold text-slate-600">
-                Ajuste rápido de unidades disponibles y visibilidad en tiempo real
+            <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 mb-3 sm:mb-4 flex items-center justify-between shadow-2xs">
+              <span className="text-xs font-bold text-slate-600 truncate">
+                Ajuste rápido de unidades y visibilidad
               </span>
               <button
                 onClick={loadProducts}
-                className="py-1.5 px-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs flex items-center space-x-1.5 cursor-pointer"
+                className="py-1 px-2.5 sm:px-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs flex items-center space-x-1 cursor-pointer shrink-0"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${isLoadingProducts ? 'animate-spin' : ''}`} />
-                <span>Actualizar stock</span>
+                <span className="hidden sm:inline">Actualizar</span>
               </button>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+            {/* MOBILE ONLY: Inventory Cards */}
+            <div className="md:hidden space-y-2.5">
+              {products.map((p) => (
+                <div
+                  key={p.id}
+                  className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs flex flex-col space-y-2"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-bold text-xs text-[#061F3D] truncate">{p.name}</h4>
+                      <p className="text-[10px] text-slate-400 mt-0.5">
+                        {p.weightOrSize || '-'} • <strong className="text-slate-600">{formatPrice(p.price)}</strong>
+                      </p>
+                    </div>
+                    <span
+                      className={`text-sm font-black px-2.5 py-1 rounded-xl shrink-0 ${
+                        (p.stockCount || 0) < 5
+                          ? 'bg-rose-50 text-rose-600 border border-rose-200'
+                          : 'bg-slate-100 text-slate-800'
+                      }`}
+                    >
+                      {p.stockCount !== undefined ? p.stockCount : 15} un.
+                    </span>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                    <div className="flex items-center space-x-1.5">
+                      <button
+                        onClick={() => handleQuickStock(p, -1)}
+                        className="w-8 h-8 rounded-xl bg-slate-100 active:bg-slate-200 text-slate-700 font-black text-sm flex items-center justify-center cursor-pointer"
+                        title="Restar 1"
+                      >
+                        -1
+                      </button>
+                      <button
+                        onClick={() => handleQuickStock(p, 1)}
+                        className="w-8 h-8 rounded-xl bg-slate-100 active:bg-slate-200 text-slate-700 font-black text-sm flex items-center justify-center cursor-pointer"
+                        title="Sumar 1"
+                      >
+                        +1
+                      </button>
+                      <button
+                        onClick={() => handleQuickStock(p, 5)}
+                        className="px-2.5 h-8 rounded-xl bg-[#FFF2EA] active:bg-[#FFE6D6] text-[#FF5200] font-black text-xs flex items-center justify-center cursor-pointer"
+                        title="Sumar 5"
+                      >
+                        +5
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={() => handleToggleInStock(p)}
+                      className={`flex-1 py-1.5 px-3 rounded-xl text-xs font-bold transition-all text-center ${
+                        p.inStock
+                          ? 'bg-emerald-500 text-white shadow-xs'
+                          : 'bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      {p.inStock ? '✓ En Stock' : '✕ Sin Stock'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* DESKTOP ONLY: Inventory Table */}
+            <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-50 border-b border-slate-200 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
@@ -1319,50 +1511,54 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         )}
 
         {/* ===================================================================== */}
-        {/* TAB 3: PEDIDOS (SIN POPUPS - VISTA DEDICADA SI SE SELECCIONA)        */}
+        {/* TAB 3: PEDIDOS (100% RESPONSIVE)                                     */}
         {/* ===================================================================== */}
         {activeTab === 'orders' && (
           <div className="flex-1 flex flex-col">
             {selectedOrder ? (
-              /* DETALLE DEL PEDIDO (IN-PAGE COMPLETO) */
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs space-y-6">
-                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                  <div className="flex items-center space-x-3">
+              /* DETALLE DEL PEDIDO (RESPONSIVE COMPLETO) */
+              <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-slate-200 shadow-2xs space-y-4 sm:space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 sm:pb-4 border-b border-slate-100">
+                  <div className="flex items-center space-x-2">
                     <button
                       onClick={() => setSelectedOrder(null)}
-                      className="p-2 rounded-xl text-slate-500 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1.5 text-xs font-bold cursor-pointer"
+                      className="p-1.5 sm:p-2 rounded-xl text-slate-500 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1 text-xs font-bold cursor-pointer"
                     >
                       <ArrowLeft className="w-4 h-4" />
-                      <span>Volver a todos los pedidos</span>
+                      <span>Volver a pedidos</span>
                     </button>
                     <span className="text-slate-300">/</span>
                     <span className="text-xs font-black text-[#FF5200] uppercase tracking-wider">
-                      Orden {selectedOrder.orderNumber}
+                      {selectedOrder.orderNumber}
                     </span>
                   </div>
 
-                  <span className="text-xs text-slate-400 font-semibold">
+                  <span className="text-[11px] text-slate-400 font-semibold pl-2 sm:pl-0">
                     {new Date(selectedOrder.created).toLocaleString('es-CL')}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   {/* Customer Info Card */}
-                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-2.5 text-xs text-slate-600">
+                  <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-2 text-xs text-slate-600">
                     <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
                       Datos de Despacho y Contacto
                     </span>
-                    <p className="text-base font-black text-[#061F3D]">
+                    <p className="text-sm sm:text-base font-black text-[#061F3D]">
                       {selectedOrder.customerName}
                     </p>
                     <p className="flex items-center space-x-2 text-slate-600">
                       <Mail className="w-4 h-4 text-slate-400 shrink-0" />
-                      <span>{selectedOrder.customerEmail}</span>
+                      <a href={`mailto:${selectedOrder.customerEmail}`} className="text-blue-600 hover:underline">
+                        {selectedOrder.customerEmail}
+                      </a>
                     </p>
                     {selectedOrder.customerPhone && (
                       <p className="flex items-center space-x-2 text-slate-600">
                         <Phone className="w-4 h-4 text-slate-400 shrink-0" />
-                        <span>{selectedOrder.customerPhone}</span>
+                        <a href={`tel:${selectedOrder.customerPhone}`} className="text-blue-600 hover:underline">
+                          {selectedOrder.customerPhone}
+                        </a>
                       </p>
                     )}
                     <p className="flex items-center space-x-2 text-slate-600">
@@ -1374,9 +1570,9 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                   </div>
 
                   {/* Order Status & Actions Card */}
-                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-3">
+                  <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-3">
                     <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
-                      Estado Actual del Pedido
+                      Estado del Pedido
                     </span>
                     <div className="flex items-center space-x-2">
                       <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase">
@@ -1384,7 +1580,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                       </span>
                       <span className="text-xs text-slate-500 font-semibold">
                         Total:{' '}
-                        <strong className="text-base font-black text-[#061F3D]">
+                        <strong className="text-sm sm:text-base font-black text-[#061F3D]">
                           {formatPrice(selectedOrder.total)}
                         </strong>
                       </span>
@@ -1394,16 +1590,16 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                       <label className="block text-[11px] font-bold text-slate-500 mb-1.5">
                         Cambiar estado con 1 clic:
                       </label>
-                      <div className="grid grid-cols-3 gap-2 text-[11px] font-bold">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] font-bold">
                         {(['pendiente', 'pagado', 'en_preparacion', 'despachado', 'entregado', 'cancelado'] as const).map(
                           (st) => (
                             <button
                               key={st}
                               onClick={() => handleChangeOrderStatus(selectedOrder.id, st)}
-                              className={`py-1.5 px-2 rounded-xl border capitalize cursor-pointer transition-colors text-center ${
+                              className={`py-1.5 px-2 rounded-xl border capitalize cursor-pointer transition-colors text-center truncate ${
                                 selectedOrder.status === st
                                   ? 'bg-[#FF5200] text-white border-[#FF5200]'
-                                  : 'border-slate-200 hover:bg-white text-slate-600'
+                                  : 'border-slate-200 hover:bg-white bg-white/60 text-slate-600'
                               }`}
                             >
                               {st.replace('_', ' ')}
@@ -1417,27 +1613,27 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
 
                 {/* Items in this Order */}
                 <div>
-                  <h4 className="text-xs font-black uppercase text-slate-400 tracking-wider mb-3">
+                  <h4 className="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-2.5">
                     Productos del Pedido ({selectedOrder.items?.length || 0})
                   </h4>
                   <div className="border border-slate-200 rounded-2xl divide-y divide-slate-100 overflow-hidden">
                     {selectedOrder.items?.map((item, idx) => (
                       <div
                         key={idx}
-                        className="p-4 flex items-center justify-between text-xs sm:text-sm bg-white"
+                        className="p-3 sm:p-4 flex items-center justify-between text-xs sm:text-sm bg-white"
                       >
-                        <div className="flex items-center space-x-3">
-                          <span className="w-6 h-6 rounded-lg bg-orange-50 text-[#FF5200] font-black flex items-center justify-center text-xs">
+                        <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0 pr-2">
+                          <span className="w-6 h-6 rounded-lg bg-orange-50 text-[#FF5200] font-black flex items-center justify-center text-xs shrink-0">
                             {item.quantity}x
                           </span>
-                          <div>
-                            <span className="font-bold text-[#061F3D] block">{item.name}</span>
-                            <span className="text-[11px] text-slate-400">
+                          <div className="min-w-0">
+                            <span className="font-bold text-[#061F3D] block truncate">{item.name}</span>
+                            <span className="text-[10px] text-slate-400">
                               {formatPrice(item.price)} c/u
                             </span>
                           </div>
                         </div>
-                        <span className="font-black text-[#061F3D]">
+                        <span className="font-black text-[#061F3D] shrink-0">
                           {formatPrice(item.price * item.quantity)}
                         </span>
                       </div>
@@ -1446,17 +1642,17 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 </div>
               </div>
             ) : (
-              /* TABLA DE PEDIDOS */
+              /* TABLA Y CARDS DE PEDIDOS */
               <>
-                <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs">
+                <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 mb-3 sm:mb-4 flex items-center justify-between gap-2 shadow-2xs">
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs font-bold text-slate-500">Filtrar por estado:</span>
+                    <span className="text-xs font-bold text-slate-500 hidden sm:inline">Filtrar:</span>
                     <select
                       value={orderFilter}
                       onChange={(e) => setOrderFilter(e.target.value)}
                       className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#FF5200] bg-white cursor-pointer"
                     >
-                      <option value="all">Todos los estados</option>
+                      <option value="all">Todos los pedidos</option>
                       <option value="pendiente">Pendiente</option>
                       <option value="pagado">Pagado</option>
                       <option value="en_preparacion">En preparación</option>
@@ -1467,14 +1663,67 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
 
                   <button
                     onClick={loadOrders}
-                    className="py-1.5 px-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs flex items-center space-x-1.5 cursor-pointer"
+                    className="py-1.5 px-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs flex items-center space-x-1.5 cursor-pointer shrink-0"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isLoadingOrders ? 'animate-spin' : ''}`} />
-                    <span>Actualizar pedidos</span>
+                    <span className="hidden sm:inline">Actualizar</span>
                   </button>
                 </div>
 
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+                {/* MOBILE ONLY: Order Cards */}
+                <div className="md:hidden space-y-2.5">
+                  {filteredOrders.length === 0 ? (
+                    <div className="bg-white rounded-2xl p-6 text-center text-slate-400 text-xs font-semibold border border-slate-200">
+                      No hay pedidos con el filtro seleccionado.
+                    </div>
+                  ) : (
+                    filteredOrders.map((ord) => (
+                      <div
+                        key={ord.id}
+                        className="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-2xs space-y-2"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-black text-xs text-[#FF5200]">
+                            {ord.orderNumber}
+                          </span>
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold border ${
+                              ord.status === 'pagado' || ord.status === 'entregado'
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                : ord.status === 'despachado' || ord.status === 'en_preparacion'
+                                ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                : 'bg-amber-50 text-amber-700 border-amber-200'
+                            }`}
+                          >
+                            {ord.status.replace('_', ' ')}
+                          </span>
+                        </div>
+
+                        <div>
+                          <p className="font-bold text-xs text-[#061F3D]">{ord.customerName}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">
+                            {ord.customerEmail} • {ord.customerCity || 'Santiago'}
+                          </p>
+                        </div>
+
+                        <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                          <span className="font-black text-sm text-[#061F3D]">
+                            {formatPrice(ord.total)}
+                          </span>
+                          <button
+                            onClick={() => setSelectedOrder(ord)}
+                            className="px-3 py-1.5 rounded-xl bg-orange-50 active:bg-orange-100 text-[#FF5200] font-bold text-xs transition-colors cursor-pointer"
+                          >
+                            Ver Detalle →
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* DESKTOP ONLY: Order Table */}
+                <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-50 border-b border-slate-200 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
@@ -1557,31 +1806,31 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         {/* ===================================================================== */}
         {activeTab === 'transbank' && (
           <div className="max-w-2xl mx-auto w-full">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs space-y-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-slate-200 shadow-2xs space-y-4 sm:space-y-6">
               <div>
-                <h3 className="text-xl font-black text-[#061F3D] flex items-center space-x-2">
+                <h3 className="text-lg sm:text-xl font-black text-[#061F3D] flex items-center space-x-2">
                   <CreditCard className="w-5 h-5 text-[#FF5200]" />
-                  <span>Configuración Transbank Webpay Plus</span>
+                  <span>Transbank Webpay Plus</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-1">
-                  Ingresa las credenciales oficiales de Transbank para procesar pagos reales con tarjetas de crédito, débito y prepago.
+                  Ingresa las credenciales oficiales de Transbank para procesar pagos reales con tarjetas.
                 </p>
               </div>
 
               {tbkSuccessMsg && (
                 <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>{tbkSuccessMsg}</span>
                 </div>
               )}
 
-              <form onSubmit={handleSaveTransbank} className="space-y-4">
+              <form onSubmit={handleSaveTransbank} className="space-y-3.5 sm:space-y-4">
                 {/* Environment Mode */}
                 <div>
                   <label className="block text-xs font-extrabold uppercase text-slate-500 tracking-wider mb-1.5">
                     Ambiente de Pagos
                   </label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                     <button
                       type="button"
                       onClick={() => setTbkConfig({ ...tbkConfig, environment: 'integration' })}
@@ -1625,7 +1874,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     value={tbkConfig.commerceCode}
                     onChange={(e) => setTbkConfig({ ...tbkConfig, commerceCode: e.target.value.trim() })}
                     placeholder="Ej: 597055555532 o el entregado por Transbank"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold focus:outline-none focus:border-[#FF5200]"
+                    className="w-full px-3.5 sm:px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold focus:outline-none focus:border-[#FF5200]"
                   />
                 </div>
 
@@ -1640,16 +1889,16 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     value={tbkConfig.apiKey}
                     onChange={(e) => setTbkConfig({ ...tbkConfig, apiKey: e.target.value.trim() })}
                     placeholder="Pega aquí la API Key que te entrega Transbank..."
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold focus:outline-none focus:border-[#FF5200]"
+                    className="w-full px-3.5 sm:px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold focus:outline-none focus:border-[#FF5200]"
                   />
                   <span className="text-[10px] text-slate-400 mt-1 block">
-                    Se guarda de manera segura para autenticar las transacciones con Transbank Webpay Plus.
+                    Se guarda de manera segura para autenticar transacciones con Webpay Plus.
                   </span>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-sm shadow-orange-glow transition-all active:scale-95 cursor-pointer"
+                  className="w-full py-3.5 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-sm shadow-orange-glow transition-all active:scale-95 cursor-pointer mt-2"
                 >
                   Guardar Configuración de Transbank
                 </button>

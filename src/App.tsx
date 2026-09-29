@@ -179,7 +179,7 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-screen w-full flex flex-col justify-between selection:bg-[#FF5200] selection:text-white relative bg-[#F8FAFC]">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col justify-between selection:bg-[#FF5200] selection:text-white relative bg-[#F8FAFC]">
       {/* Top Floating Notification Toast */}
       {toastMessage && (
         <div className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 bg-[#061F3D] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-2xl flex items-center space-x-2.5 sm:space-x-3 border border-slate-700 animate-in fade-in slide-in-from-top-4 duration-300 max-w-[90vw] sm:max-w-md">
