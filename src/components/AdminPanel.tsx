@@ -15,12 +15,12 @@ import {
   Image as ImageIcon,
   X,
   ExternalLink,
-  ShieldCheck,
   RefreshCw,
   Phone,
   Mail,
   MapPin,
   ArrowLeft,
+  Check,
 } from 'lucide-react';
 import type { Product } from '../data/products.ts';
 import { formatPrice } from '../data/products.ts';
@@ -57,7 +57,10 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
-  // Tab navigation
+  // Main navigation view
+  // 'dashboard' = lists (products, inventory, orders, transbank)
+  // 'product_editor' = FULL-PAGE dedicated product creator/editor
+  const [activeView, setActiveView] = useState<'dashboard' | 'product_editor'>('dashboard');
   const [activeTab, setActiveTab] = useState<'products' | 'inventory' | 'orders' | 'transbank'>('products');
 
   // Products state
@@ -66,27 +69,21 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   const [productSearch, setProductSearch] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  // Product modal state (Add / Edit)
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // Product Form State (Full-Page Editor)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [isSavingProduct, setIsSavingProduct] = useState<boolean>(false);
-  const [productFormError, setProductFormError] = useState<string | null>(null);
-
-  // Form Fields
-  const [formName, setFormName] = useState('');
-  const [formBrand, setFormBrand] = useState('');
-  const [formCategory, setFormCategory] = useState<'perros' | 'gatos' | 'snacks' | 'higiene' | 'juguetes' | 'accesorios'>('perros');
-  const [formPetType, setFormPetType] = useState<'perro' | 'gato' | 'ambos'>('perro');
-  const [formLifeStage, setFormLifeStage] = useState<'cachorro' | 'adulto' | 'senior' | 'todas'>('adulto');
-  const [formPrice, setFormPrice] = useState<number>(0);
-  const [formWeightOrSize, setFormWeightOrSize] = useState('');
-  const [formStock, setFormStock] = useState<number>(20);
+  const [formName, setFormName] = useState<string>('');
+  const [formBrand, setFormBrand] = useState<string>('');
+  const [formCategory, setFormCategory] = useState<'perros' | 'gatos' | 'higiene' | 'snacks' | 'accesorios'>('perros');
+  const [formPrice, setFormPrice] = useState<number>(19900);
+  const [formWeightOrSize, setFormWeightOrSize] = useState<string>('');
+  const [formStock, setFormStock] = useState<number>(25);
   const [formInStock, setFormInStock] = useState<boolean>(true);
-  const [formSku, setFormSku] = useState('');
-  const [formDescription, setFormDescription] = useState('');
-  const [formBenefits, setFormBenefits] = useState('');
+  const [formSku, setFormSku] = useState<string>('');
+  const [formDescription, setFormDescription] = useState<string>('');
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [productFormError, setProductFormError] = useState<string | null>(null);
+  const [isSavingProduct, setIsSavingProduct] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Orders state
@@ -107,20 +104,20 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     setTimeout(() => setToast(null), 3500);
   };
 
-  // Load products on mount
+  // Load products from PocketBase
   const loadProducts = async () => {
     setIsLoadingProducts(true);
     try {
       const data = await fetchAllProducts();
       setProducts(data);
     } catch {
-      showToast('Error al cargar productos desde la base de datos', 'error');
+      showToast('Error al cargar productos desde PocketBase', 'error');
     } finally {
       setIsLoadingProducts(false);
     }
   };
 
-  // Load orders on mount or tab change
+  // Load orders from PocketBase
   const loadOrders = async () => {
     if (!isAuthenticated) return;
     setIsLoadingOrders(true);
@@ -143,74 +140,71 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     }
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    if (activeTab === 'orders' && isAuthenticated) {
-      loadOrders();
-    }
-  }, [activeTab]);
-
-  // Auth Submit
-  const handleLoginSubmit = async (e: React.FormEvent) => {
+  // Handle Login
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError(null);
     setIsLoggingIn(true);
 
-    const res = await adminLogin(loginEmail, loginPassword, true);
+    const res = await adminLogin(loginEmail.trim(), loginPassword);
     setIsLoggingIn(false);
 
     if (res.success) {
       setIsAuthenticated(true);
       showToast('¡Bienvenido al Panel de Administración PetLife!');
+      loadProducts();
+      loadOrders();
     } else {
-      setLoginError(res.error || 'Credenciales inválidas.');
+      setLoginError(res.error || 'Credenciales incorrectas. Verifica tu contraseña.');
     }
   };
 
+  // Handle Logout
   const handleLogout = () => {
     adminLogout();
     setIsAuthenticated(false);
     showToast('Sesión de administrador cerrada');
   };
 
-  // Open Product Modal (New or Edit)
+  // Navigate to Full-Page Editor for New Product
   const handleOpenNewProduct = () => {
     setEditingProduct(null);
     setFormName('');
     setFormBrand('');
     setFormCategory('perros');
-    setFormPetType('perro');
-    setFormLifeStage('adulto');
     setFormPrice(19900);
     setFormWeightOrSize('');
     setFormStock(25);
     setFormInStock(true);
     setFormSku(`PL-${Math.floor(100 + Math.random() * 900)}`);
     setFormDescription('');
-    setFormBenefits('');
     setSelectedImageFile(null);
     setImagePreview(null);
     setProductFormError(null);
-    setIsModalOpen(true);
+    setActiveView('product_editor');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Navigate to Full-Page Editor for Editing Existing Product
   const handleOpenEditProduct = (p: Product) => {
     setEditingProduct(p);
     setFormName(p.name);
     setFormBrand(p.brand || '');
-    setFormCategory(p.category);
-    setFormPetType(p.petType);
-    setFormLifeStage(p.lifeStage);
+    setFormCategory(
+      (p.category as any) ||
+        (p.name.toLowerCase().includes('gato') || p.petType === 'gato' ? 'gatos' : 'perros')
+    );
     setFormPrice(p.price);
     setFormWeightOrSize(p.weightOrSize || '');
-    setFormStock(p.stockCount || 0);
+    setFormStock(p.stockCount !== undefined ? p.stockCount : 15);
     setFormInStock(p.inStock);
-    setFormSku(p.sku || '');
+    setFormSku(p.sku || `PL-${p.id.slice(0, 4)}`);
     setFormDescription(p.description || '');
-    setFormBenefits((p.benefits || []).join('\n'));
     setSelectedImageFile(null);
     setImagePreview(p.imageUrl);
     setProductFormError(null);
-    setIsModalOpen(true);
+    setActiveView('product_editor');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Handle Image File Selection
@@ -234,42 +228,41 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
       return;
     }
     if (formPrice <= 0) {
-      setProductFormError('El precio debe ser un número mayor a 0.');
+      setProductFormError('El precio debe ser un número mayor a $0.');
       return;
     }
 
     setIsSavingProduct(true);
     setProductFormError(null);
 
-    const benefitsArray = formBenefits
-      .split('\n')
-      .map((b) => b.trim())
-      .filter(Boolean);
-
     const formData = new FormData();
     formData.append('name', formName.trim());
     formData.append('brand', formBrand.trim());
     formData.append('category', formCategory);
-    formData.append(
-      'categoryLabel',
+
+    const categoryLabel =
       formCategory === 'perros'
         ? 'Alimentos Perros'
         : formCategory === 'gatos'
         ? 'Alimentos Gatos'
         : formCategory === 'higiene'
         ? 'Arenas & Higiene'
-        : 'Snacks & Premios'
-    );
-    formData.append('petType', formPetType);
-    formData.append('lifeStage', formLifeStage);
+        : formCategory === 'snacks'
+        ? 'Snacks & Premios'
+        : 'Accesorios';
+    formData.append('categoryLabel', categoryLabel);
+
+    const inferredPetType =
+      formCategory === 'gatos' ? 'gato' : formCategory === 'perros' ? 'perro' : 'ambos';
+    formData.append('petType', inferredPetType);
+    formData.append('lifeStage', 'adulto');
     formData.append('price', String(formPrice));
     formData.append('weightOrSize', formWeightOrSize.trim());
     formData.append('stockCount', String(formStock));
     formData.append('inStock', String(formInStock));
-    formData.append('sku', formSku.trim());
+    formData.append('sku', formSku.trim() || `PL-${Math.floor(100 + Math.random() * 900)}`);
     formData.append('description', formDescription.trim());
-    formData.append('longDescription', formDescription.trim());
-    formData.append('benefits', JSON.stringify(benefitsArray));
+    formData.append('benefits', JSON.stringify([]));
 
     if (selectedImageFile) {
       formData.append('image', selectedImageFile);
@@ -280,7 +273,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         const res = await adminUpdateProduct(editingProduct.id, formData);
         if (res.success) {
           showToast(`Producto "${formName}" actualizado con éxito`);
-          setIsModalOpen(false);
+          setActiveView('dashboard');
           await loadProducts();
           onRefreshProducts?.();
         } else {
@@ -290,7 +283,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         const res = await adminCreateProduct(formData);
         if (res.success) {
           showToast(`Producto "${formName}" creado exitosamente`);
-          setIsModalOpen(false);
+          setActiveView('dashboard');
           await loadProducts();
           onRefreshProducts?.();
         } else {
@@ -298,7 +291,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         }
       }
     } catch (err: any) {
-      setProductFormError(err.message || 'Error en la conexión');
+      setProductFormError(err.message || 'Error en la conexión con PocketBase');
     } finally {
       setIsSavingProduct(false);
     }
@@ -311,7 +304,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     }
     const res = await adminDeleteProduct(p.id);
     if (res.success) {
-      showToast(`Producto "${p.name}" eliminado`);
+      showToast(`Producto "${p.name}" eliminado de la base de datos`);
       await loadProducts();
       onRefreshProducts?.();
     } else {
@@ -324,7 +317,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     const newStock = Math.max(0, (product.stockCount || 0) + delta);
     const newInStock = newStock > 0;
 
-    // Optimistic UI update
     setProducts((prev) =>
       prev.map((item) =>
         item.id === product.id ? { ...item, stockCount: newStock, inStock: newInStock } : item
@@ -375,7 +367,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   const handleSaveTransbank = (e: React.FormEvent) => {
     e.preventDefault();
     saveTransbankConfig(tbkConfig);
-    setTbkSuccessMsg('¡Configuración de Transbank guardada con éxito!');
+    setTbkSuccessMsg('¡Configuración de Transbank Webpay Plus guardada!');
     showToast('Configuración de Transbank actualizada');
     setTimeout(() => setTbkSuccessMsg(null), 4000);
   };
@@ -410,15 +402,15 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   }, [products]);
 
   // =========================================================================
-  // VIEW: LOGIN MODAL (SI NO ESTÁ AUTENTICADO)
+  // VIEW 1: LOGIN A PANTALLA COMPLETA
   // =========================================================================
   if (!isAuthenticated) {
     return (
       <div className="w-full min-h-screen bg-[#061F3D] flex flex-col items-center justify-center p-4 sm:p-6 animate-fade-in">
-        <div className="mb-4">
+        <div className="mb-6">
           <button
             onClick={onClose}
-            className="inline-flex items-center space-x-2 text-xs font-bold text-slate-300 hover:text-white transition-colors cursor-pointer bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700/80 shadow-sm"
+            className="inline-flex items-center space-x-2 text-xs font-bold text-slate-300 hover:text-white transition-colors cursor-pointer bg-slate-800/90 px-4 py-2 rounded-full border border-slate-700 shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Volver a la Tienda</span>
@@ -426,44 +418,40 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         </div>
 
         <div className="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 overflow-hidden">
-          {/* Top banner decor */}
           <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#FF5200] via-[#FF7A00] to-[#FFA611]" />
 
-          <div className="text-center mb-6 pt-2">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center mb-3 shadow-xs">
-              <ShieldCheck className="w-7 h-7 text-[#FF5200]" />
+          <div className="text-center mb-6">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center text-2xl shadow-xs mb-3">
+              🐾
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-[#061F3D]">
-              Panel de Administración
+              Panel de Control PetLife
             </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Ingresa tus credenciales seguras para administrar PetLife
+            <p className="text-xs text-slate-400 mt-1 font-medium">
+              Gestión de productos, inventario real y pedidos en tiempo real
             </p>
           </div>
 
           {loginError && (
-            <div className="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2">
+            <div className="mb-5 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2 animate-shake">
               <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500" />
               <span>{loginError}</span>
             </div>
           )}
 
-          <form onSubmit={handleLoginSubmit} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-extrabold uppercase text-slate-500 tracking-wider mb-1.5">
-                Usuario / Correo Electrónico
+                Correo Administrador
               </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
-                <input
-                  type="email"
-                  required
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  placeholder="contacto@tiendapetlife.cl"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/20 text-xs sm:text-sm font-semibold text-[#061F3D]"
-                />
-              </div>
+              <input
+                type="email"
+                required
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                placeholder="contacto@tiendapetlife.cl"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+              />
             </div>
 
             <div>
@@ -476,7 +464,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/20 text-xs sm:text-sm font-semibold text-[#061F3D]"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
               />
             </div>
 
@@ -507,10 +495,350 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   }
 
   // =========================================================================
-  // VIEW: ADMIN DASHBOARD PRINCIPAL
+  // VIEW 2: EDITOR DE PRODUCTO A PANTALLA COMPLETA (CREAR O EDITAR)
+  // =========================================================================
+  if (activeView === 'product_editor') {
+    return (
+      <div className="w-full min-h-screen bg-[#F8FAFC] flex flex-col animate-fade-in pb-20">
+        {/* Toast Notification */}
+        {toast && (
+          <div
+            className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-2xl shadow-xl border text-xs font-bold flex items-center space-x-2 animate-bounce-in ${
+              toast.type === 'success'
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                : 'bg-rose-50 text-rose-800 border-rose-200'
+            }`}
+          >
+            {toast.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            ) : (
+              <AlertTriangle className="w-4 h-4 text-rose-500" />
+            )}
+            <span>{toast.message}</span>
+          </div>
+        )}
+
+        {/* Top Header / Breadcrumbs Bar */}
+        <header className="bg-white border-b border-slate-200 py-3.5 px-4 sm:px-8 sticky top-0 z-30 shadow-2xs">
+          <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
+            <div className="flex items-center space-x-3">
+              <button
+                type="button"
+                onClick={() => setActiveView('dashboard')}
+                className="p-2 rounded-xl text-slate-500 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1.5 text-xs font-bold cursor-pointer"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Volver a Productos</span>
+              </button>
+              <span className="text-slate-300">/</span>
+              <span className="text-xs font-black text-[#FF5200] uppercase tracking-wider">
+                {editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
+              </span>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <button
+                type="button"
+                onClick={() => setActiveView('dashboard')}
+                className="px-4 py-2 rounded-full border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveProduct}
+                disabled={isSavingProduct}
+                className="px-5 py-2 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-xs shadow-orange-glow transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center space-x-1.5"
+              >
+                {isSavingProduct ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Guardando...</span>
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-3.5 h-3.5" />
+                    <span>{editingProduct ? 'Guardar Cambios' : 'Crear Producto'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Form Container */}
+        <main className="max-w-5xl mx-auto w-full px-4 sm:px-8 py-6 sm:py-8">
+          <div className="mb-6">
+            <h1 className="text-2xl sm:text-3xl font-black text-[#061F3D]">
+              {editingProduct ? `Editar: ${formName || 'Producto'}` : 'Crear Nuevo Producto'}
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              Completa la información esencial. Los datos e imágenes se guardan directamente en PocketBase.
+            </p>
+          </div>
+
+          {productFormError && (
+            <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm font-semibold flex items-center space-x-3">
+              <AlertTriangle className="w-5 h-5 shrink-0 text-rose-500" />
+              <span>{productFormError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSaveProduct} className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Column (8 cols): Main details */}
+            <div className="lg:col-span-8 space-y-6">
+              {/* Card 1: Basic Info */}
+              <div className="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200 shadow-2xs space-y-5">
+                <h3 className="text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
+                  <span className="w-2 h-2 rounded-full bg-[#FF5200]" />
+                  <span>Información Principal</span>
+                </h3>
+
+                {/* Product Name */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    Nombre del producto *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                    placeholder="Ej: Bravery Salmon Adult Cat 7kg"
+                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-bold text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all placeholder:font-normal"
+                  />
+                </div>
+
+                {/* Price & Weight/Size Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Precio de Venta ($ CLP) *
+                    </label>
+                    <div className="relative flex items-center">
+                      <span className="absolute left-4 text-slate-400 font-black text-sm">$</span>
+                      <input
+                        type="number"
+                        required
+                        min={1}
+                        value={formPrice}
+                        onChange={(e) => setFormPrice(Number(e.target.value))}
+                        placeholder="Ej: 47900"
+                        className="w-full pl-8 pr-4 py-3 rounded-2xl border border-slate-200 font-black text-base text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Formato / Presentación (Kilos, Gramos)
+                    </label>
+                    <input
+                      type="text"
+                      value={formWeightOrSize}
+                      onChange={(e) => setFormWeightOrSize(e.target.value)}
+                      placeholder="Ej: 15 kg, 2 kg, 500 g"
+                      className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-semibold text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Category & Brand Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Categoría del Producto *
+                    </label>
+                    <select
+                      value={formCategory}
+                      onChange={(e) => setFormCategory(e.target.value as any)}
+                      className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-bold text-xs sm:text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all bg-white"
+                    >
+                      <option value="perros">🐕 Alimentos Perros</option>
+                      <option value="gatos">🐱 Alimentos Gatos</option>
+                      <option value="higiene">🧼 Arenas & Higiene</option>
+                      <option value="snacks">🦴 Snacks & Premios</option>
+                      <option value="accesorios">🎾 Accesorios</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Marca o Fabricante
+                    </label>
+                    <input
+                      type="text"
+                      value={formBrand}
+                      onChange={(e) => setFormBrand(e.target.value)}
+                      placeholder="Ej: Bravery, Belcando, Champion"
+                      className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-semibold text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    Descripción del Producto (Opcional)
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={formDescription}
+                    onChange={(e) => setFormDescription(e.target.value)}
+                    placeholder="Escribe una breve descripción del alimento, beneficios nutricionales o recomendaciones de uso..."
+                    className="w-full px-4 py-3 rounded-2xl border border-slate-200 font-medium text-xs sm:text-sm text-slate-700 focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column (4 cols): Image, Stock & Status */}
+            <div className="lg:col-span-4 space-y-6">
+              {/* Card 2: Main Image Upload */}
+              <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-2xs space-y-4">
+                <h3 className="text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
+                  <span className="w-2 h-2 rounded-full bg-[#FF5200]" />
+                  <span>Foto Principal</span>
+                </h3>
+
+                <div className="w-full aspect-square max-h-56 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center p-3 relative overflow-hidden group">
+                  {imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-full h-full object-contain p-2"
+                    />
+                  ) : (
+                    <div className="text-center p-4">
+                      <ImageIcon className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                      <p className="text-xs font-bold text-slate-500">Sin imagen seleccionada</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">JPEG, PNG o WEBP</p>
+                    </div>
+                  )}
+                </div>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+                >
+                  <Upload className="w-4 h-4 text-[#FF5200]" />
+                  <span>{imagePreview ? 'Cambiar Imagen' : 'Subir Imagen'}</span>
+                </button>
+              </div>
+
+              {/* Card 3: Stock & Availability */}
+              <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200 shadow-2xs space-y-4">
+                <h3 className="text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
+                  <span className="w-2 h-2 rounded-full bg-[#FF5200]" />
+                  <span>Inventario</span>
+                </h3>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    Unidades en Stock
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={formStock}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setFormStock(val);
+                      if (val <= 0) setFormInStock(false);
+                      else setFormInStock(true);
+                    }}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 font-black text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
+                  />
+                </div>
+
+                {/* Big Visual Availability Switch */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    Disponibilidad en Tienda
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setFormInStock(!formInStock)}
+                    className={`w-full py-3 px-4 rounded-2xl font-bold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer border ${
+                      formInStock
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-xs'
+                        : 'bg-rose-50 text-rose-700 border-rose-200'
+                    }`}
+                  >
+                    {formInStock ? (
+                      <>
+                        <Check className="w-4 h-4 text-emerald-600 stroke-[3]" />
+                        <span>✓ Producto en Stock (Visible)</span>
+                      </>
+                    ) : (
+                      <>
+                        <X className="w-4 h-4 text-rose-600 stroke-[3]" />
+                        <span>✕ Producto Agotado</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* SKU Code */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    Código SKU (Opcional)
+                  </label>
+                  <input
+                    type="text"
+                    value={formSku}
+                    onChange={(e) => setFormSku(e.target.value)}
+                    placeholder="PL-001"
+                    className="w-full px-4 py-2 rounded-xl border border-slate-200 font-mono font-bold text-xs text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
+                  />
+                </div>
+              </div>
+
+              {/* Save & Cancel Buttons Mobile / Sticky */}
+              <div className="pt-2 flex flex-col space-y-2">
+                <button
+                  type="submit"
+                  disabled={isSavingProduct}
+                  className="w-full py-3.5 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-sm shadow-orange-glow transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center space-x-2"
+                >
+                  {isSavingProduct ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Guardando en PocketBase...</span>
+                    </>
+                  ) : (
+                    <span>{editingProduct ? 'Guardar Cambios' : 'Crear Producto'}</span>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveView('dashboard')}
+                  className="w-full py-2.5 rounded-full border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer text-center"
+                >
+                  Cancelar y Volver
+                </button>
+              </div>
+            </div>
+          </form>
+        </main>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // VIEW 3: ADMIN DASHBOARD PRINCIPAL (PRODUCTOS, INVENTARIO, PEDIDOS, TRANSBANK)
   // =========================================================================
   return (
-    <div className="w-full min-h-screen bg-[#F8FAFC] flex flex-col animate-fade-in">
+    <div className="w-full min-h-screen bg-[#F8FAFC] flex flex-col animate-fade-in pb-16">
       {/* Toast Notification */}
       {toast && (
         <div
@@ -530,203 +858,215 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
       )}
 
       {/* Top Navbar */}
-        <header className="bg-white px-4 sm:px-6 py-3.5 border-b border-slate-200 flex items-center justify-between shrink-0">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center text-[#FF5200] font-black text-lg">
-              🐾
-            </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <h1 className="text-base sm:text-lg font-black text-[#061F3D]">
-                  PetLife Admin
-                </h1>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-extrabold text-[10px] border border-emerald-200">
-                  En Vivo
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block">
-                Sesión: <span className="font-semibold text-slate-600">{getAdminEmail()}</span>
-              </p>
-            </div>
+      <header className="bg-white px-4 sm:px-8 py-3.5 border-b border-slate-200 flex items-center justify-between shrink-0 sticky top-0 z-20 shadow-2xs">
+        <div className="flex items-center space-x-3">
+          <div className="w-9 h-9 rounded-xl bg-[#FFF8F5] border border-[#FF5200]/20 flex items-center justify-center text-[#FF5200] font-black text-lg">
+            🐾
           </div>
-
-          {/* Navigation Tabs Header */}
-          <nav className="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-2xl">
-            <button
-              onClick={() => setActiveTab('products')}
-              className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
-                activeTab === 'products'
-                  ? 'bg-white text-[#FF5200] shadow-xs'
-                  : 'text-slate-600 hover:text-[#061F3D]'
-              }`}
-            >
-              <Package className="w-3.5 h-3.5" />
-              <span>Productos ({products.length})</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('inventory')}
-              className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
-                activeTab === 'inventory'
-                  ? 'bg-white text-[#FF5200] shadow-xs'
-                  : 'text-slate-600 hover:text-[#061F3D]'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Inventario</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('orders')}
-              className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
-                activeTab === 'orders'
-                  ? 'bg-white text-[#FF5200] shadow-xs'
-                  : 'text-slate-600 hover:text-[#061F3D]'
-              }`}
-            >
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>Pedidos ({orders.length})</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('transbank')}
-              className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
-                activeTab === 'transbank'
-                  ? 'bg-white text-[#FF5200] shadow-xs'
-                  : 'text-slate-600 hover:text-[#061F3D]'
-              }`}
-            >
-              <CreditCard className="w-3.5 h-3.5" />
-              <span>Transbank Webpay</span>
-            </button>
-          </nav>
-
-          {/* Actions: View Store & Logout & Close */}
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={onClose}
-              className="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1 cursor-pointer"
-              title="Volver a la tienda"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Ver Tienda</span>
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
-              title="Cerrar sesión"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={onClose}
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
-              title="Cerrar panel"
-            >
-              <X className="w-4 h-4" />
-            </button>
+          <div>
+            <div className="flex items-center space-x-2">
+              <h1 className="text-base sm:text-lg font-black text-[#061F3D]">
+                PetLife Admin
+              </h1>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-extrabold text-[10px] border border-emerald-200">
+                En Vivo
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 hidden sm:block">
+              Sesión: <span className="font-semibold text-slate-600">{getAdminEmail()}</span>
+            </p>
           </div>
-        </header>
+        </div>
 
-        {/* Mobile Navigation Tabs */}
-        <div className="md:hidden flex items-center justify-around bg-white border-b border-slate-200 px-2 py-2 overflow-x-auto">
+        {/* Desktop Navigation Tabs */}
+        <nav className="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-2xl">
           <button
-            onClick={() => setActiveTab('products')}
-            className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
-              activeTab === 'products' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+            onClick={() => {
+              setActiveTab('products');
+              setSelectedOrder(null);
+            }}
+            className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
+              activeTab === 'products'
+                ? 'bg-white text-[#FF5200] shadow-xs'
+                : 'text-slate-600 hover:text-[#061F3D]'
             }`}
           >
-            Productos ({products.length})
+            <Package className="w-3.5 h-3.5" />
+            <span>Productos ({products.length})</span>
           </button>
           <button
-            onClick={() => setActiveTab('inventory')}
-            className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
-              activeTab === 'inventory' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+            onClick={() => {
+              setActiveTab('inventory');
+              setSelectedOrder(null);
+            }}
+            className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
+              activeTab === 'inventory'
+                ? 'bg-white text-[#FF5200] shadow-xs'
+                : 'text-slate-600 hover:text-[#061F3D]'
             }`}
           >
-            Inventario
+            <Layers className="w-3.5 h-3.5" />
+            <span>Inventario</span>
           </button>
           <button
             onClick={() => setActiveTab('orders')}
-            className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
-              activeTab === 'orders' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+            className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
+              activeTab === 'orders'
+                ? 'bg-white text-[#FF5200] shadow-xs'
+                : 'text-slate-600 hover:text-[#061F3D]'
             }`}
           >
-            Pedidos ({orders.length})
+            <ShoppingBag className="w-3.5 h-3.5" />
+            <span>Pedidos ({orders.length})</span>
           </button>
           <button
-            onClick={() => setActiveTab('transbank')}
-            className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
-              activeTab === 'transbank' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+            onClick={() => {
+              setActiveTab('transbank');
+              setSelectedOrder(null);
+            }}
+            className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
+              activeTab === 'transbank'
+                ? 'bg-white text-[#FF5200] shadow-xs'
+                : 'text-slate-600 hover:text-[#061F3D]'
             }`}
           >
-            Transbank
+            <CreditCard className="w-3.5 h-3.5" />
+            <span>Transbank Webpay</span>
+          </button>
+        </nav>
+
+        {/* Actions: View Store & Logout */}
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={onClose}
+            className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1.5 cursor-pointer border border-slate-200"
+            title="Volver a la tienda"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Ver Tienda</span>
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+            title="Cerrar sesión"
+          >
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
+      </header>
 
-        {/* Top Summary Stat Cards */}
-        <div className="px-4 sm:px-6 pt-4 pb-2 grid grid-cols-2 lg:grid-cols-4 gap-3 shrink-0">
-          <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
-                Total Productos
-              </span>
-              <p className="text-xl font-black text-[#061F3D]">{products.length}</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-[#FF5200]">
-              <Package className="w-5 h-5" />
-            </div>
+      {/* Mobile Navigation Tabs */}
+      <div className="md:hidden flex items-center justify-around bg-white border-b border-slate-200 px-2 py-2 overflow-x-auto">
+        <button
+          onClick={() => {
+            setActiveTab('products');
+            setSelectedOrder(null);
+          }}
+          className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
+            activeTab === 'products' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+          }`}
+        >
+          Productos ({products.length})
+        </button>
+        <button
+          onClick={() => {
+            setActiveTab('inventory');
+            setSelectedOrder(null);
+          }}
+          className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
+            activeTab === 'inventory' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+          }`}
+        >
+          Inventario
+        </button>
+        <button
+          onClick={() => setActiveTab('orders')}
+          className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
+            activeTab === 'orders' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+          }`}
+        >
+          Pedidos ({orders.length})
+        </button>
+        <button
+          onClick={() => {
+            setActiveTab('transbank');
+            setSelectedOrder(null);
+          }}
+          className={`px-3 py-1 rounded-xl text-xs font-bold whitespace-nowrap ${
+            activeTab === 'transbank' ? 'bg-[#FF5200] text-white' : 'text-slate-600'
+          }`}
+        >
+          Transbank
+        </button>
+      </div>
+
+      {/* Top Stat Summary Cards */}
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 pt-5 pb-2 grid grid-cols-2 lg:grid-cols-4 gap-3 shrink-0">
+        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+              Total Productos
+            </span>
+            <p className="text-xl font-black text-[#061F3D]">{products.length}</p>
           </div>
-
-          <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
-                Unidades en Stock
-              </span>
-              <p className="text-xl font-black text-[#061F3D]">{totalStockCount}</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-              <Layers className="w-5 h-5" />
-            </div>
-          </div>
-
-          <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
-                Stock Crítico (&lt; 5)
-              </span>
-              <p className={`text-xl font-black ${lowStockCount > 0 ? 'text-rose-600' : 'text-slate-700'}`}>
-                {lowStockCount}
-              </p>
-            </div>
-            <div
-              className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                lowStockCount > 0 ? 'bg-rose-50 text-rose-600' : 'bg-slate-50 text-slate-400'
-              }`}
-            >
-              <AlertTriangle className="w-5 h-5" />
-            </div>
-          </div>
-
-          <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
-                Pedidos Registrados
-              </span>
-              <p className="text-xl font-black text-[#061F3D]">{orders.length}</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-              <ShoppingBag className="w-5 h-5" />
-            </div>
+          <div className="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center text-[#FF5200]">
+            <Package className="w-5 h-5" />
           </div>
         </div>
 
+        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+              Stock Total
+            </span>
+            <p className="text-xl font-black text-[#061F3D]">{totalStockCount}</p>
+          </div>
+          <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+            <Layers className="w-5 h-5" />
+          </div>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+              Stock Crítico (&lt; 5)
+            </span>
+            <p className={`text-xl font-black ${lowStockCount > 0 ? 'text-rose-600' : 'text-slate-700'}`}>
+              {lowStockCount}
+            </p>
+          </div>
+          <div
+            className={`w-9 h-9 rounded-xl flex items-center justify-center ${
+              lowStockCount > 0 ? 'bg-rose-50 text-rose-600' : 'bg-slate-50 text-slate-400'
+            }`}
+          >
+            <AlertTriangle className="w-5 h-5" />
+          </div>
+        </div>
+
+        <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+              Pedidos
+            </span>
+            <p className="text-xl font-black text-[#061F3D]">{orders.length}</p>
+          </div>
+          <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <ShoppingBag className="w-5 h-5" />
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Body */}
+      <main className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-4 flex-1 flex flex-col">
         {/* ===================================================================== */}
-        {/* TAB 1: PRODUCTOS (GESTIÓN COMPLETA Y CREACIÓN)                       */}
+        {/* TAB 1: PRODUCTOS                                                     */}
         {/* ===================================================================== */}
         {activeTab === 'products' && (
-          <div className="flex-1 flex flex-col p-4 sm:p-6 overflow-hidden">
+          <div className="flex-1 flex flex-col">
             {/* Toolbar */}
-            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs">
               <div className="flex items-center space-x-2 w-full sm:w-auto">
                 <div className="relative flex-1 sm:w-72">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -735,12 +1075,12 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     value={productSearch}
                     onChange={(e) => setProductSearch(e.target.value)}
                     placeholder="Buscar por nombre, marca o SKU..."
-                    className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:border-[#FF5200]"
+                    className="w-full pl-9 pr-8 py-2 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:border-[#FF5200]"
                   />
                   {productSearch && (
                     <button
                       onClick={() => setProductSearch('')}
-                      className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
+                      className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -750,132 +1090,130 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#FF5200]"
+                  className="px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#FF5200] bg-white cursor-pointer"
                 >
                   <option value="all">Todas las categorías</option>
-                  <option value="perros">Perros</option>
-                  <option value="gatos">Gatos</option>
+                  <option value="perros">Alimentos Perros</option>
+                  <option value="gatos">Alimentos Gatos</option>
                   <option value="higiene">Arenas & Higiene</option>
-                  <option value="snacks">Snacks</option>
+                  <option value="snacks">Snacks & Premios</option>
                 </select>
               </div>
 
               <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
                 <button
                   onClick={loadProducts}
-                  className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
-                  title="Recargar productos"
+                  className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                  title="Refrescar productos"
                 >
                   <RefreshCw className={`w-4 h-4 ${isLoadingProducts ? 'animate-spin' : ''}`} />
                 </button>
 
                 <button
                   onClick={handleOpenNewProduct}
-                  className="py-2.5 px-4 rounded-xl bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-xs shadow-orange-glow transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
+                  className="py-2 px-4 rounded-xl bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-xs shadow-orange-glow transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>Nuevo Producto</span>
+                  <span>+ Nuevo Producto</span>
                 </button>
               </div>
             </div>
 
             {/* Products Table */}
-            <div className="flex-1 bg-white rounded-2xl border border-slate-200 overflow-y-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-10 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Producto</th>
-                    <th className="py-3 px-3">Categoría</th>
-                    <th className="py-3 px-3">Precio (CLP)</th>
-                    <th className="py-3 px-3">Presentación</th>
-                    <th className="py-3 px-3">Stock</th>
-                    <th className="py-3 px-3">Estado</th>
-                    <th className="py-3 px-4 text-right">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 font-semibold text-[#061F3D]">
-                  {filteredProducts.map((p) => (
-                    <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-11 h-11 rounded-xl bg-slate-100 p-1 border border-slate-200/60 shrink-0 flex items-center justify-center overflow-hidden">
-                            <img
-                              src={p.imageUrl}
-                              alt={p.name}
-                              className="w-full h-full object-contain"
-                              onError={(e) => {
-                                e.currentTarget.src = '/product-dog-food.jpg';
-                              }}
-                            />
-                          </div>
-                          <div className="max-w-xs sm:max-w-md">
-                            <span className="font-bold text-xs text-[#061F3D] block truncate">
-                              {p.name}
-                            </span>
-                            <span className="text-[10px] text-slate-400 font-normal">
-                              SKU: {p.sku || 'N/A'} • {p.brand}
-                            </span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 px-3 text-slate-600 capitalize">
-                        {p.category}
-                      </td>
-                      <td className="py-3 px-3 font-black text-[#061F3D]">
-                        {formatPrice(p.price)}
-                      </td>
-                      <td className="py-3 px-3 text-slate-600">
-                        {p.weightOrSize || '-'}
-                      </td>
-                      <td className="py-3 px-3">
-                        <span
-                          className={`font-black ${
-                            (p.stockCount || 0) < 5 ? 'text-rose-600' : 'text-[#061F3D]'
-                          }`}
-                        >
-                          {p.stockCount || 0}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3">
-                        <span
-                          className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-                            p.inStock
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-rose-50 text-rose-700 border border-rose-200'
-                          }`}
-                        >
-                          {p.inStock ? 'Disponible' : 'Agotado'}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className="inline-flex items-center space-x-1">
-                          <button
-                            onClick={() => handleOpenEditProduct(p)}
-                            className="p-1.5 rounded-lg text-slate-500 hover:text-[#FF5200] hover:bg-[#FFF8F5] transition-colors"
-                            title="Editar producto"
-                          >
-                            <Edit2 className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteProduct(p)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                            title="Eliminar producto"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {filteredProducts.length === 0 && (
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
                     <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-400">
-                        No se encontraron productos con los criterios de búsqueda.
-                      </td>
+                      <th className="py-3 px-4">Producto</th>
+                      <th className="py-3 px-3">Categoría</th>
+                      <th className="py-3 px-3">Formato</th>
+                      <th className="py-3 px-3">Precio</th>
+                      <th className="py-3 px-3">Stock</th>
+                      <th className="py-3 px-3">Estado</th>
+                      <th className="py-3 px-4 text-right">Acciones</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-semibold text-[#061F3D]">
+                    {filteredProducts.map((p) => (
+                      <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="py-3 px-4">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 p-1 flex items-center justify-center shrink-0 overflow-hidden">
+                              <img
+                                src={p.imageUrl}
+                                alt={p.name}
+                                className="w-full h-full object-contain"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/product-dog-food.jpg';
+                                }}
+                              />
+                            </div>
+                            <div className="max-w-[200px] sm:max-w-xs">
+                              <span className="font-bold text-xs sm:text-sm text-[#061F3D] block truncate">
+                                {p.name}
+                              </span>
+                              <span className="text-[10px] text-slate-400 font-mono">
+                                {p.brand ? `${p.brand} • ` : ''}{p.sku || `PL-${p.id.slice(0, 4)}`}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-3 px-3">
+                          <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[10px] font-bold capitalize">
+                            {p.category}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 text-slate-600 font-medium">
+                          {p.weightOrSize || '-'}
+                        </td>
+                        <td className="py-3 px-3 font-black text-[#061F3D]">
+                          {formatPrice(p.price)}
+                        </td>
+                        <td className="py-3 px-3">
+                          <span
+                            className={`font-black text-xs ${
+                              (p.stockCount || 0) < 5 ? 'text-rose-600' : 'text-slate-700'
+                            }`}
+                          >
+                            {p.stockCount !== undefined ? p.stockCount : 15} un.
+                          </span>
+                        </td>
+                        <td className="py-3 px-3">
+                          <button
+                            onClick={() => handleToggleInStock(p)}
+                            className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold cursor-pointer transition-colors ${
+                              p.inStock
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-rose-50 text-rose-700 border border-rose-200'
+                            }`}
+                          >
+                            {p.inStock ? '✓ En Stock' : '✕ Agotado'}
+                          </button>
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex items-center justify-end space-x-1">
+                            <button
+                              onClick={() => handleOpenEditProduct(p)}
+                              className="p-1.5 rounded-lg text-slate-500 hover:text-[#FF5200] hover:bg-orange-50 transition-colors cursor-pointer"
+                              title="Editar producto a pantalla completa"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteProduct(p)}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                              title="Eliminar producto"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -884,316 +1222,402 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         {/* TAB 2: INVENTARIO RÁPIDO                                             */}
         {/* ===================================================================== */}
         {activeTab === 'inventory' && (
-          <div className="flex-1 flex flex-col p-4 sm:p-6 overflow-hidden">
-            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 flex items-center justify-between shrink-0">
-              <div>
-                <h3 className="font-bold text-sm text-[#061F3D]">Control Rápido de Stock</h3>
-                <p className="text-[11px] text-slate-400">
-                  Ajusta existencias y disponibilidad con un clic en tiempo real.
-                </p>
-              </div>
-              <div className="w-64">
-                <input
-                  type="text"
-                  value={productSearch}
-                  onChange={(e) => setProductSearch(e.target.value)}
-                  placeholder="Filtrar por nombre o SKU..."
-                  className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold focus:outline-none focus:border-[#FF5200]"
-                />
-              </div>
-            </div>
-
-            <div className="flex-1 bg-white rounded-2xl border border-slate-200 overflow-y-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-10 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">Producto</th>
-                    <th className="py-3 px-3">Precio</th>
-                    <th className="py-3 px-3">Estado Actual</th>
-                    <th className="py-3 px-4 text-center">Ajustar Unidades (+ / -)</th>
-                    <th className="py-3 px-4 text-right">Interruptor de Stock</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 font-semibold text-[#061F3D]">
-                  {filteredProducts.map((p) => (
-                    <tr key={p.id} className="hover:bg-slate-50/70">
-                      <td className="py-3 px-4">
-                        <div className="flex items-center space-x-3">
-                          <img
-                            src={p.imageUrl}
-                            alt=""
-                            className="w-9 h-9 object-contain rounded-lg bg-slate-50 p-0.5 border border-slate-100 shrink-0"
-                          />
-                          <div>
-                            <span className="font-bold text-xs text-[#061F3D] block truncate max-w-xs sm:max-w-md">
-                              {p.name}
-                            </span>
-                            <span className="text-[10px] text-slate-400">
-                              SKU: {p.sku || '-'} • {p.weightOrSize || '-'}
-                            </span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 px-3 font-black text-[#061F3D]">
-                        {formatPrice(p.price)}
-                      </td>
-                      <td className="py-3 px-3">
-                        <span
-                          className={`font-black text-sm ${
-                            (p.stockCount || 0) < 5 ? 'text-rose-600' : 'text-slate-800'
-                          }`}
-                        >
-                          {p.stockCount || 0} un.
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <div className="inline-flex items-center space-x-1.5 bg-slate-100 p-1 rounded-xl">
-                          <button
-                            onClick={() => handleQuickStock(p, -5)}
-                            className="px-2 py-1 rounded-lg bg-white hover:bg-rose-50 hover:text-rose-600 text-slate-700 font-black text-[11px] shadow-2xs transition-colors cursor-pointer"
-                            title="Restar 5"
-                          >
-                            -5
-                          </button>
-                          <button
-                            onClick={() => handleQuickStock(p, -1)}
-                            className="px-2 py-1 rounded-lg bg-white hover:bg-rose-50 hover:text-rose-600 text-slate-700 font-black text-[11px] shadow-2xs transition-colors cursor-pointer"
-                            title="Restar 1"
-                          >
-                            -1
-                          </button>
-                          <span className="px-2 font-black text-xs text-[#061F3D]">
-                            {p.stockCount || 0}
-                          </span>
-                          <button
-                            onClick={() => handleQuickStock(p, 1)}
-                            className="px-2 py-1 rounded-lg bg-white hover:bg-emerald-50 hover:text-emerald-600 text-slate-700 font-black text-[11px] shadow-2xs transition-colors cursor-pointer"
-                            title="Sumar 1"
-                          >
-                            +1
-                          </button>
-                          <button
-                            onClick={() => handleQuickStock(p, 5)}
-                            className="px-2 py-1 rounded-lg bg-white hover:bg-emerald-50 hover:text-emerald-600 text-slate-700 font-black text-[11px] shadow-2xs transition-colors cursor-pointer"
-                            title="Sumar 5"
-                          >
-                            +5
-                          </button>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <button
-                          onClick={() => handleToggleInStock(p)}
-                          className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                            p.inStock
-                              ? 'bg-emerald-500 text-white shadow-emerald-500/20 shadow-xs'
-                              : 'bg-slate-200 text-slate-600'
-                          }`}
-                        >
-                          {p.inStock ? '✓ En Stock' : '✕ Sin Stock'}
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* ===================================================================== */}
-        {/* TAB 3: ADMINISTRACIÓN DE PEDIDOS                                     */}
-        {/* ===================================================================== */}
-        {activeTab === 'orders' && (
-          <div className="flex-1 flex flex-col p-4 sm:p-6 overflow-hidden">
-            {/* Orders Toolbar */}
-            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
-              <div className="flex items-center space-x-2">
-                <span className="text-xs font-bold text-slate-500">Filtrar por estado:</span>
-                <select
-                  value={orderFilter}
-                  onChange={(e) => setOrderFilter(e.target.value)}
-                  className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#FF5200]"
-                >
-                  <option value="all">Todos los estados</option>
-                  <option value="pendiente">Pendiente</option>
-                  <option value="pagado">Pagado</option>
-                  <option value="en_preparacion">En preparación</option>
-                  <option value="despachado">Despachado</option>
-                  <option value="entregado">Entregado</option>
-                </select>
-              </div>
-
+          <div className="flex-1 flex flex-col">
+            <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 flex items-center justify-between shadow-2xs">
+              <span className="text-xs font-bold text-slate-600">
+                Ajuste rápido de unidades disponibles y visibilidad en tiempo real
+              </span>
               <button
-                onClick={loadOrders}
+                onClick={loadProducts}
                 className="py-1.5 px-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs flex items-center space-x-1.5 cursor-pointer"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${isLoadingOrders ? 'animate-spin' : ''}`} />
-                <span>Actualizar pedidos</span>
+                <RefreshCw className={`w-3.5 h-3.5 ${isLoadingProducts ? 'animate-spin' : ''}`} />
+                <span>Actualizar stock</span>
               </button>
             </div>
 
-            {/* Orders Table */}
-            <div className="flex-1 bg-white rounded-2xl border border-slate-200 overflow-y-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-10 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
-                  <tr>
-                    <th className="py-3 px-4">N° Pedido</th>
-                    <th className="py-3 px-3">Cliente</th>
-                    <th className="py-3 px-3">Contacto</th>
-                    <th className="py-3 px-3">Total</th>
-                    <th className="py-3 px-3">Estado</th>
-                    <th className="py-3 px-3">Fecha</th>
-                    <th className="py-3 px-4 text-right">Detalle</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 font-semibold text-[#061F3D]">
-                  {filteredOrders.map((ord) => (
-                    <tr key={ord.id} className="hover:bg-slate-50/70">
-                      <td className="py-3 px-4 font-black text-[#FF5200]">
-                        {ord.orderNumber}
-                      </td>
-                      <td className="py-3 px-3">
-                        <span className="font-bold text-xs text-[#061F3D] block">
-                          {ord.customerName}
-                        </span>
-                        <span className="text-[10px] text-slate-400">
-                          {ord.customerCity || 'Santiago'}
-                        </span>
-                      </td>
-                      <td className="py-3 px-3">
-                        <span className="text-[11px] text-slate-600 block">{ord.customerEmail}</span>
-                        <span className="text-[10px] text-slate-400">{ord.customerPhone}</span>
-                      </td>
-                      <td className="py-3 px-3 font-black text-[#061F3D]">
-                        {formatPrice(ord.total)}
-                      </td>
-                      <td className="py-3 px-3">
-                        <select
-                          value={ord.status}
-                          onChange={(e) => handleChangeOrderStatus(ord.id, e.target.value as any)}
-                          className={`px-2 py-1 rounded-full text-[10px] font-extrabold border cursor-pointer ${
-                            ord.status === 'pagado' || ord.status === 'entregado'
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                              : ord.status === 'despachado' || ord.status === 'en_preparacion'
-                              ? 'bg-blue-50 text-blue-700 border-blue-200'
-                              : 'bg-amber-50 text-amber-700 border-amber-200'
-                          }`}
-                        >
-                          <option value="pendiente">Pendiente</option>
-                          <option value="pagado">Pagado</option>
-                          <option value="en_preparacion">En preparación</option>
-                          <option value="despachado">Despachado</option>
-                          <option value="entregado">Entregado</option>
-                          <option value="cancelado">Cancelado</option>
-                        </select>
-                      </td>
-                      <td className="py-3 px-3 text-[11px] text-slate-400">
-                        {new Date(ord.created).toLocaleDateString('es-CL')}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <button
-                          onClick={() => setSelectedOrder(ord)}
-                          className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-[#FF5200] hover:text-white font-bold text-[11px] transition-colors cursor-pointer"
-                        >
-                          Ver ítems
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  {filteredOrders.length === 0 && (
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
                     <tr>
-                      <td colSpan={7} className="py-12 text-center text-slate-400">
-                        No hay pedidos registrados en este momento.
-                      </td>
+                      <th className="py-3 px-4">Producto</th>
+                      <th className="py-3 px-3">Formato</th>
+                      <th className="py-3 px-3">Precio</th>
+                      <th className="py-3 px-3">Stock Actual</th>
+                      <th className="py-3 px-3">Ajuste Rápido</th>
+                      <th className="py-3 px-4 text-right">Disponibilidad</th>
                     </tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-semibold text-[#061F3D]">
+                    {products.map((p) => (
+                      <tr key={p.id} className="hover:bg-slate-50/80">
+                        <td className="py-3 px-4">
+                          <span className="font-bold text-xs text-[#061F3D] block truncate max-w-xs">
+                            {p.name}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 text-slate-600 font-medium">
+                          {p.weightOrSize || '-'}
+                        </td>
+                        <td className="py-3 px-3 font-black text-[#061F3D]">
+                          {formatPrice(p.price)}
+                        </td>
+                        <td className="py-3 px-3">
+                          <span
+                            className={`font-black text-sm ${
+                              (p.stockCount || 0) < 5 ? 'text-rose-600' : 'text-slate-800'
+                            }`}
+                          >
+                            {p.stockCount !== undefined ? p.stockCount : 15}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3">
+                          <div className="flex items-center space-x-1.5">
+                            <button
+                              onClick={() => handleQuickStock(p, -1)}
+                              className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-black flex items-center justify-center cursor-pointer"
+                              title="Restar 1 unidad"
+                            >
+                              -1
+                            </button>
+                            <button
+                              onClick={() => handleQuickStock(p, 1)}
+                              className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-black flex items-center justify-center cursor-pointer"
+                              title="Sumar 1 unidad"
+                            >
+                              +1
+                            </button>
+                            <button
+                              onClick={() => handleQuickStock(p, 5)}
+                              className="px-2 h-7 rounded-lg bg-[#FFF2EA] hover:bg-[#FFE6D6] text-[#FF5200] font-black flex items-center justify-center cursor-pointer text-[10px]"
+                              title="Sumar 5 unidades"
+                            >
+                              +5
+                            </button>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <button
+                            onClick={() => handleToggleInStock(p)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                              p.inStock
+                                ? 'bg-emerald-500 text-white shadow-emerald-500/20 shadow-xs'
+                                : 'bg-slate-200 text-slate-600'
+                            }`}
+                          >
+                            {p.inStock ? '✓ En Stock' : '✕ Sin Stock'}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
 
         {/* ===================================================================== */}
-        {/* TAB 4: CONFIGURACIÓN DE TRANSBANK WEBPAY PLUS                         */}
+        {/* TAB 3: PEDIDOS (SIN POPUPS - VISTA DEDICADA SI SE SELECCIONA)        */}
+        {/* ===================================================================== */}
+        {activeTab === 'orders' && (
+          <div className="flex-1 flex flex-col">
+            {selectedOrder ? (
+              /* DETALLE DEL PEDIDO (IN-PAGE COMPLETO) */
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs space-y-6">
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={() => setSelectedOrder(null)}
+                      className="p-2 rounded-xl text-slate-500 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1.5 text-xs font-bold cursor-pointer"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      <span>Volver a todos los pedidos</span>
+                    </button>
+                    <span className="text-slate-300">/</span>
+                    <span className="text-xs font-black text-[#FF5200] uppercase tracking-wider">
+                      Orden {selectedOrder.orderNumber}
+                    </span>
+                  </div>
+
+                  <span className="text-xs text-slate-400 font-semibold">
+                    {new Date(selectedOrder.created).toLocaleString('es-CL')}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Customer Info Card */}
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-2.5 text-xs text-slate-600">
+                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
+                      Datos de Despacho y Contacto
+                    </span>
+                    <p className="text-base font-black text-[#061F3D]">
+                      {selectedOrder.customerName}
+                    </p>
+                    <p className="flex items-center space-x-2 text-slate-600">
+                      <Mail className="w-4 h-4 text-slate-400 shrink-0" />
+                      <span>{selectedOrder.customerEmail}</span>
+                    </p>
+                    {selectedOrder.customerPhone && (
+                      <p className="flex items-center space-x-2 text-slate-600">
+                        <Phone className="w-4 h-4 text-slate-400 shrink-0" />
+                        <span>{selectedOrder.customerPhone}</span>
+                      </p>
+                    )}
+                    <p className="flex items-center space-x-2 text-slate-600">
+                      <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                      <span>
+                        {selectedOrder.customerAddress}, {selectedOrder.customerCity || 'Santiago'}
+                      </span>
+                    </p>
+                  </div>
+
+                  {/* Order Status & Actions Card */}
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-3">
+                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
+                      Estado Actual del Pedido
+                    </span>
+                    <div className="flex items-center space-x-2">
+                      <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase">
+                        {selectedOrder.status.replace('_', ' ')}
+                      </span>
+                      <span className="text-xs text-slate-500 font-semibold">
+                        Total:{' '}
+                        <strong className="text-base font-black text-[#061F3D]">
+                          {formatPrice(selectedOrder.total)}
+                        </strong>
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-500 mb-1.5">
+                        Cambiar estado con 1 clic:
+                      </label>
+                      <div className="grid grid-cols-3 gap-2 text-[11px] font-bold">
+                        {(['pendiente', 'pagado', 'en_preparacion', 'despachado', 'entregado', 'cancelado'] as const).map(
+                          (st) => (
+                            <button
+                              key={st}
+                              onClick={() => handleChangeOrderStatus(selectedOrder.id, st)}
+                              className={`py-1.5 px-2 rounded-xl border capitalize cursor-pointer transition-colors text-center ${
+                                selectedOrder.status === st
+                                  ? 'bg-[#FF5200] text-white border-[#FF5200]'
+                                  : 'border-slate-200 hover:bg-white text-slate-600'
+                              }`}
+                            >
+                              {st.replace('_', ' ')}
+                            </button>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Items in this Order */}
+                <div>
+                  <h4 className="text-xs font-black uppercase text-slate-400 tracking-wider mb-3">
+                    Productos del Pedido ({selectedOrder.items?.length || 0})
+                  </h4>
+                  <div className="border border-slate-200 rounded-2xl divide-y divide-slate-100 overflow-hidden">
+                    {selectedOrder.items?.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="p-4 flex items-center justify-between text-xs sm:text-sm bg-white"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <span className="w-6 h-6 rounded-lg bg-orange-50 text-[#FF5200] font-black flex items-center justify-center text-xs">
+                            {item.quantity}x
+                          </span>
+                          <div>
+                            <span className="font-bold text-[#061F3D] block">{item.name}</span>
+                            <span className="text-[11px] text-slate-400">
+                              {formatPrice(item.price)} c/u
+                            </span>
+                          </div>
+                        </div>
+                        <span className="font-black text-[#061F3D]">
+                          {formatPrice(item.price * item.quantity)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* TABLA DE PEDIDOS */
+              <>
+                <div className="bg-white p-3.5 rounded-2xl border border-slate-200 mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-2xs">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs font-bold text-slate-500">Filtrar por estado:</span>
+                    <select
+                      value={orderFilter}
+                      onChange={(e) => setOrderFilter(e.target.value)}
+                      className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#FF5200] bg-white cursor-pointer"
+                    >
+                      <option value="all">Todos los estados</option>
+                      <option value="pendiente">Pendiente</option>
+                      <option value="pagado">Pagado</option>
+                      <option value="en_preparacion">En preparación</option>
+                      <option value="despachado">Despachado</option>
+                      <option value="entregado">Entregado</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={loadOrders}
+                    className="py-1.5 px-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs flex items-center space-x-1.5 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isLoadingOrders ? 'animate-spin' : ''}`} />
+                    <span>Actualizar pedidos</span>
+                  </button>
+                </div>
+
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 border-b border-slate-200 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+                        <tr>
+                          <th className="py-3 px-4">N° Pedido</th>
+                          <th className="py-3 px-3">Cliente</th>
+                          <th className="py-3 px-3">Contacto</th>
+                          <th className="py-3 px-3">Total</th>
+                          <th className="py-3 px-3">Estado</th>
+                          <th className="py-3 px-3">Fecha</th>
+                          <th className="py-3 px-4 text-right">Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 font-semibold text-[#061F3D]">
+                        {filteredOrders.length === 0 ? (
+                          <tr>
+                            <td colSpan={7} className="py-8 text-center text-slate-400 font-medium">
+                              No hay pedidos registrados aún.
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredOrders.map((ord) => (
+                            <tr key={ord.id} className="hover:bg-slate-50/80">
+                              <td className="py-3 px-4 font-black text-[#FF5200]">
+                                {ord.orderNumber}
+                              </td>
+                              <td className="py-3 px-3">
+                                <span className="font-bold text-xs text-[#061F3D] block">
+                                  {ord.customerName}
+                                </span>
+                                <span className="text-[10px] text-slate-400">
+                                  {ord.customerCity || 'Santiago'}
+                                </span>
+                              </td>
+                              <td className="py-3 px-3">
+                                <span className="text-[11px] text-slate-600 block">{ord.customerEmail}</span>
+                                <span className="text-[10px] text-slate-400">{ord.customerPhone}</span>
+                              </td>
+                              <td className="py-3 px-3 font-black text-[#061F3D]">
+                                {formatPrice(ord.total)}
+                              </td>
+                              <td className="py-3 px-3">
+                                <span
+                                  className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border ${
+                                    ord.status === 'pagado' || ord.status === 'entregado'
+                                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                      : ord.status === 'despachado' || ord.status === 'en_preparacion'
+                                      ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                      : 'bg-amber-50 text-amber-700 border-amber-200'
+                                  }`}
+                                >
+                                  {ord.status.replace('_', ' ')}
+                                </span>
+                              </td>
+                              <td className="py-3 px-3 text-[11px] text-slate-400">
+                                {new Date(ord.created).toLocaleDateString('es-CL')}
+                              </td>
+                              <td className="py-3 px-4 text-right">
+                                <button
+                                  onClick={() => setSelectedOrder(ord)}
+                                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-[#FF5200] hover:text-white font-bold text-xs transition-colors cursor-pointer"
+                                >
+                                  Ver Detalle
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* ===================================================================== */}
+        {/* TAB 4: TRANSBANK WEBPAY CONFIGURATION                                */}
         {/* ===================================================================== */}
         {activeTab === 'transbank' && (
-          <div className="flex-1 p-4 sm:p-6 overflow-y-auto">
-            <div className="max-w-2xl mx-auto bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500 to-[#FF5200] flex items-center justify-center text-white shadow-xs">
-                  <CreditCard className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-black text-[#061F3D]">
-                    Configuración Transbank Webpay Plus
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    Acepta tarjetas de débito (Redcompra), crédito y prepago en Chile.
-                  </p>
-                </div>
+          <div className="max-w-2xl mx-auto w-full">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-2xs space-y-6">
+              <div>
+                <h3 className="text-xl font-black text-[#061F3D] flex items-center space-x-2">
+                  <CreditCard className="w-5 h-5 text-[#FF5200]" />
+                  <span>Configuración Transbank Webpay Plus</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Ingresa las credenciales oficiales de Transbank para procesar pagos reales con tarjetas de crédito, débito y prepago.
+                </p>
               </div>
 
               {tbkSuccessMsg && (
-                <div className="mb-5 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center space-x-2">
+                <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                   <span>{tbkSuccessMsg}</span>
                 </div>
               )}
 
-              <form onSubmit={handleSaveTransbank} className="space-y-5">
-                {/* Environment Selector */}
+              <form onSubmit={handleSaveTransbank} className="space-y-4">
+                {/* Environment Mode */}
                 <div>
-                  <label className="block text-xs font-extrabold uppercase text-slate-500 tracking-wider mb-2">
-                    Ambiente de Operación
+                  <label className="block text-xs font-extrabold uppercase text-slate-500 tracking-wider mb-1.5">
+                    Ambiente de Pagos
                   </label>
                   <div className="grid grid-cols-2 gap-3">
-                    <label
-                      className={`p-3 rounded-2xl border text-center cursor-pointer transition-all ${
+                    <button
+                      type="button"
+                      onClick={() => setTbkConfig({ ...tbkConfig, environment: 'integration' })}
+                      className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer text-left ${
                         tbkConfig.environment === 'integration'
-                          ? 'border-[#FF5200] bg-[#FFF8F5] font-bold text-[#FF5200]'
-                          : 'border-slate-200 text-slate-600'
+                          ? 'border-[#FF5200] bg-orange-50/50 text-[#FF5200]'
+                          : 'border-slate-200 hover:bg-slate-50 text-slate-600'
                       }`}
                     >
-                      <input
-                        type="radio"
-                        name="tbk-env"
-                        className="hidden"
-                        checked={tbkConfig.environment === 'integration'}
-                        onChange={() => setTbkConfig({ ...tbkConfig, environment: 'integration' })}
-                      />
-                      <span className="text-xs block">🧪 Pruebas / Integración</span>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">
-                        Tarjetas de prueba Transbank
+                      <span className="block font-black text-sm">🧪 Integración (Pruebas)</span>
+                      <span className="text-[11px] font-normal opacity-80">
+                        Tarjetas de prueba de Transbank
                       </span>
-                    </label>
+                    </button>
 
-                    <label
-                      className={`p-3 rounded-2xl border text-center cursor-pointer transition-all ${
+                    <button
+                      type="button"
+                      onClick={() => setTbkConfig({ ...tbkConfig, environment: 'production' })}
+                      className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer text-left ${
                         tbkConfig.environment === 'production'
-                          ? 'border-emerald-500 bg-emerald-50/50 font-bold text-emerald-700'
-                          : 'border-slate-200 text-slate-600'
+                          ? 'border-emerald-500 bg-emerald-50/50 text-emerald-700'
+                          : 'border-slate-200 hover:bg-slate-50 text-slate-600'
                       }`}
                     >
-                      <input
-                        type="radio"
-                        name="tbk-env"
-                        className="hidden"
-                        checked={tbkConfig.environment === 'production'}
-                        onChange={() => setTbkConfig({ ...tbkConfig, environment: 'production' })}
-                      />
-                      <span className="text-xs block">🚀 Producción Real</span>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">
-                        Pagos bancarios chilenos reales
+                      <span className="block font-black text-sm">🔒 Producción Real</span>
+                      <span className="text-[11px] font-normal opacity-80">
+                        Cobros y dinero real en tu cuenta
                       </span>
-                    </label>
+                    </button>
                   </div>
                 </div>
 
                 {/* Commerce Code */}
                 <div>
                   <label className="block text-xs font-extrabold uppercase text-slate-500 tracking-wider mb-1.5">
-                    Código de Comercio (Commerce Code)
+                    Código de Comercio
                   </label>
                   <input
                     type="text"
@@ -1203,9 +1627,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     placeholder="Ej: 597055555532 o el entregado por Transbank"
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold focus:outline-none focus:border-[#FF5200]"
                   />
-                  <span className="text-[10px] text-slate-400 mt-1 block">
-                    En ambiente de pruebas puedes usar el código oficial: <code>597055555532</code>
-                  </span>
                 </div>
 
                 {/* API Key */}
@@ -1222,20 +1643,8 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold focus:outline-none focus:border-[#FF5200]"
                   />
                   <span className="text-[10px] text-slate-400 mt-1 block">
-                    Nunca compartas esta clave. Se resguarda de forma segura para las transacciones.
+                    Se guarda de manera segura para autenticar las transacciones con Transbank Webpay Plus.
                   </span>
-                </div>
-
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-600 space-y-1.5">
-                  <span className="font-extrabold text-[#061F3D] block">
-                    ¿Cómo obtener tus credenciales de producción?
-                  </span>
-                  <ol className="list-decimal pl-4 space-y-1 text-[11px] text-slate-500">
-                    <li>Ingresa a tu portal de clientes de Transbank o Transbank Developers.</li>
-                    <li>Solicita la activación de Webpay Plus REST API.</li>
-                    <li>Copia tu Código de Comercio y tu API Key generada.</li>
-                    <li>Pégalos aquí, selecciona "Producción Real" y guarda los cambios.</li>
-                  </ol>
                 </div>
 
                 <button
@@ -1248,356 +1657,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
             </div>
           </div>
         )}
-
-      {/* ===================================================================== */}
-      {/* MODAL: AGREGAR O EDITAR PRODUCTO                                     */}
-      {/* ===================================================================== */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#061F3D]/80 backdrop-blur-sm animate-fade-in overflow-y-auto">
-          <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl border border-slate-100 p-6 sm:p-8 my-8 relative">
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-5 right-5 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <h3 className="text-xl font-black text-[#061F3D] mb-1">
-              {editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
-            </h3>
-            <p className="text-xs text-slate-400 mb-6">
-              Los cambios se guardarán directamente en la base de datos real de PocketBase.
-            </p>
-
-            {productFormError && (
-              <div className="mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center space-x-2">
-                <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500" />
-                <span>{productFormError}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleSaveProduct} className="space-y-4 text-xs">
-              {/* Product Name */}
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">
-                  Nombre completo del producto *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formName}
-                  onChange={(e) => setFormName(e.target.value)}
-                  placeholder="Ej: Bravery Salmon Adult Cat 7kg"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
-                />
-              </div>
-
-              {/* Brand & Category */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Marca</label>
-                  <input
-                    type="text"
-                    value={formBrand}
-                    onChange={(e) => setFormBrand(e.target.value)}
-                    placeholder="Ej: Bravery, Alaska, Purina"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Categoría</label>
-                  <select
-                    value={formCategory}
-                    onChange={(e) => setFormCategory(e.target.value as any)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
-                  >
-                    <option value="perros">Alimentos Perros</option>
-                    <option value="gatos">Alimentos Gatos</option>
-                    <option value="higiene">Arenas & Higiene</option>
-                    <option value="snacks">Snacks & Premios</option>
-                    <option value="juguetes">Juguetes</option>
-                    <option value="accesorios">Accesorios</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Pet Type & Life Stage */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Tipo de Mascota</label>
-                  <select
-                    value={formPetType}
-                    onChange={(e) => setFormPetType(e.target.value as any)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
-                  >
-                    <option value="perro">🐕 Perro</option>
-                    <option value="gato">🐱 Gato</option>
-                    <option value="ambos">🐾 Ambos / Roedores</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Etapa de Vida</label>
-                  <select
-                    value={formLifeStage}
-                    onChange={(e) => setFormLifeStage(e.target.value as any)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
-                  >
-                    <option value="adulto">Adulto</option>
-                    <option value="cachorro">Cachorro / Kitten</option>
-                    <option value="senior">Senior (+7 años)</option>
-                    <option value="todas">Todas las edades</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Price & Weight/Size */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    Precio en Pesos Chilenos (CLP) *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    min={1}
-                    value={formPrice}
-                    onChange={(e) => setFormPrice(Number(e.target.value))}
-                    placeholder="Ej: 47900"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-black text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    Presentación / Formato
-                  </label>
-                  <input
-                    type="text"
-                    value={formWeightOrSize}
-                    onChange={(e) => setFormWeightOrSize(e.target.value)}
-                    placeholder="Ej: 15 kg, 2 kg, 500 g"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
-                  />
-                </div>
-              </div>
-
-              {/* Stock Count & InStock Toggle */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    Cantidad en Stock
-                  </label>
-                  <input
-                    type="number"
-                    min={0}
-                    value={formStock}
-                    onChange={(e) => setFormStock(Number(e.target.value))}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-bold text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
-                  />
-                </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">SKU</label>
-                  <input
-                    type="text"
-                    value={formSku}
-                    onChange={(e) => setFormSku(e.target.value)}
-                    placeholder="PL-001"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-mono font-bold text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
-                  />
-                </div>
-                <div className="pb-1">
-                  <label className="flex items-center space-x-2 font-bold text-slate-700 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={formInStock}
-                      onChange={(e) => setFormInStock(e.target.checked)}
-                      className="accent-[#FF5200] w-4 h-4 rounded cursor-pointer"
-                    />
-                    <span>Producto en Stock</span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Descripción</label>
-                <textarea
-                  rows={2}
-                  value={formDescription}
-                  onChange={(e) => setFormDescription(e.target.value)}
-                  placeholder="Descripción detallada del producto..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 font-medium text-slate-700 focus:outline-none focus:border-[#FF5200]"
-                />
-              </div>
-
-              {/* Benefits (one per line) */}
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">
-                  Beneficios clave (uno por línea)
-                </label>
-                <textarea
-                  rows={2}
-                  value={formBenefits}
-                  onChange={(e) => setFormBenefits(e.target.value)}
-                  placeholder="Carne de vacuno como primer ingrediente&#10;Pelaje brillante y saludable&#10;Digestión óptima"
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 font-medium text-slate-700 focus:outline-none focus:border-[#FF5200]"
-                />
-              </div>
-
-              {/* Image Upload Box */}
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">
-                  Imagen Principal del Producto
-                </label>
-                <div className="flex items-center space-x-4 p-3 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50">
-                  <div className="w-16 h-16 rounded-xl bg-white border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
-                    {imagePreview ? (
-                      <img src={imagePreview} alt="Preview" className="w-full h-full object-contain" />
-                    ) : (
-                      <ImageIcon className="w-6 h-6 text-slate-300" />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="py-1.5 px-3 rounded-xl bg-white border border-slate-200 hover:border-[#FF5200] text-slate-700 font-bold text-xs flex items-center space-x-1.5 shadow-2xs transition-colors cursor-pointer"
-                    >
-                      <Upload className="w-3.5 h-3.5 text-[#FF5200]" />
-                      <span>{imagePreview ? 'Cambiar imagen' : 'Subir imagen desde tu equipo'}</span>
-                    </button>
-                    <span className="text-[10px] text-slate-400 block mt-1">
-                      Formatos recomendados: JPEG, PNG, WEBP (Hasta 5MB).
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Submit Buttons */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-full border border-slate-200 font-bold text-slate-600 hover:bg-slate-50 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSavingProduct}
-                  className="px-6 py-2.5 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold shadow-orange-glow transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center space-x-2"
-                >
-                  {isSavingProduct ? (
-                    <>
-                      <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Guardando en base de datos...</span>
-                    </>
-                  ) : (
-                    <span>{editingProduct ? 'Guardar Cambios' : 'Crear Producto'}</span>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ===================================================================== */}
-      {/* MODAL: DETALLE DEL PEDIDO                                            */}
-      {/* ===================================================================== */}
-      {selectedOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#061F3D]/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-100 p-6 relative">
-            <button
-              onClick={() => setSelectedOrder(null)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center space-x-2 mb-4">
-              <span className="px-2.5 py-1 rounded-full bg-orange-50 text-[#FF5200] font-black text-xs">
-                {selectedOrder.orderNumber}
-              </span>
-              <span className="text-xs text-slate-400 font-semibold">
-                {new Date(selectedOrder.created).toLocaleString('es-CL')}
-              </span>
-            </div>
-
-            <h3 className="text-lg font-black text-[#061F3D] mb-4">
-              Detalle del Pedido
-            </h3>
-
-            {/* Customer info */}
-            <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 space-y-1 text-xs text-slate-600 mb-4">
-              <p className="font-bold text-[#061F3D]">{selectedOrder.customerName}</p>
-              <p className="flex items-center space-x-1.5 text-slate-500">
-                <Mail className="w-3.5 h-3.5 text-slate-400" />
-                <span>{selectedOrder.customerEmail}</span>
-              </p>
-              {selectedOrder.customerPhone && (
-                <p className="flex items-center space-x-1.5 text-slate-500">
-                  <Phone className="w-3.5 h-3.5 text-slate-400" />
-                  <span>{selectedOrder.customerPhone}</span>
-                </p>
-              )}
-              <p className="flex items-center space-x-1.5 text-slate-500">
-                <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                <span>{selectedOrder.customerAddress}, {selectedOrder.customerCity || 'Santiago'}</span>
-              </p>
-            </div>
-
-            {/* Items list */}
-            <div className="max-h-48 overflow-y-auto space-y-2 mb-4">
-              {selectedOrder.items?.map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between text-xs py-1.5 border-b border-slate-100">
-                  <div className="max-w-[240px] truncate">
-                    <span className="font-bold text-[#061F3D] block truncate">{item.name}</span>
-                    <span className="text-[10px] text-slate-400">Cant: {item.quantity} • {formatPrice(item.price)} c/u</span>
-                  </div>
-                  <span className="font-black text-[#061F3D]">
-                    {formatPrice(item.price * item.quantity)}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Total */}
-            <div className="pt-2 border-t border-slate-200 flex items-center justify-between mb-4">
-              <span className="font-bold text-slate-600 text-xs">Total del pedido:</span>
-              <span className="font-black text-lg text-[#061F3D]">{formatPrice(selectedOrder.total)}</span>
-            </div>
-
-            {/* Change Status */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                Cambiar estado del pedido:
-              </label>
-              <div className="grid grid-cols-3 gap-2 text-[11px] font-bold">
-                {(['pendiente', 'pagado', 'en_preparacion', 'despachado', 'entregado', 'cancelado'] as const).map((st) => (
-                  <button
-                    key={st}
-                    onClick={() => handleChangeOrderStatus(selectedOrder.id, st)}
-                    className={`py-1.5 px-2 rounded-xl border capitalize cursor-pointer transition-colors ${
-                      selectedOrder.status === st
-                        ? 'bg-[#FF5200] text-white border-[#FF5200]'
-                        : 'border-slate-200 hover:bg-slate-50 text-slate-600'
-                    }`}
-                  >
-                    {st.replace('_', ' ')}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      </main>
     </div>
   );
 };
