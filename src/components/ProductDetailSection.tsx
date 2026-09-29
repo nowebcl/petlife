@@ -1,5 +1,5 @@
 import { useState, type FC } from 'react';
-import type { Product } from '../data/products.ts';
+import { formatPrice, type Product } from '../data/products.ts';
 import {
   Star,
   ShoppingCart,
@@ -203,11 +203,11 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                 <div>
                   <div className="flex items-baseline space-x-2.5">
                     <span className="text-3xl sm:text-4xl font-black text-[#061F3D]">
-                      ${currentPrice.toFixed(2)}
+                      {formatPrice(currentPrice)}
                     </span>
                     {currentOriginalPrice && (
                       <span className="text-base sm:text-lg text-slate-400 line-through">
-                        ${currentOriginalPrice.toFixed(2)}
+                        {formatPrice(currentOriginalPrice)}
                       </span>
                     )}
                   </div>
@@ -218,7 +218,7 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
 
                 {hasDiscount && currentOriginalPrice && (
                   <div className="px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold">
-                    Ahorras ${(currentOriginalPrice - currentPrice).toFixed(2)}
+                    Ahorras {formatPrice(currentOriginalPrice - currentPrice)}
                   </div>
                 )}
               </div>
@@ -249,7 +249,7 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                             {isSelected && <Check className="w-3.5 h-3.5 text-[#FF5200]" />}
                           </div>
                           <span className="text-xs font-extrabold text-slate-700 block mt-1">
-                            ${v.price.toFixed(2)}
+                            {formatPrice(v.price)}
                           </span>
                         </button>
                       );
@@ -608,7 +608,7 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                   </div>
                   <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100">
                     <span className="text-sm font-black text-[#061F3D]">
-                      ${rel.price.toFixed(2)}
+                      {formatPrice(rel.price)}
                     </span>
                     <span className="text-[10px] font-bold text-[#061F3D] bg-slate-100 hover:bg-[#FF5200] hover:text-white px-2 py-1 rounded-full transition-colors">
                       Ver detalle

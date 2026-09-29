@@ -14,7 +14,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
-import { FEATURED_PRODUCTS, type Product } from '../data/products.ts';
+import { FEATURED_PRODUCTS, type Product, formatPrice } from '../data/products.ts';
 export type { Product } from '../data/products.ts';
 
 const PRODUCTS: Product[] = FEATURED_PRODUCTS;
@@ -283,11 +283,11 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
                     <div>
                       <div className="flex items-baseline space-x-1">
                         <span className="text-sm sm:text-base font-black text-[#061F3D]">
-                          ${product.price.toFixed(2)}
+                          {formatPrice(product.price)}
                         </span>
                         {product.originalPrice && (
                           <span className="text-[10px] text-slate-400 line-through">
-                            ${product.originalPrice.toFixed(2)}
+                            {formatPrice(product.originalPrice)}
                           </span>
                         )}
                       </div>

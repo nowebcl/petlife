@@ -4,7 +4,7 @@ import { Hero } from './components/Hero.tsx';
 import { ProductsSection } from './components/ProductsSection.tsx';
 import { CatalogSection } from './components/CatalogSection.tsx';
 import { ProductDetailSection } from './components/ProductDetailSection.tsx';
-import { PRODUCTS_DATABASE, type Product } from './data/products.ts';
+import { PRODUCTS_DATABASE, type Product, formatPrice } from './data/products.ts';
 import { BottomNavBar } from './components/BottomNavBar.tsx';
 import { ShoppingBag, CheckCircle2, X, Trash2, ArrowRight } from 'lucide-react';
 import { Logo } from './components/Logo.tsx';
@@ -327,7 +327,7 @@ export default function App() {
                           {product.name}
                         </h4>
                         <div className="flex items-center space-x-2 text-[10px] sm:text-xs text-slate-400 mt-0.5">
-                          <span>${product.price.toFixed(2)} c/u</span>
+                          <span>{formatPrice(product.price)} c/u</span>
                           <span>•</span>
                           <span className="font-semibold text-slate-600">Cant: {quantity}</span>
                         </div>
@@ -336,7 +336,7 @@ export default function App() {
 
                     <div className="flex items-center space-x-2 sm:space-x-3">
                       <span className="font-black text-xs sm:text-sm text-[#061F3D]">
-                        ${(product.price * quantity).toFixed(2)}
+                        {formatPrice(product.price * quantity)}
                       </span>
                       <button
                         onClick={() => handleRemoveFromCart(product.id)}
@@ -356,7 +356,7 @@ export default function App() {
                 <div className="flex items-center justify-between">
                   <span className="text-xs sm:text-sm font-semibold text-slate-500">Subtotal:</span>
                   <span className="text-xl sm:text-2xl font-black text-[#061F3D]">
-                    ${cartSubtotal.toFixed(2)}
+                    {formatPrice(cartSubtotal)}
                   </span>
                 </div>
                 <button

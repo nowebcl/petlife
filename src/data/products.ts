@@ -1,3 +1,7 @@
+export const formatPrice = (price: number): string => {
+  return '$' + Math.round(price).toLocaleString('es-CL');
+};
+
 export interface ProductVariant {
   id: string;
   label: string;
@@ -57,8 +61,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 34.9,
-    "originalPrice": 39.9,
+    "price": 47900,
+    "originalPrice": 52900,
     "rating": 4.8,
     "reviewsCount": 86,
     "weightOrSize": "15 kg",
@@ -78,15 +82,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 11.9,
+        "price": 11900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 15 kg",
         "weightOrSize": "15 kg",
-        "price": 34.9,
-        "originalPrice": 39.9,
+        "price": 47900,
+        "originalPrice": 52900,
         "inStock": true
       }
     ],
@@ -154,11 +158,11 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Arenas & Higiene",
     "petType": "gato",
     "lifeStage": "todas",
-    "price": 16.9,
-    "originalPrice": 19.9,
+    "price": 16900,
+    "originalPrice": 19900,
     "rating": 4.9,
     "reviewsCount": 112,
-    "weightOrSize": "10 kg",
+    "weightOrSize": "15 kg",
     "icon": "✨",
     "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
     "description": "Arena sanitaria aglutinante instantánea sin fragancia, 99.9% libre de polvo y con control superior de olores.",
@@ -173,17 +177,18 @@ export const PRODUCTS_DATABASE: Product[] = [
     "variants": [
       {
         "id": "v1",
-        "label": "Bolsa 5 kg",
-        "weightOrSize": "5 kg",
-        "price": 9.9,
+        "label": "Bolsa 15 kg",
+        "weightOrSize": "15 kg",
+        "price": 16900,
+        "originalPrice": 19900,
         "inStock": true
       },
       {
         "id": "v2",
-        "label": "Bolsa 10 kg",
-        "weightOrSize": "10 kg",
-        "price": 16.9,
-        "originalPrice": 19.9,
+        "label": "Bolsa 20 kg",
+        "weightOrSize": "20 kg",
+        "price": 20900,
+        "originalPrice": 24900,
         "inStock": true
       }
     ],
@@ -247,8 +252,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 29.9,
-    "originalPrice": 34.9,
+    "price": 29900,
+    "originalPrice": 34900,
     "rating": 4.9,
     "reviewsCount": 78,
     "weightOrSize": "4 kg",
@@ -268,22 +273,22 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 1 kg",
         "weightOrSize": "1 kg",
-        "price": 9.9,
+        "price": 11900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Bolsa 4 kg",
         "weightOrSize": "4 kg",
-        "price": 29.9,
-        "originalPrice": 34.9,
+        "price": 29900,
+        "originalPrice": 34900,
         "inStock": true
       },
       {
         "id": "v3",
         "label": "Saco 12.5 kg",
         "weightOrSize": "12.5 kg",
-        "price": 74.9,
+        "price": 74900,
         "inStock": true
       }
     ],
@@ -351,8 +356,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 46.9,
-    "originalPrice": 54.9,
+    "price": 52900,
+    "originalPrice": 54900,
     "rating": 5,
     "reviewsCount": 145,
     "weightOrSize": "7 kg",
@@ -372,15 +377,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 2 kg",
         "weightOrSize": "2 kg",
-        "price": 17.9,
+        "price": 17900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7 kg",
-        "weightOrSize": "46.90",
-        "price": 46.9,
-        "originalPrice": 54.9,
+        "weightOrSize": "7 kg",
+        "price": 52900,
+        "originalPrice": 54900,
         "inStock": true
       }
     ],
@@ -448,8 +453,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "cachorro",
-    "price": 21.9,
-    "originalPrice": 25.9,
+    "price": 21900,
+    "originalPrice": 25900,
     "rating": 4.9,
     "reviewsCount": 94,
     "weightOrSize": "2 kg",
@@ -469,15 +474,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 2 kg",
         "weightOrSize": "2 kg",
-        "price": 21.9,
-        "originalPrice": 25.9,
+        "price": 21900,
+        "originalPrice": 25900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7 kg",
         "weightOrSize": "7 kg",
-        "price": 49.9,
+        "price": 52900,
         "inStock": true
       }
     ],
@@ -545,8 +550,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 69.9,
-    "originalPrice": 79.9,
+    "price": 69900,
+    "originalPrice": 79900,
     "rating": 5,
     "reviewsCount": 160,
     "weightOrSize": "12 kg",
@@ -566,15 +571,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 4 kg",
         "weightOrSize": "4 kg",
-        "price": 28.9,
+        "price": 28900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 12 kg",
         "weightOrSize": "12 kg",
-        "price": 69.9,
-        "originalPrice": 79.9,
+        "price": 69900,
+        "originalPrice": 79900,
         "inStock": true
       }
     ],
@@ -644,8 +649,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "senior",
-    "price": 72.9,
-    "originalPrice": 84.9,
+    "price": 72900,
+    "originalPrice": 84900,
     "rating": 4.9,
     "reviewsCount": 88,
     "weightOrSize": "12 kg",
@@ -665,15 +670,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 4 kg",
         "weightOrSize": "4 kg",
-        "price": 29.9,
+        "price": 29900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 12 kg",
         "weightOrSize": "12 kg",
-        "price": 72.9,
-        "originalPrice": 84.9,
+        "price": 72900,
+        "originalPrice": 84900,
         "inStock": true
       }
     ],
@@ -742,8 +747,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 48.9,
-    "originalPrice": 56.9,
+    "price": 48900,
+    "originalPrice": 56900,
     "rating": 5,
     "reviewsCount": 132,
     "weightOrSize": "7 kg",
@@ -763,15 +768,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 2 kg",
         "weightOrSize": "2 kg",
-        "price": 18.9,
+        "price": 18900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7 kg",
         "weightOrSize": "7 kg",
-        "price": 48.9,
-        "originalPrice": 56.9,
+        "price": 52900,
+        "originalPrice": 56900,
         "inStock": true
       }
     ],
@@ -839,8 +844,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Arenas & Higiene",
     "petType": "gato",
     "lifeStage": "todas",
-    "price": 13.9,
-    "originalPrice": 16.5,
+    "price": 12900,
+    "originalPrice": 16500,
     "rating": 4.8,
     "reviewsCount": 110,
     "weightOrSize": "10 kg",
@@ -860,8 +865,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 10 kg",
         "weightOrSize": "10 kg",
-        "price": 13.9,
-        "originalPrice": 16.5,
+        "price": 12900,
+        "originalPrice": 15900,
         "inStock": true
       }
     ],
@@ -926,8 +931,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 38.9,
-    "originalPrice": 44.9,
+    "price": 38900,
+    "originalPrice": 44900,
     "rating": 4.9,
     "reviewsCount": 124,
     "weightOrSize": "7.5 kg",
@@ -947,15 +952,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 2.7 kg",
         "weightOrSize": "2.7 kg",
-        "price": 19.9,
+        "price": 19900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
-        "price": 38.9,
-        "originalPrice": 44.9,
+        "price": 38900,
+        "originalPrice": 44900,
         "inStock": true
       }
     ],
@@ -1024,8 +1029,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 19.9,
-    "originalPrice": 22.9,
+    "price": 19900,
+    "originalPrice": 22900,
     "rating": 4.8,
     "reviewsCount": 76,
     "weightOrSize": "2.7 kg",
@@ -1045,8 +1050,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 2.7 kg",
         "weightOrSize": "2.7 kg",
-        "price": 19.9,
-        "originalPrice": 22.9,
+        "price": 19900,
+        "originalPrice": 22900,
         "inStock": true
       }
     ],
@@ -1114,8 +1119,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Arenas & Higiene",
     "petType": "perro",
     "lifeStage": "todas",
-    "price": 14.9,
-    "originalPrice": 17.9,
+    "price": 14900,
+    "originalPrice": 17900,
     "rating": 4.9,
     "reviewsCount": 95,
     "weightOrSize": "24 pcs (60x60cm)",
@@ -1135,15 +1140,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Paquete 24 pcs",
         "weightOrSize": "24 pcs",
-        "price": 14.9,
-        "originalPrice": 17.9,
+        "price": 14900,
+        "originalPrice": 17900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Pack Ahorro 48 pcs",
         "weightOrSize": "48 pcs",
-        "price": 26.9,
+        "price": 26900,
         "inStock": true
       }
     ],
@@ -1209,8 +1214,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Arenas & Higiene",
     "petType": "perro",
     "lifeStage": "todas",
-    "price": 9.9,
-    "originalPrice": 12,
+    "price": 9900,
+    "originalPrice": 12000,
     "rating": 4.8,
     "reviewsCount": 64,
     "weightOrSize": "12 pcs (33x45cm)",
@@ -1230,8 +1235,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Paquete 12 pcs",
         "weightOrSize": "12 pcs",
-        "price": 9.9,
-        "originalPrice": 12,
+        "price": 9900,
+        "originalPrice": 12000,
         "inStock": true
       }
     ],
@@ -1297,8 +1302,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 39.9,
-    "originalPrice": 46.9,
+    "price": 39900,
+    "originalPrice": 46900,
     "rating": 4.8,
     "reviewsCount": 180,
     "weightOrSize": "20 kg",
@@ -1318,8 +1323,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Saco 20 kg",
         "weightOrSize": "20 kg",
-        "price": 39.9,
-        "originalPrice": 46.9,
+        "price": 39900,
+        "originalPrice": 46900,
         "inStock": true
       }
     ],
@@ -1387,8 +1392,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Pequeñas Mascotas",
     "petType": "ambos",
     "lifeStage": "todas",
-    "price": 6.9,
-    "originalPrice": 8.5,
+    "price": 3000,
+    "originalPrice": 3900,
     "rating": 4.9,
     "reviewsCount": 42,
     "weightOrSize": "500 g",
@@ -1408,8 +1413,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 500 g",
         "weightOrSize": "500 g",
-        "price": 6.9,
-        "originalPrice": 8.5,
+        "price": 3000,
+        "originalPrice": 3900,
         "inStock": true
       }
     ],
@@ -1477,8 +1482,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Pequeñas Mascotas",
     "petType": "ambos",
     "lifeStage": "todas",
-    "price": 6.9,
-    "originalPrice": 8.5,
+    "price": 3000,
+    "originalPrice": 3900,
     "rating": 4.9,
     "reviewsCount": 38,
     "weightOrSize": "500 g",
@@ -1498,8 +1503,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 500 g",
         "weightOrSize": "500 g",
-        "price": 6.9,
-        "originalPrice": 8.5,
+        "price": 3000,
+        "originalPrice": 3900,
         "inStock": true
       }
     ],
@@ -1567,8 +1572,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 49.9,
-    "originalPrice": 58,
+    "price": 49900,
+    "originalPrice": 58000,
     "rating": 5,
     "reviewsCount": 68,
     "weightOrSize": "7.5 kg",
@@ -1588,15 +1593,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 1.8 kg",
         "weightOrSize": "1.8 kg",
-        "price": 18.9,
+        "price": 18900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
-        "price": 49.9,
-        "originalPrice": 58,
+        "price": 49900,
+        "originalPrice": 58000,
         "inStock": true
       }
     ],
@@ -1664,8 +1669,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Arenas & Higiene",
     "petType": "gato",
     "lifeStage": "todas",
-    "price": 12.9,
-    "originalPrice": 15.5,
+    "price": 12900,
+    "originalPrice": 15500,
     "rating": 4.8,
     "reviewsCount": 82,
     "weightOrSize": "9 kg",
@@ -1685,8 +1690,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 9 kg",
         "weightOrSize": "9 kg",
-        "price": 12.9,
-        "originalPrice": 15.5,
+        "price": 12900,
+        "originalPrice": 15500,
         "inStock": true
       }
     ],
@@ -1751,8 +1756,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 42.9,
-    "originalPrice": 49.9,
+    "price": 42900,
+    "originalPrice": 49900,
     "rating": 4.9,
     "reviewsCount": 215,
     "weightOrSize": "20 kg",
@@ -1772,8 +1777,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Saco 20 kg",
         "weightOrSize": "20 kg",
-        "price": 42.9,
-        "originalPrice": 49.9,
+        "price": 42900,
+        "originalPrice": 49900,
         "inStock": true
       }
     ],
@@ -1841,8 +1846,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Arenas & Higiene",
     "petType": "gato",
     "lifeStage": "todas",
-    "price": 14.5,
-    "originalPrice": 17.5,
+    "price": 14500,
+    "originalPrice": 17500,
     "rating": 4.8,
     "reviewsCount": 90,
     "weightOrSize": "10 kg",
@@ -1862,8 +1867,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 10 kg",
         "weightOrSize": "10 kg",
-        "price": 14.5,
-        "originalPrice": 17.5,
+        "price": 14500,
+        "originalPrice": 17500,
         "inStock": true
       }
     ],
@@ -1927,8 +1932,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 31.9,
-    "originalPrice": 36.9,
+    "price": 31900,
+    "originalPrice": 36900,
     "rating": 4.8,
     "reviewsCount": 135,
     "weightOrSize": "10 kg",
@@ -1948,8 +1953,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Saco 10 kg",
         "weightOrSize": "10 kg",
-        "price": 31.9,
-        "originalPrice": 36.9,
+        "price": 31900,
+        "originalPrice": 36900,
         "inStock": true
       }
     ],
@@ -2017,8 +2022,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 26.9,
-    "originalPrice": 31.9,
+    "price": 26900,
+    "originalPrice": 31900,
     "rating": 4.7,
     "reviewsCount": 58,
     "weightOrSize": "8 kg",
@@ -2038,8 +2043,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 8 kg",
         "weightOrSize": "8 kg",
-        "price": 26.9,
-        "originalPrice": 31.9,
+        "price": 26900,
+        "originalPrice": 31900,
         "inStock": true
       }
     ],
@@ -2107,8 +2112,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 42.9,
-    "originalPrice": 48.9,
+    "price": 42900,
+    "originalPrice": 48900,
     "rating": 4.7,
     "reviewsCount": 72,
     "weightOrSize": "15 kg",
@@ -2128,8 +2133,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Saco 15 kg",
         "weightOrSize": "15 kg",
-        "price": 42.9,
-        "originalPrice": 48.9,
+        "price": 47900,
+        "originalPrice": 48900,
         "inStock": true
       }
     ],
@@ -2197,8 +2202,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 28.9,
-    "originalPrice": 33.9,
+    "price": 28900,
+    "originalPrice": 33900,
     "rating": 4.8,
     "reviewsCount": 190,
     "weightOrSize": "8 kg",
@@ -2218,15 +2223,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 12.9,
+        "price": 12900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Bolsa 8 kg",
         "weightOrSize": "8 kg",
-        "price": 28.9,
-        "originalPrice": 33.9,
+        "price": 28900,
+        "originalPrice": 33900,
         "inStock": true
       }
     ],
@@ -2294,8 +2299,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 18.9,
-    "originalPrice": 22,
+    "price": 18900,
+    "originalPrice": 22000,
     "rating": 4.9,
     "reviewsCount": 104,
     "weightOrSize": "2 kg",
@@ -2315,8 +2320,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 2 kg",
         "weightOrSize": "2 kg",
-        "price": 18.9,
-        "originalPrice": 22,
+        "price": 18900,
+        "originalPrice": 22000,
         "inStock": true
       }
     ],
@@ -2385,8 +2390,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 52.9,
-    "originalPrice": 61.9,
+    "price": 52900,
+    "originalPrice": 61900,
     "rating": 4.9,
     "reviewsCount": 128,
     "weightOrSize": "15 kg",
@@ -2406,15 +2411,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3.5 kg",
         "weightOrSize": "3.5 kg",
-        "price": 17.9,
+        "price": 17900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 15 kg",
         "weightOrSize": "15 kg",
-        "price": 52.9,
-        "originalPrice": 61.9,
+        "price": 47900,
+        "originalPrice": 61900,
         "inStock": true
       }
     ],
@@ -2482,8 +2487,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 34.9,
-    "originalPrice": 39.9,
+    "price": 34900,
+    "originalPrice": 39900,
     "rating": 4.9,
     "reviewsCount": 115,
     "weightOrSize": "7.5 kg",
@@ -2503,15 +2508,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 1.5 kg",
         "weightOrSize": "1.5 kg",
-        "price": 9.9,
+        "price": 9900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
-        "price": 34.9,
-        "originalPrice": 39.9,
+        "price": 34900,
+        "originalPrice": 39900,
         "inStock": true
       }
     ],
@@ -2579,8 +2584,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 54.9,
-    "originalPrice": 63.9,
+    "price": 54900,
+    "originalPrice": 63900,
     "rating": 5,
     "reviewsCount": 175,
     "weightOrSize": "7.5 kg",
@@ -2600,15 +2605,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 27.9,
+        "price": 27900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
-        "price": 54.9,
-        "originalPrice": 63.9,
+        "price": 54900,
+        "originalPrice": 63900,
         "inStock": true
       }
     ],
@@ -2676,8 +2681,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "cachorro",
-    "price": 29.9,
-    "originalPrice": 35,
+    "price": 29900,
+    "originalPrice": 35000,
     "rating": 5,
     "reviewsCount": 130,
     "weightOrSize": "3 kg",
@@ -2697,15 +2702,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 1 kg",
         "weightOrSize": "1 kg",
-        "price": 12.9,
+        "price": 11900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 29.9,
-        "originalPrice": 35,
+        "price": 29900,
+        "originalPrice": 35000,
         "inStock": true
       }
     ],
@@ -2772,8 +2777,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "cachorro",
-    "price": 49.9,
-    "originalPrice": 58,
+    "price": 49900,
+    "originalPrice": 58000,
     "rating": 5,
     "reviewsCount": 154,
     "weightOrSize": "7.5 kg",
@@ -2793,15 +2798,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 24.9,
+        "price": 24900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
-        "price": 49.9,
-        "originalPrice": 58,
+        "price": 49900,
+        "originalPrice": 58000,
         "inStock": true
       }
     ],
@@ -2869,8 +2874,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 56.9,
-    "originalPrice": 65.9,
+    "price": 56900,
+    "originalPrice": 65900,
     "rating": 5,
     "reviewsCount": 165,
     "weightOrSize": "7.5 kg",
@@ -2890,15 +2895,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 28.9,
+        "price": 28900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
-        "price": 56.9,
-        "originalPrice": 65.9,
+        "price": 56900,
+        "originalPrice": 65900,
         "inStock": true
       }
     ],
@@ -2966,8 +2971,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 58.9,
-    "originalPrice": 67.9,
+    "price": 58900,
+    "originalPrice": 67900,
     "rating": 5,
     "reviewsCount": 140,
     "weightOrSize": "7.5 kg",
@@ -2987,15 +2992,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 29.9,
+        "price": 29900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
-        "price": 58.9,
-        "originalPrice": 67.9,
+        "price": 58900,
+        "originalPrice": 67900,
         "inStock": true
       }
     ],
@@ -3063,8 +3068,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 24.9,
-    "originalPrice": 29.9,
+    "price": 24900,
+    "originalPrice": 29900,
     "rating": 4.7,
     "reviewsCount": 75,
     "weightOrSize": "10 kg",
@@ -3084,8 +3089,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Saco 10 kg",
         "weightOrSize": "10 kg",
-        "price": 24.9,
-        "originalPrice": 29.9,
+        "price": 24900,
+        "originalPrice": 29900,
         "inStock": true
       }
     ],
@@ -3153,8 +3158,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "todas",
-    "price": 59.9,
-    "originalPrice": 69.9,
+    "price": 59900,
+    "originalPrice": 69900,
     "rating": 5,
     "reviewsCount": 185,
     "weightOrSize": "6.6 kg",
@@ -3174,15 +3179,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 2 kg",
         "weightOrSize": "2 kg",
-        "price": 23.9,
+        "price": 23900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 6.6 kg",
         "weightOrSize": "6.6 kg",
-        "price": 59.9,
-        "originalPrice": 69.9,
+        "price": 59900,
+        "originalPrice": 69900,
         "inStock": true
       }
     ],
@@ -3252,8 +3257,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 27.9,
-    "originalPrice": 32.5,
+    "price": 27900,
+    "originalPrice": 32500,
     "rating": 4.8,
     "reviewsCount": 65,
     "weightOrSize": "9 kg",
@@ -3273,8 +3278,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Saco 9 kg",
         "weightOrSize": "9 kg",
-        "price": 27.9,
-        "originalPrice": 32.5,
+        "price": 27900,
+        "originalPrice": 32500,
         "inStock": true
       }
     ],
@@ -3342,8 +3347,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 22.9,
-    "originalPrice": 26.9,
+    "price": 22900,
+    "originalPrice": 26900,
     "rating": 4.7,
     "reviewsCount": 54,
     "weightOrSize": "10 kg",
@@ -3363,8 +3368,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Saco 10 kg",
         "weightOrSize": "10 kg",
-        "price": 22.9,
-        "originalPrice": 26.9,
+        "price": 22900,
+        "originalPrice": 26900,
         "inStock": true
       }
     ],
@@ -3432,8 +3437,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 21.9,
-    "originalPrice": 25.9,
+    "price": 21900,
+    "originalPrice": 25900,
     "rating": 4.8,
     "reviewsCount": 60,
     "weightOrSize": "9 kg",
@@ -3453,8 +3458,8 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Saco 9 kg",
         "weightOrSize": "9 kg",
-        "price": 21.9,
-        "originalPrice": 25.9,
+        "price": 21900,
+        "originalPrice": 25900,
         "inStock": true
       }
     ],
@@ -3522,8 +3527,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 57.9,
-    "originalPrice": 66.9,
+    "price": 57900,
+    "originalPrice": 66900,
     "rating": 4.9,
     "reviewsCount": 138,
     "weightOrSize": "17 kg",
@@ -3543,15 +3548,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 15.9,
+        "price": 15900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 17 kg",
         "weightOrSize": "17 kg",
-        "price": 57.9,
-        "originalPrice": 66.9,
+        "price": 57900,
+        "originalPrice": 66900,
         "inStock": true
       }
     ],
@@ -3619,8 +3624,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 36.9,
-    "originalPrice": 42.9,
+    "price": 36900,
+    "originalPrice": 42900,
     "rating": 5,
     "reviewsCount": 92,
     "weightOrSize": "7.5 kg",
@@ -3640,15 +3645,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 18.9,
+        "price": 18900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 7.5 kg",
         "weightOrSize": "7.5 kg",
-        "price": 36.9,
-        "originalPrice": 42.9,
+        "price": 36900,
+        "originalPrice": 42900,
         "inStock": true
       }
     ],
@@ -3715,8 +3720,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "adulto",
-    "price": 49.9,
-    "originalPrice": 57.9,
+    "price": 49900,
+    "originalPrice": 57900,
     "rating": 4.9,
     "reviewsCount": 110,
     "weightOrSize": "15 kg",
@@ -3736,15 +3741,15 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 14.9,
+        "price": 14900,
         "inStock": true
       },
       {
         "id": "v2",
         "label": "Saco 15 kg",
         "weightOrSize": "15 kg",
-        "price": 49.9,
-        "originalPrice": 57.9,
+        "price": 47900,
+        "originalPrice": 57900,
         "inStock": true
       }
     ],

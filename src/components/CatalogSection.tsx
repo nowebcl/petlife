@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, type FC } from 'react';
 import type { Product } from '../data/products.ts';
-import { ALL_CATEGORIES } from '../data/products.ts';
+import { ALL_CATEGORIES, formatPrice } from '../data/products.ts';
 import {
   Search,
   SlidersHorizontal,
@@ -112,9 +112,9 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
 
         // Price Range
         let matchPrice = true;
-        if (priceRange === 'under-20') matchPrice = p.price < 20;
-        if (priceRange === '20-50') matchPrice = p.price >= 20 && p.price <= 50;
-        if (priceRange === 'over-50') matchPrice = p.price > 50;
+        if (priceRange === 'under-20') matchPrice = p.price < 20000;
+        if (priceRange === '20-50') matchPrice = p.price >= 20000 && p.price <= 50000;
+        if (priceRange === 'over-50') matchPrice = p.price > 50000;
 
         // Toggles
         const matchDiscount = !onlyDiscount || Boolean(p.originalPrice && p.originalPrice > p.price);
@@ -317,9 +317,9 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
               <div className="space-y-1.5">
                 {[
                   { id: 'all', label: 'Cualquier precio' },
-                  { id: 'under-20', label: 'Menos de $20' },
-                  { id: '20-50', label: '$20 a $50' },
-                  { id: 'over-50', label: 'Más de $50' },
+                  { id: 'under-20', label: 'Menos de $20.000' },
+                  { id: '20-50', label: '$20.000 a $50.000' },
+                  { id: 'over-50', label: 'Más de $50.000' },
                 ].map((range) => (
                   <label
                     key={range.id}
@@ -488,7 +488,7 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                   {priceRange !== 'all' && (
                     <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-[11px]">
                       <span>
-                        {priceRange === 'under-20' ? '< $20' : priceRange === '20-50' ? '$20 - $50' : '> $50'}
+                        {priceRange === 'under-20' ? '< $20.000' : priceRange === '20-50' ? '$20.000 - $50.000' : '> $50.000'}
                       </span>
                       <button onClick={() => setPriceRange('all')}>
                         <X className="w-3 h-3 ml-0.5" />
@@ -650,11 +650,11 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                         <div>
                           <div className="flex items-baseline space-x-1">
                             <span className="text-sm sm:text-lg font-black text-[#061F3D]">
-                              ${product.price.toFixed(2)}
+                              {formatPrice(product.price)}
                             </span>
                             {product.originalPrice && (
                               <span className="text-[10px] text-slate-400 line-through">
-                                ${product.originalPrice.toFixed(2)}
+                                {formatPrice(product.originalPrice)}
                               </span>
                             )}
                           </div>
@@ -753,11 +753,11 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                       <div className="w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
                         <div>
                           <span className="text-xl sm:text-2xl font-black text-[#061F3D] block">
-                            ${product.price.toFixed(2)}
+                            {formatPrice(product.price)}
                           </span>
                           {product.originalPrice && (
                             <span className="text-xs text-slate-400 line-through block text-right">
-                              ${product.originalPrice.toFixed(2)}
+                              {formatPrice(product.originalPrice)}
                             </span>
                           )}
                         </div>
