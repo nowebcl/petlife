@@ -1,6 +1,6 @@
 import { useState, type FC } from 'react';
 
-export const WhatsAppIcon: FC<{ className?: string }> = ({ className = 'w-6 h-6' }) => (
+export const WhatsAppIcon: FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
   <svg
     viewBox="0 0 24 24"
     width="24"
@@ -26,41 +26,35 @@ export const FloatingWhatsApp: FC = () => {
   return (
     <aside
       aria-label="Contacto por WhatsApp"
-      className="fixed z-40 bottom-20 sm:bottom-6 right-3.5 sm:right-6 flex items-center space-x-2 group select-none pointer-events-auto"
+      className="fixed z-40 bottom-20 sm:bottom-6 left-3.5 sm:left-6 flex items-center space-x-2.5 group select-none pointer-events-auto"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Tooltip on desktop hover */}
-      <div
-        className={`hidden sm:flex items-center space-x-2 bg-white text-[#061F3D] px-3.5 py-2 rounded-2xl shadow-xl border border-slate-100 transition-all duration-300 origin-right ${
-          isHovered
-            ? 'opacity-100 scale-100 translate-x-0'
-            : 'opacity-0 scale-95 translate-x-2 pointer-events-none'
-        }`}
-      >
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-        <span className="text-xs font-bold whitespace-nowrap">
-          ¿Dudas con tu compra? <strong className="text-emerald-600">¡Escríbenos!</strong>
-        </span>
-      </div>
-
-      {/* Main WhatsApp Floating Action Button */}
+      {/* Main WhatsApp Minimal Floating Button on the LEFT */}
       <a
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Abrir chat de WhatsApp con PetLife (+56 9 8253 5868)"
-        className="relative w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white flex items-center justify-center shadow-[0_4px_24px_rgba(37,211,102,0.45)] hover:shadow-[0_6px_30px_rgba(37,211,102,0.65)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+        aria-label="Contactar por WhatsApp (+56 9 8253 5868)"
+        className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white flex items-center justify-center shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer border border-white/30"
       >
-        {/* Subtle glowing beacon ring */}
-        <span className="absolute -inset-1 rounded-full bg-emerald-400/30 animate-ping pointer-events-none" />
-
-        {/* WhatsApp Icon */}
-        <WhatsAppIcon className="w-7 h-7 sm:w-7 sm:h-7 drop-shadow-xs relative z-10" />
-
-        {/* Online Status Green Dot */}
-        <span className="absolute top-0 right-0 w-3.5 h-3.5 rounded-full bg-emerald-300 border-2 border-white shadow-xs z-10" />
+        <WhatsAppIcon className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-xs" />
+        <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-300 border border-white" />
       </a>
+
+      {/* Minimal clean Tooltip on desktop hover */}
+      <div
+        className={`hidden sm:flex items-center space-x-1.5 bg-[#061F3D] text-white px-3 py-1.5 rounded-xl shadow-lg border border-slate-700/60 transition-all duration-200 origin-left ${
+          isHovered
+            ? 'opacity-100 scale-100 translate-x-0'
+            : 'opacity-0 scale-95 -translate-x-2 pointer-events-none'
+        }`}
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+        <span className="text-xs font-semibold whitespace-nowrap">
+          WhatsApp PetLife
+        </span>
+      </div>
     </aside>
   );
 };
