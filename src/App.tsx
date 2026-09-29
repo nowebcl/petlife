@@ -409,9 +409,22 @@ export default function App() {
                 </button>
               </nav>
 
-              <p className="text-[11px] sm:text-xs text-[#637792] text-center sm:text-right">
-                © {new Date().getFullYear()} PetLife Store. Todo para tu mascota.
-              </p>
+              <div className="flex flex-col items-center sm:items-end space-y-1 text-center sm:text-right">
+                <p className="text-[11px] sm:text-xs text-[#637792]">
+                  © {new Date().getFullYear()} PetLife Store. Todo para tu mascota.
+                </p>
+                <p className="text-[11px] sm:text-xs text-[#637792]">
+                  Desarrollado por{' '}
+                  <a
+                    href="https://www.instagram.com/noweb.dev/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-[#8BA0B8] hover:text-[#FF5200] transition-colors underline decoration-slate-700 hover:decoration-[#FF5200] underline-offset-2 cursor-pointer"
+                  >
+                    noweb.dev
+                  </a>
+                </p>
+              </div>
             </div>
           </footer>
 
