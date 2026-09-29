@@ -20,8 +20,22 @@ interface CartItem {
   quantity: number;
 }
 
+const getInitialView = (): ViewMode => {
+  if (typeof window === 'undefined') return 'home';
+  const path = window.location.pathname.toLowerCase();
+  const hash = window.location.hash.toLowerCase();
+  const search = window.location.search.toLowerCase();
+  if (path === '/admin' || path.startsWith('/admin') || hash === '#admin' || search.includes('admin')) {
+    return 'admin';
+  }
+  if (path === '/cart' || hash === '#cart') return 'cart';
+  if (path === '/checkout' || hash === '#checkout') return 'checkout';
+  if (path === '/catalog' || hash === '#catalog') return 'catalog';
+  return 'home';
+};
+
 export default function App() {
-  const [currentView, setCurrentView] = useState<ViewMode>('home');
+  const [currentView, setCurrentView] = useState<ViewMode>(getInitialView);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [catalogSearchQuery, setCatalogSearchQuery] = useState<string>('');
   const [catalogCategory, setCatalogCategory] = useState<string>('todos');
@@ -52,19 +66,72 @@ export default function App() {
     }
   };
 
+  const updateUrl = (urlPath: string) => {
+    try {
+      if (typeof window !== 'undefined' && window.location.pathname !== urlPath && window.location.hash !== `#${urlPath.replace('/', '')}`) {
+        window.history.pushState(null, '', urlPath);
+      }
+    } catch {
+      // Fallback if pushState fails
+    }
+  };
+
   useEffect(() => {
     refreshProducts();
+
+    const handleUrlChange = () => {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+
+      if (path === '/admin' || path.startsWith('/admin') || hash === '#admin' || search.includes('admin')) {
+        setCurrentView('admin');
+      } else if (path === '/cart' || hash === '#cart') {
+        setCurrentView('cart');
+      } else if (path === '/checkout' || hash === '#checkout') {
+        setCurrentView('checkout');
+      } else if (path === '/catalog' || hash === '#catalog') {
+        setCurrentView('catalog');
+      } else {
+        setCurrentView('home');
+      }
+    };
 
     // Keyboard shortcut: Ctrl + Alt + A toggles Admin Panel
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'A')) {
         e.preventDefault();
-        setCurrentView((prev) => (prev === 'admin' ? 'home' : 'admin'));
+        setCurrentView((prev) => {
+          if (prev === 'admin') {
+            updateUrl('/');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return 'home';
+          } else {
+            updateUrl('/admin');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return 'admin';
+          }
+        });
       }
     };
 
+    // Expose convenient global helper for owner if needed
+    (window as any).petLifeAdmin = () => {
+      setCurrentView('admin');
+      updateUrl('/admin');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    return () => {
+      delete (window as any).petLifeAdmin;
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const handleAddToCart = (product: Product, quantity: number = 1) => {
@@ -105,6 +172,7 @@ export default function App() {
 
   const handleNavigateToHome = () => {
     setCurrentView('home');
+    updateUrl('/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -112,21 +180,19 @@ export default function App() {
     setCatalogCategory(category);
     setCatalogSearchQuery(query);
     setCurrentView('catalog');
+    updateUrl('/catalog');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavigateToCart = () => {
     setCurrentView('cart');
+    updateUrl('/cart');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavigateToCheckout = () => {
     setCurrentView('checkout');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleNavigateToAdmin = () => {
-    setCurrentView('admin');
+    updateUrl('/checkout');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -339,14 +405,6 @@ export default function App() {
                   className="hover:text-white transition-colors cursor-pointer font-bold text-[#FF5200]"
                 >
                   Catálogo Completo
-                </button>
-                <button
-                  onClick={handleNavigateToAdmin}
-                  className="hover:text-amber-400 transition-colors cursor-pointer flex items-center space-x-1.5 text-slate-400 hover:text-white text-xs font-bold bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60"
-                  title="Panel de Administración (o presiona Ctrl+Alt+A)"
-                >
-                  <span>🔒</span>
-                  <span>Admin PetLife</span>
                 </button>
               </div>
 
