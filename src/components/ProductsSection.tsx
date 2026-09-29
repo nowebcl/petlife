@@ -17,18 +17,8 @@ import {
 import { FEATURED_PRODUCTS, type Product, formatPrice } from '../data/products.ts';
 export type { Product } from '../data/products.ts';
 
-const PRODUCTS: Product[] = FEATURED_PRODUCTS;
-
-const CATEGORIES = [
-  { id: 'todos', label: 'Todos', icon: LayoutGrid, count: PRODUCTS.length },
-  { id: 'perros', label: 'Perros', icon: Dog, count: PRODUCTS.filter((p) => p.category === 'perros').length },
-  { id: 'gatos', label: 'Gatos', icon: Cat, count: PRODUCTS.filter((p) => p.category === 'gatos').length },
-  { id: 'higiene', label: 'Higiene', icon: HeartPulse, count: PRODUCTS.filter((p) => p.category === 'higiene').length },
-  { id: 'snacks', label: 'Roedores & Snacks', icon: Cookie, count: PRODUCTS.filter((p) => p.category === 'snacks').length },
-];
-
-
 interface ProductsSectionProps {
+  products?: Product[];
   onAddToCart: (product: Product) => void;
   onToggleFavorite?: (product: Product) => void;
   onSelectProduct?: (product: Product) => void;
@@ -36,11 +26,22 @@ interface ProductsSectionProps {
 }
 
 export const ProductsSection: FC<ProductsSectionProps> = ({
+  products,
   onAddToCart,
   onToggleFavorite,
   onSelectProduct,
   onViewAll,
 }) => {
+  const allList = products && products.length > 0 ? products : FEATURED_PRODUCTS;
+  const activeProducts = useMemo(() => allList.slice(0, 10), [allList]);
+
+  const categories = useMemo(() => [
+    { id: 'todos', label: 'Todos', icon: LayoutGrid, count: activeProducts.length },
+    { id: 'perros', label: 'Perros', icon: Dog, count: activeProducts.filter((p) => p.category === 'perros').length },
+    { id: 'gatos', label: 'Gatos', icon: Cat, count: activeProducts.filter((p) => p.category === 'gatos').length },
+    { id: 'higiene', label: 'Higiene', icon: HeartPulse, count: activeProducts.filter((p) => p.category === 'higiene').length },
+    { id: 'snacks', label: 'Roedores & Snacks', icon: Cookie, count: activeProducts.filter((p) => p.category === 'snacks').length },
+  ], [activeProducts]);
   const [selectedCategory, setSelectedCategory] = useState<string>('todos');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>('featured');
@@ -49,7 +50,7 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
 
   // Filtered and sorted products
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((prod) => {
+    return activeProducts.filter((prod) => {
       const matchCategory = selectedCategory === 'todos' || prod.category === selectedCategory;
       const matchSearch =
         searchQuery.trim() === '' ||
@@ -62,7 +63,7 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
       if (sortBy === 'rating') return b.rating - a.rating;
       return 0; // featured
     });
-  }, [selectedCategory, searchQuery, sortBy]);
+  }, [activeProducts, selectedCategory, searchQuery, sortBy]);
 
   const handleAdd = (product: Product) => {
     onAddToCart(product);
@@ -150,7 +151,7 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
 
         {/* Category Chips: Horizontal Scroll on Mobile, Clean Wrap on Desktop */}
         <div className="mb-6 -mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto sm:overflow-visible no-scrollbar flex sm:flex-wrap items-center gap-2 py-1 scroll-smooth">
-          {CATEGORIES.map((cat) => {
+          {categories.map((cat) => {
             const Icon = cat.icon;
             const isActive = selectedCategory === cat.id;
 

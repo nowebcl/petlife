@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar.tsx';
 import { Hero } from './components/Hero.tsx';
 import { ProductsSection } from './components/ProductsSection.tsx';
@@ -8,6 +8,9 @@ import { PRODUCTS_DATABASE, type Product, formatPrice } from './data/products.ts
 import { BottomNavBar } from './components/BottomNavBar.tsx';
 import { ShoppingBag, CheckCircle2, X, Trash2, ArrowRight } from 'lucide-react';
 import { Logo } from './components/Logo.tsx';
+import { AdminPanel } from './components/AdminPanel.tsx';
+import { CheckoutModal } from './components/CheckoutModal.tsx';
+import { fetchAllProducts } from './services/pocketbase.ts';
 
 interface CartItem {
   product: Product;
@@ -19,6 +22,11 @@ export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [catalogSearchQuery, setCatalogSearchQuery] = useState<string>('');
   const [catalogCategory, setCatalogCategory] = useState<string>('todos');
+
+  // Live products from PocketBase database (falls back to local database)
+  const [products, setProducts] = useState<Product[]>(PRODUCTS_DATABASE);
+  const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -36,6 +44,32 @@ export default function App() {
       setToastMessage(null);
     }, 3200);
   };
+
+  const refreshProducts = async () => {
+    try {
+      const live = await fetchAllProducts();
+      if (live && live.length > 0) {
+        setProducts(live);
+      }
+    } catch (err) {
+      console.error('Error fetching live products from PocketBase:', err);
+    }
+  };
+
+  useEffect(() => {
+    refreshProducts();
+
+    // Keyboard shortcut: Ctrl + Alt + A opens Admin Panel
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault();
+        setIsAdminOpen((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleAddToCart = (product: Product, quantity: number = 1) => {
     const addQty = quantity > 0 ? quantity : 1;
@@ -137,6 +171,7 @@ export default function App() {
 
           {/* Featured Products Section with direct navigation to singular product & catalog */}
           <ProductsSection
+            products={products}
             onAddToCart={(product) => handleAddToCart(product, 1)}
             onSelectProduct={handleSelectProduct}
             onViewAll={() => handleNavigateToCatalog()}
@@ -162,7 +197,7 @@ export default function App() {
 
           {/* Full Catalog Component */}
           <CatalogSection
-            products={PRODUCTS_DATABASE}
+            products={products}
             onSelectProduct={handleSelectProduct}
             onAddToCart={(product) => handleAddToCart(product, 1)}
             onToggleFavorite={() => handleFavoritesClick()}
@@ -191,7 +226,7 @@ export default function App() {
           {/* Singular Product View */}
           <ProductDetailSection
             product={selectedProduct}
-            allProducts={PRODUCTS_DATABASE}
+            allProducts={products}
             onBackToCatalog={() => {
               setCurrentView('catalog');
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -237,6 +272,14 @@ export default function App() {
               className="hover:text-white transition-colors cursor-pointer font-bold text-[#FF5200]"
             >
               Catálogo Completo
+            </button>
+            <button
+              onClick={() => setIsAdminOpen(true)}
+              className="hover:text-amber-400 transition-colors cursor-pointer flex items-center space-x-1.5 text-slate-400 hover:text-white text-xs font-bold bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700/60"
+              title="Panel de Administración (o presiona Ctrl+Alt+A)"
+            >
+              <span>🔒</span>
+              <span>Admin PetLife</span>
             </button>
           </div>
 
@@ -361,9 +404,8 @@ export default function App() {
                 </div>
                 <button
                   onClick={() => {
-                    setCartItems([]);
                     setIsCartModalOpen(false);
-                    showToast('¡Gracias por tu compra! Tu pedido está en camino 🚚🐾');
+                    setIsCheckoutOpen(true);
                   }}
                   className="w-full py-3.5 sm:py-4 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-bold text-xs sm:text-sm text-center shadow-orange-glow transition-all flex items-center justify-center space-x-2 cursor-pointer"
                 >
@@ -375,6 +417,26 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* Admin Panel Modal / Dashboard */}
+      {isAdminOpen && (
+        <AdminPanel
+          onClose={() => setIsAdminOpen(false)}
+          onRefreshProducts={refreshProducts}
+        />
+      )}
+
+      {/* Checkout & Transbank Webpay Modal */}
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        cartItems={cartItems}
+        cartSubtotal={cartSubtotal}
+        onOrderSuccess={(orderNum) => {
+          setCartItems([]);
+          showToast(`¡Pedido ${orderNum} registrado con éxito! 🐾`);
+        }}
+      />
     </div>
   );
 }
