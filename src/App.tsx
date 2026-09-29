@@ -12,6 +12,7 @@ import { BottomNavBar } from './components/BottomNavBar.tsx';
 import { CheckCircle2, X } from 'lucide-react';
 import { Logo } from './components/Logo.tsx';
 import { fetchAllProducts } from './services/pocketbase.ts';
+import { FloatingWhatsApp } from './components/FloatingWhatsApp.tsx';
 
 export type ViewMode = 'home' | 'catalog' | 'product' | 'cart' | 'checkout' | 'admin';
 
@@ -430,6 +431,9 @@ export default function App() {
               }}
             />
           )}
+
+          {/* Direct Floating WhatsApp Contact Button (+56 9 8253 5868) */}
+          <FloatingWhatsApp />
         </>
       )}
     </div>
