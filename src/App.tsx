@@ -373,16 +373,16 @@ export default function App() {
           </div>
 
           {/* Global Storefront Minimal Clean Footer */}
-          <footer className="w-full bg-[#061F3D] text-white py-8 sm:py-12 px-4 sm:px-8 border-t border-slate-800">
-            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+          <footer className="w-full bg-[#061F3D] text-white pt-8 sm:pt-12 pb-28 sm:pb-12 px-4 sm:px-8 border-t border-slate-800">
+            <div className="max-w-7xl mx-auto flex flex-col items-center justify-center space-y-5 sm:space-y-0 sm:flex-row sm:justify-between sm:gap-6 text-center sm:text-left">
               <div
                 onClick={handleNavigateToHome}
-                className="flex items-center space-x-3 cursor-pointer select-none"
+                className="flex items-center justify-center cursor-pointer select-none"
               >
-                <Logo className="h-8 sm:h-12" />
+                <Logo className="h-9 sm:h-12" />
               </div>
 
-              <div className="flex items-center space-x-4 sm:space-x-6 text-xs sm:text-sm text-[#637792]">
+              <nav className="flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-6 gap-y-2 text-xs sm:text-sm text-[#8BA0B8]">
                 <button
                   onClick={() => handleNavigateToCatalog('perros')}
                   className="hover:text-white transition-colors cursor-pointer"
@@ -407,7 +407,7 @@ export default function App() {
                 >
                   Catálogo Completo
                 </button>
-              </div>
+              </nav>
 
               <p className="text-[11px] sm:text-xs text-[#637792] text-center sm:text-right">
                 © {new Date().getFullYear()} PetLife Store. Todo para tu mascota.

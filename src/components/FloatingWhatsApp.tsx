@@ -26,7 +26,7 @@ export const FloatingWhatsApp: FC = () => {
   return (
     <aside
       aria-label="Contacto por WhatsApp"
-      className="fixed z-40 bottom-20 sm:bottom-6 left-3.5 sm:left-6 flex items-center space-x-2.5 group select-none pointer-events-auto"
+      className="fixed z-50 bottom-[76px] sm:bottom-6 left-3.5 sm:left-6 flex items-center space-x-2.5 group select-none pointer-events-auto"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
