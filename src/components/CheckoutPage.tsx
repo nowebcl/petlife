@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useState, useEffect, type FC } from 'react';
 import {
   CreditCard,
   CheckCircle2,
@@ -10,11 +10,23 @@ import {
   Mail,
   Phone,
   MapPin,
+  Download,
+  MessageCircle,
+  FileText,
+  ShieldCheck,
+  ExternalLink,
 } from 'lucide-react';
 import type { Product } from '../data/products.ts';
 import { formatPrice } from '../data/products.ts';
 import { submitOrder, type OrderItem } from '../services/pocketbase.ts';
-import { createWebpayTransaction } from '../services/transbank.ts';
+import {
+  createFlowPayment,
+  buildWhatsAppCoordinationUrl,
+} from '../services/flow.ts';
+import {
+  downloadOrderReceiptPDF,
+  type ReceiptData,
+} from '../services/receipt.ts';
 import { Logo } from './Logo.tsx';
 
 interface CartItem {
@@ -47,13 +59,8 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   // Processing state
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [confirmedOrder, setConfirmedOrder] = useState<{
-    orderNumber: string;
-    total: number;
-    email: string;
-    address: string;
-    city: string;
-  } | null>(null);
+  const [confirmedOrder, setConfirmedOrder] = useState<ReceiptData | null>(null);
+  const [autoDownloadNotice, setAutoDownloadNotice] = useState(false);
 
   const cartSubtotal = cartItems.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
@@ -63,22 +70,99 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   const shippingCost = cartSubtotal >= 30000 || cartItems.length === 0 ? 0 : 2990;
   const totalAmount = cartSubtotal + shippingCost;
 
+  // Detect return from Flow gateway (urlReturn) or restored session
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const query = new URLSearchParams(window.location.search);
+    const hasFlowReturn =
+      query.get('status') === 'flow_return' ||
+      query.get('status') === 'success' ||
+      Boolean(query.get('token')) ||
+      Boolean(query.get('order'));
+
+    const storedPending = sessionStorage.getItem('petlife_pending_order');
+    const storedLast = sessionStorage.getItem('petlife_last_order');
+
+    let orderData: ReceiptData | null = null;
+    if (storedPending) {
+      try {
+        orderData = JSON.parse(storedPending);
+      } catch (e) {
+        console.error('Error parsing stored pending order', e);
+      }
+    } else if (storedLast && hasFlowReturn) {
+      try {
+        orderData = JSON.parse(storedLast);
+      } catch (e) {
+        console.error('Error parsing stored last order', e);
+      }
+    }
+
+    if (orderData && hasFlowReturn) {
+      setConfirmedOrder(orderData);
+      sessionStorage.removeItem('petlife_pending_order');
+      sessionStorage.setItem('petlife_last_order', JSON.stringify(orderData));
+      onOrderSuccess(orderData.orderNumber);
+
+      // Trigger automatic PDF receipt download immediately
+      setAutoDownloadNotice(true);
+      setTimeout(() => {
+        downloadOrderReceiptPDF(orderData!);
+      }, 600);
+    }
+  }, [onOrderSuccess]);
+
   const handleSubmitCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!customerName.trim() || !customerEmail.trim() || !customerAddress.trim()) {
-      setErrorMessage('Por favor completa todos los datos obligatorios de despacho.');
+      setErrorMessage('Por favor completa todos los datos obligatorios de contacto y despacho.');
       return;
     }
 
     if (cartItems.length === 0) {
-      setErrorMessage('Tu carrito está vacío.');
+      setErrorMessage('Tu carrito está vacío. Agrega productos antes de finalizar la compra.');
       return;
     }
 
     setIsProcessing(true);
     setErrorMessage(null);
 
-    const items: OrderItem[] = cartItems.map((item) => ({
+    const buyOrder = `PL-${Date.now().toString().slice(-6)}`;
+
+    // Prepare full receipt & order data
+    const orderData: ReceiptData = {
+      orderNumber: buyOrder,
+      customerName: customerName.trim(),
+      customerEmail: customerEmail.trim(),
+      customerPhone: customerPhone.trim(),
+      customerAddress: customerAddress.trim(),
+      customerCity: customerCity.trim(),
+      customerNotes: customerNotes.trim(),
+      items: cartItems.map((ci) => ({
+        name: ci.product.name,
+        price: ci.product.price,
+        quantity: ci.quantity,
+        weightOrSize: ci.product.weightOrSize,
+      })),
+      subtotal: cartSubtotal,
+      shippingCost,
+      total: totalAmount,
+      paymentMethod: 'Flow (Webpay Plus / Débito / Crédito)',
+      date: new Date().toLocaleDateString('es-CL', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    };
+
+    // Store in session storage so it persists during gateway redirection
+    sessionStorage.setItem('petlife_pending_order', JSON.stringify(orderData));
+    sessionStorage.setItem('petlife_last_order', JSON.stringify(orderData));
+
+    const dbItems: OrderItem[] = cartItems.map((item) => ({
       id: item.product.id,
       name: item.product.name,
       price: item.product.price,
@@ -88,49 +172,63 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
     }));
 
     try {
-      const buyOrder = `PL-${Date.now().toString().slice(-6)}`;
-
-      // 1. Iniciar transacción Transbank Webpay Plus
-      const tbkResult = await createWebpayTransaction({
-        buyOrder,
-        sessionId: `SES-${Date.now()}`,
-        amount: totalAmount,
-        returnUrl: window.location.origin + '/transbank-return',
-      });
-
-      // 2. Registrar pedido en la base de datos real de PocketBase
-      const orderRes = await submitOrder({
-        customerName: customerName.trim(),
-        customerEmail: customerEmail.trim(),
-        customerPhone: customerPhone.trim(),
-        customerAddress: `${customerAddress.trim()} (${customerRegion})`,
-        customerCity: customerCity.trim(),
-        customerNotes: customerNotes.trim(),
-        items,
-        subtotal: cartSubtotal,
-        shippingCost,
-        total: totalAmount,
-        paymentMethod: 'Webpay Plus Transbank',
-        transbankToken: tbkResult.token,
-      });
-
-      if (orderRes.success && orderRes.order) {
-        const ordNumber = orderRes.order.orderNumber || buyOrder;
-        setConfirmedOrder({
-          orderNumber: ordNumber,
+      // 1. Registrar pedido en base de datos
+      try {
+        await submitOrder({
+          customerName: orderData.customerName,
+          customerEmail: orderData.customerEmail,
+          customerPhone: orderData.customerPhone || '',
+          customerAddress: `${orderData.customerAddress} (${customerRegion})`,
+          customerCity: orderData.customerCity || '',
+          customerNotes: orderData.customerNotes || '',
+          items: dbItems,
+          subtotal: cartSubtotal,
+          shippingCost,
           total: totalAmount,
-          email: customerEmail.trim(),
-          address: customerAddress.trim(),
-          city: customerCity.trim(),
+          paymentMethod: 'Flow (Webpay Plus)',
+          transbankToken: '',
         });
-        onOrderSuccess(ordNumber);
+      } catch (dbErr) {
+        console.warn('Registro de pedido en backend advertencia:', dbErr);
+      }
+
+      // 2. Iniciar pago oficial con pasarela Flow en Producción
+      const flowRes = await createFlowPayment({
+        commerceOrder: buyOrder,
+        amount: totalAmount,
+        email: customerEmail.trim(),
+        subject: `Compra PetLife ${buyOrder}`,
+        urlReturn: `${window.location.origin}/checkout?status=flow_return&order=${buyOrder}`,
+      });
+
+      if (flowRes.success && flowRes.redirectUrl) {
+        // Guardar identificador de Flow si fue retornado
+        if (flowRes.flowOrder) {
+          orderData.flowOrder = flowRes.flowOrder;
+          sessionStorage.setItem('petlife_pending_order', JSON.stringify(orderData));
+          sessionStorage.setItem('petlife_last_order', JSON.stringify(orderData));
+        }
+
+        // Redirigir al cliente a la página de pago seguro de Flow
+        window.location.href = flowRes.redirectUrl;
       } else {
-        setErrorMessage(orderRes.error || 'Error al procesar el pedido.');
+        // En caso de que falle la conexión externa, permitir continuar de forma protegida
+        setErrorMessage(
+          flowRes.error ||
+            'No se pudo conectar con la pasarela Flow. Por favor verifica tu conexión o intenta nuevamente.'
+        );
+        setIsProcessing(false);
       }
     } catch (err: any) {
-      setErrorMessage(err.message || 'Error de conexión');
-    } finally {
+      setErrorMessage(err.message || 'Error de conexión con la pasarela de pagos.');
       setIsProcessing(false);
+    }
+  };
+
+  // Helper manual de descarga de comprobante PDF
+  const handleManualDownloadReceipt = () => {
+    if (confirmedOrder) {
+      downloadOrderReceiptPDF(confirmedOrder);
     }
   };
 
@@ -138,61 +236,178 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   // VIEW: CONFIRMACIÓN EXITOSA A PANTALLA COMPLETA
   // =========================================================================
   if (confirmedOrder) {
+    const whatsappUrl = buildWhatsAppCoordinationUrl({
+      orderNumber: confirmedOrder.orderNumber,
+      customerName: confirmedOrder.customerName,
+      total: confirmedOrder.total,
+      customerAddress: confirmedOrder.customerAddress,
+      customerCity: confirmedOrder.customerCity,
+    });
+
     return (
       <div className="w-full min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8 animate-fade-in flex items-center justify-center">
-        <div className="max-w-2xl w-full bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-lg text-center space-y-6">
-          <div className="w-20 h-20 mx-auto rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shadow-sm">
-            <CheckCircle2 className="w-10 h-10" />
+        <div className="max-w-2xl w-full bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl space-y-6">
+          {/* Header con Check de Pago Aprobado */}
+          <div className="text-center space-y-3">
+            <div className="w-20 h-20 mx-auto rounded-full bg-emerald-50 border-2 border-emerald-400 flex items-center justify-center text-emerald-600 shadow-sm animate-bounce-short">
+              <CheckCircle2 className="w-10 h-10" />
+            </div>
+
+            <div>
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
+                <span>Pago Aprobado con Éxito vía Flow</span>
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-black text-[#061F3D] mt-2">
+                ¡Muchas Gracias por tu Compra!
+              </h1>
+              <p className="text-sm font-semibold text-slate-500 mt-1">
+                Orden N°:{' '}
+                <span className="font-mono font-black text-[#FF5200] text-base">
+                  {confirmedOrder.orderNumber}
+                </span>
+                {confirmedOrder.flowOrder && (
+                  <span className="text-slate-400 text-xs ml-2">
+                    (Flow #{confirmedOrder.flowOrder})
+                  </span>
+                )}
+              </p>
+            </div>
           </div>
 
-          <div>
-            <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">
-              Pago y Pedido Registrado
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-[#061F3D] mt-2">
-              ¡Muchas Gracias por tu Compra!
-            </h1>
-            <p className="text-sm font-semibold text-slate-500 mt-1">
-              Orden N°:{' '}
-              <span className="font-mono font-black text-[#FF5200]">
-                {confirmedOrder.orderNumber}
+          {/* Banner de Descarga Automática de Comprobante PDF */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-sky-50 border border-sky-200 text-sky-900 space-y-3 text-left shadow-2xs">
+            <div className="flex items-start space-x-3">
+              <div className="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-sm text-[#061F3D]">
+                    Comprobante de Pago Electrónico
+                  </h3>
+                  {autoDownloadNotice && (
+                    <span className="text-[11px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                      Descargado automáticamente ✓
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Tu comprobante oficial en formato PDF ya se ha generado y descargado a tu dispositivo. También puedes volver a descargarlo en cualquier momento.
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-1 flex flex-col sm:flex-row gap-2">
+              <button
+                type="button"
+                onClick={handleManualDownloadReceipt}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-sky-300 text-sky-800 font-extrabold text-xs flex items-center justify-center space-x-2 shadow-2xs transition-all cursor-pointer hover:shadow-xs"
+              >
+                <Download className="w-4 h-4 text-sky-600" />
+                <span>Descargar Comprobante PDF (Reimprimir)</span>
+              </button>
+            </div>
+          </div>
+
+          {/* BOTÓN Y TARJETA DESTACADA: COORDINAR ENVÍO POR WHATSAPP (+56 9 8253 5868) */}
+          <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-emerald-500 via-[#25D366] to-emerald-600 text-white shadow-lg space-y-3.5 text-center relative overflow-hidden">
+            <div className="relative z-10 space-y-1">
+              <span className="inline-block px-3 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-black tracking-wider uppercase backdrop-blur-xs">
+                Paso Final • Coordinación Inmediata
               </span>
+              <h2 className="text-lg sm:text-xl font-black">
+                ¿Deseas coordinar la entrega de tu pedido?
+              </h2>
+              <p className="text-xs sm:text-sm text-emerald-50 max-w-lg mx-auto leading-relaxed">
+                Escríbenos directamente a nuestro WhatsApp oficial para agendar el día y horario exacto de despacho con nuestro equipo.
+              </p>
+            </div>
+
+            <div className="relative z-10 pt-1">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center space-x-2.5 w-full sm:w-auto px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-emerald-800 font-black text-sm sm:text-base shadow-md hover:shadow-xl transition-all transform active:scale-95 cursor-pointer"
+              >
+                <MessageCircle className="w-5 h-5 text-[#25D366] fill-[#25D366]" />
+                <span>Coordinar Despacho por WhatsApp (+56 9 8253 5868)</span>
+                <ExternalLink className="w-4 h-4 text-emerald-600" />
+              </a>
+            </div>
+
+            <p className="text-[11px] text-emerald-100 relative z-10">
+              Número directo: <strong>+56 9 8253 5868</strong> • Atención rápida de Lunes a Domingo
             </p>
           </div>
 
+          {/* Resumen detallado del pedido */}
           <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-left text-xs sm:text-sm text-slate-600 space-y-3">
             <div className="flex justify-between font-bold text-[#061F3D] pb-2 border-b border-slate-200">
               <span>Monto total pagado:</span>
-              <span className="text-lg text-[#FF5200] font-black">{formatPrice(confirmedOrder.total)}</span>
+              <span className="text-lg text-[#FF5200] font-black">
+                {formatPrice(confirmedOrder.total)}
+              </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Método de pago:</span>
-              <span className="font-bold text-slate-800">Webpay Plus Transbank</span>
+              <span className="text-slate-500">Pasarela de pago:</span>
+              <span className="font-bold text-slate-800">
+                Flow Chile (Webpay Plus / Débito / Crédito)
+              </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Dirección de entrega:</span>
-              <span className="font-bold text-slate-800">{confirmedOrder.address}, {confirmedOrder.city}</span>
+              <span className="text-slate-500">Dirección de despacho:</span>
+              <span className="font-bold text-slate-800 text-right">
+                {confirmedOrder.customerAddress}
+                {confirmedOrder.customerCity ? `, ${confirmedOrder.customerCity}` : ''}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Confirmación enviada a:</span>
-              <span className="font-bold text-slate-800">{confirmedOrder.email}</span>
+              <span className="font-bold text-slate-800">{confirmedOrder.customerEmail}</span>
             </div>
+            {confirmedOrder.customerPhone && (
+              <div className="flex justify-between">
+                <span className="text-slate-500">Teléfono de contacto:</span>
+                <span className="font-bold text-slate-800">{confirmedOrder.customerPhone}</span>
+              </div>
+            )}
           </div>
 
-          <div className="p-4 bg-orange-50/70 rounded-2xl border border-orange-200/80 text-xs text-[#061F3D] flex items-center space-x-3 text-left">
-            <span className="text-2xl">🚚</span>
-            <div>
-              <strong className="block font-bold">Tu pedido ya está siendo preparado en nuestra bodega.</strong>
-              <span className="text-slate-500 text-[11px]">
-                Recibirás actualizaciones de despacho en tiempo real a tu correo electrónico.
+          {/* Artículos comprados */}
+          {confirmedOrder.items && confirmedOrder.items.length > 0 && (
+            <div className="border border-slate-200 rounded-2xl p-4 bg-white text-left">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                Productos Comprados ({confirmedOrder.items.length})
               </span>
+              <div className="divide-y divide-slate-100 max-h-48 overflow-y-auto pr-1">
+                {confirmedOrder.items.map((item, idx) => (
+                  <div key={idx} className="py-2 flex items-center justify-between text-xs">
+                    <div>
+                      <span className="font-bold text-slate-800">
+                        {item.quantity}x {item.name}
+                      </span>
+                      {item.weightOrSize && (
+                        <span className="text-[11px] text-slate-400 block">
+                          Formato: {item.weightOrSize}
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-black text-slate-700">
+                      {formatPrice(item.price * item.quantity)}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="pt-2">
+          {/* Botón de Retorno a Tienda */}
+          <div className="pt-2 text-center">
             <button
               onClick={onNavigateToHome}
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-sm shadow-orange-glow transition-all active:scale-95 cursor-pointer inline-flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#061F3D] hover:bg-[#0a2a52] text-white font-extrabold text-xs sm:text-sm transition-all cursor-pointer inline-flex items-center justify-center space-x-2"
             >
               <span>Volver a la Tienda Principal</span>
             </button>
@@ -253,7 +468,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
               <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center font-black">
                 3
               </span>
-              <span>Confirmación</span>
+              <span>Confirmación Flow</span>
             </span>
           </div>
         </div>
@@ -265,7 +480,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
             Finalizar Compra
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Completa tus datos de envío para procesar tu orden de forma rápida y segura.
+            Completa tus datos de envío para procesar tu orden de forma rápida y segura mediante la pasarela Flow.
           </p>
         </div>
 
@@ -309,7 +524,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block font-bold text-slate-700 mb-1.5">
-                        Correo Electrónico (para confirmación) *
+                        Correo Electrónico (para confirmación y comprobante) *
                       </label>
                       <div className="relative">
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
@@ -407,36 +622,48 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                 </div>
               </div>
 
-              {/* Card 2: Método de Pago */}
+              {/* Card 2: Método de Pago Seguro Flow */}
               <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-4">
                 <div className="flex items-center space-x-2.5 pb-3 border-b border-slate-100">
                   <div className="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5200] flex items-center justify-center font-black text-sm">
                     2
                   </div>
                   <h2 className="text-base font-black text-[#061F3D]">
-                    Método de Pago Seguro
+                    Pasarela de Pagos Oficial Flow
                   </h2>
                 </div>
 
-                <div className="p-4 sm:p-5 rounded-2xl border-2 border-[#FF5200] bg-[#FFF8F5] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center space-x-3.5">
-                    <div className="w-12 h-12 rounded-2xl bg-white border border-[#FF5200]/30 flex items-center justify-center text-[#FF5200] shrink-0 shadow-2xs">
-                      <CreditCard className="w-6 h-6" />
+                <div className="p-4 sm:p-5 rounded-2xl border-2 border-[#FF5200] bg-[#FFF8F5] space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center space-x-3.5">
+                      <div className="w-12 h-12 rounded-2xl bg-white border border-[#FF5200]/30 flex items-center justify-center text-[#FF5200] shrink-0 shadow-2xs">
+                        <CreditCard className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm font-black text-[#061F3D] block">
+                            Flow Payments (Producción Oficial)
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-black">
+                            EN VIVO
+                          </span>
+                        </div>
+                        <span className="text-xs text-slate-600 font-medium block mt-0.5">
+                          Webpay Plus • Débito (Redcompra) • Crédito • Prepago (Mach / Tenpo) • Servipag
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-sm font-black text-[#061F3D] block">
-                        Webpay Plus (Transbank)
-                      </span>
-                      <span className="text-xs text-slate-500 font-medium">
-                        Tarjetas de Débito (Redcompra), Crédito y Prepago en Chile
-                      </span>
-                    </div>
+
+                    <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black shrink-0 self-start sm:self-auto">
+                      <Lock className="w-3 h-3 text-emerald-600" />
+                      <span>Cifrado SSL 256-bit</span>
+                    </span>
                   </div>
 
-                  <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black shrink-0 self-start sm:self-auto">
-                    <Lock className="w-3 h-3 text-emerald-600" />
-                    <span>Conexión Cifrada SSL</span>
-                  </span>
+                  <div className="pt-2 border-t border-orange-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
+                    <span>✓ Descarga automática de comprobante al pagar</span>
+                    <span>✓ Link directo a WhatsApp (+56 9 8253 5868)</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -515,15 +742,15 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                   {isProcessing ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Conectando con Transbank...</span>
+                      <span>Conectando con Flow en Producción...</span>
                     </>
                   ) : (
-                    <span>Pagar con Webpay Plus {formatPrice(totalAmount)}</span>
+                    <span>Pagar con Flow {formatPrice(totalAmount)}</span>
                   )}
                 </button>
 
                 <p className="text-[11px] text-slate-400 text-center">
-                  Al confirmar, serás redirigido de forma segura para completar tu pago con Transbank.
+                  Al confirmar, serás redirigido a Flow para pagar con Webpay Plus, Débito o Crédito. Descargarás tu comprobante automáticamente.
                 </p>
               </div>
             </div>

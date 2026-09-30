@@ -30,7 +30,15 @@ const getInitialView = (): ViewMode => {
     return 'admin';
   }
   if (path === '/cart' || hash === '#cart') return 'cart';
-  if (path === '/checkout' || hash === '#checkout') return 'checkout';
+  if (
+    path === '/checkout' ||
+    hash === '#checkout' ||
+    search.includes('flow_return') ||
+    search.includes('status=') ||
+    search.includes('order=')
+  ) {
+    return 'checkout';
+  }
   if (path === '/catalog' || hash === '#catalog') return 'catalog';
   return 'home';
 };
@@ -89,7 +97,13 @@ export default function App() {
         setCurrentView('admin');
       } else if (path === '/cart' || hash === '#cart') {
         setCurrentView('cart');
-      } else if (path === '/checkout' || hash === '#checkout') {
+      } else if (
+        path === '/checkout' ||
+        hash === '#checkout' ||
+        search.includes('flow_return') ||
+        search.includes('status=') ||
+        search.includes('order=')
+      ) {
         setCurrentView('checkout');
       } else if (path === '/catalog' || hash === '#catalog') {
         setCurrentView('catalog');
