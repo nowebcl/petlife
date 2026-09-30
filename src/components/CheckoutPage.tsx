@@ -1,12 +1,10 @@
 import { useState, useEffect, type FC } from 'react';
 import {
-  CreditCard,
   CheckCircle2,
   AlertTriangle,
   RefreshCw,
   Truck,
   ArrowLeft,
-  Lock,
   Mail,
   Phone,
   MapPin,
@@ -70,12 +68,12 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   const shippingCost = cartSubtotal >= 30000 || cartItems.length === 0 ? 0 : 2990;
   const totalAmount = cartSubtotal + shippingCost;
 
-  // Detect return from Flow gateway (urlReturn) or restored session
+  // Detect return from Webpay Plus gateway (urlReturn) or restored session
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const query = new URLSearchParams(window.location.search);
-    const hasFlowReturn =
+    const hasPaymentReturn =
       query.get('status') === 'flow_return' ||
       query.get('status') === 'success' ||
       Boolean(query.get('token')) ||
@@ -91,7 +89,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       } catch (e) {
         console.error('Error parsing stored pending order', e);
       }
-    } else if (storedLast && hasFlowReturn) {
+    } else if (storedLast && hasPaymentReturn) {
       try {
         orderData = JSON.parse(storedLast);
       } catch (e) {
@@ -99,7 +97,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       }
     }
 
-    if (orderData && hasFlowReturn) {
+    if (orderData && hasPaymentReturn) {
       setConfirmedOrder(orderData);
       sessionStorage.removeItem('petlife_pending_order');
       sessionStorage.setItem('petlife_last_order', JSON.stringify(orderData));
@@ -148,7 +146,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       subtotal: cartSubtotal,
       shippingCost,
       total: totalAmount,
-      paymentMethod: 'Flow (Webpay Plus / Débito / Crédito)',
+      paymentMethod: 'Webpay Plus (Débito / Crédito)',
       date: new Date().toLocaleDateString('es-CL', {
         day: '2-digit',
         month: '2-digit',
@@ -185,15 +183,15 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
           subtotal: cartSubtotal,
           shippingCost,
           total: totalAmount,
-          paymentMethod: 'Flow (Webpay Plus)',
+          paymentMethod: 'Webpay Plus',
           transbankToken: '',
         });
       } catch (dbErr) {
         console.warn('Registro de pedido en backend advertencia:', dbErr);
       }
 
-      // 2. Iniciar pago oficial con pasarela Flow en Producción
-      const flowRes = await createFlowPayment({
+      // 2. Iniciar pago con pasarela oficial Webpay Plus
+      const paymentRes = await createFlowPayment({
         commerceOrder: buyOrder,
         amount: totalAmount,
         email: customerEmail.trim(),
@@ -201,21 +199,19 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
         urlReturn: `${window.location.origin}/checkout?status=flow_return&order=${buyOrder}`,
       });
 
-      if (flowRes.success && flowRes.redirectUrl) {
-        // Guardar identificador de Flow si fue retornado
-        if (flowRes.flowOrder) {
-          orderData.flowOrder = flowRes.flowOrder;
+      if (paymentRes.success && paymentRes.redirectUrl) {
+        if (paymentRes.flowOrder) {
+          orderData.flowOrder = paymentRes.flowOrder;
           sessionStorage.setItem('petlife_pending_order', JSON.stringify(orderData));
           sessionStorage.setItem('petlife_last_order', JSON.stringify(orderData));
         }
 
-        // Redirigir al cliente a la página de pago seguro de Flow
-        window.location.href = flowRes.redirectUrl;
+        // Redirigir al cliente a la página de pago seguro
+        window.location.href = paymentRes.redirectUrl;
       } else {
-        // En caso de que falle la conexión externa, permitir continuar de forma protegida
         setErrorMessage(
-          flowRes.error ||
-            'No se pudo conectar con la pasarela Flow. Por favor verifica tu conexión o intenta nuevamente.'
+          paymentRes.error ||
+            'No se pudo conectar con el portal de Webpay Plus. Por favor verifica tus datos o intenta nuevamente.'
         );
         setIsProcessing(false);
       }
@@ -225,7 +221,6 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
     }
   };
 
-  // Helper manual de descarga de comprobante PDF
   const handleManualDownloadReceipt = () => {
     if (confirmedOrder) {
       downloadOrderReceiptPDF(confirmedOrder);
@@ -256,7 +251,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
             <div>
               <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Pago Aprobado con Éxito vía Flow</span>
+                <span>Pago Aprobado con Éxito vía Webpay Plus</span>
               </span>
               <h1 className="text-2xl sm:text-3xl font-black text-[#061F3D] mt-2">
                 ¡Muchas Gracias por tu Compra!
@@ -266,11 +261,6 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                 <span className="font-mono font-black text-[#FF5200] text-base">
                   {confirmedOrder.orderNumber}
                 </span>
-                {confirmedOrder.flowOrder && (
-                  <span className="text-slate-400 text-xs ml-2">
-                    (Flow #{confirmedOrder.flowOrder})
-                  </span>
-                )}
               </p>
             </div>
           </div>
@@ -351,9 +341,9 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Pasarela de pago:</span>
+              <span className="text-slate-500">Método de pago:</span>
               <span className="font-bold text-slate-800">
-                Flow Chile (Webpay Plus / Débito / Crédito)
+                Webpay Plus (Débito, Crédito, Prepago)
               </span>
             </div>
             <div className="flex justify-between">
@@ -468,7 +458,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
               <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-600 text-[10px] flex items-center justify-center font-black">
                 3
               </span>
-              <span>Confirmación Flow</span>
+              <span>Confirmación</span>
             </span>
           </div>
         </div>
@@ -480,7 +470,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
             Finalizar Compra
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Completa tus datos de envío para procesar tu orden de forma rápida y segura mediante la pasarela Flow.
+            Completa tus datos de envío para procesar tu orden de forma rápida y segura mediante Webpay Plus.
           </p>
         </div>
 
@@ -493,14 +483,10 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
 
         <form onSubmit={handleSubmitCheckout}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left 7 Columns: Shipping Form & Payment Selection */}
+            {/* Left 7 Columns: Formulario de Despacho (Limpio, sin tarjeta de pasarela) */}
             <div className="lg:col-span-7 space-y-6">
-              {/* Card 1: Contacto y Envío */}
               <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-5">
                 <div className="flex items-center space-x-2.5 pb-3 border-b border-slate-100">
-                  <div className="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5200] flex items-center justify-center font-black text-sm">
-                    1
-                  </div>
                   <h2 className="text-base font-black text-[#061F3D]">
                     Datos de Contacto y Despacho
                   </h2>
@@ -621,51 +607,6 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                   </div>
                 </div>
               </div>
-
-              {/* Card 2: Método de Pago Seguro Flow */}
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-4">
-                <div className="flex items-center space-x-2.5 pb-3 border-b border-slate-100">
-                  <div className="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5200] flex items-center justify-center font-black text-sm">
-                    2
-                  </div>
-                  <h2 className="text-base font-black text-[#061F3D]">
-                    Pasarela de Pagos Oficial Flow
-                  </h2>
-                </div>
-
-                <div className="p-4 sm:p-5 rounded-2xl border-2 border-[#FF5200] bg-[#FFF8F5] space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-center space-x-3.5">
-                      <div className="w-12 h-12 rounded-2xl bg-white border border-[#FF5200]/30 flex items-center justify-center text-[#FF5200] shrink-0 shadow-2xs">
-                        <CreditCard className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-black text-[#061F3D] block">
-                            Flow Payments (Producción Oficial)
-                          </span>
-                          <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-black">
-                            EN VIVO
-                          </span>
-                        </div>
-                        <span className="text-xs text-slate-600 font-medium block mt-0.5">
-                          Webpay Plus • Débito (Redcompra) • Crédito • Prepago (Mach / Tenpo) • Servipag
-                        </span>
-                      </div>
-                    </div>
-
-                    <span className="inline-flex items-center space-x-1 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-black shrink-0 self-start sm:self-auto">
-                      <Lock className="w-3 h-3 text-emerald-600" />
-                      <span>Cifrado SSL 256-bit</span>
-                    </span>
-                  </div>
-
-                  <div className="pt-2 border-t border-orange-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
-                    <span>✓ Descarga automática de comprobante al pagar</span>
-                    <span>✓ Link directo a WhatsApp (+56 9 8253 5868)</span>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Right 5 Columns: Order Summary Card (Sticky) */}
@@ -742,15 +683,15 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                   {isProcessing ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin" />
-                      <span>Conectando con Flow en Producción...</span>
+                      <span>Conectando con Webpay Plus...</span>
                     </>
                   ) : (
-                    <span>Pagar con Flow {formatPrice(totalAmount)}</span>
+                    <span>Pagar con Webpay Plus {formatPrice(totalAmount)}</span>
                   )}
                 </button>
 
                 <p className="text-[11px] text-slate-400 text-center">
-                  Al confirmar, serás redirigido a Flow para pagar con Webpay Plus, Débito o Crédito. Descargarás tu comprobante automáticamente.
+                  Al confirmar, serás redirigido de forma segura para pagar con Webpay Plus. Descargarás tu comprobante automáticamente.
                 </p>
               </div>
             </div>

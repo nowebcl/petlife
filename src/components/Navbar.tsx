@@ -1,7 +1,6 @@
 import { useState, type FC, type FormEvent } from 'react';
 import { Search, ShoppingCart, X } from 'lucide-react';
 import { Logo } from './Logo.tsx';
-import { WhatsAppIcon } from './FloatingWhatsApp.tsx';
 
 interface NavbarProps {
   cartCount: number;
@@ -30,17 +29,13 @@ export const Navbar: FC<NavbarProps> = ({
     }
   };
 
-  const whatsappUrl =
-    'https://wa.me/56982535868?text=' +
-    encodeURIComponent('¡Hola PetLife! 🐾 Me gustaría consultar sobre sus productos y despachos.');
-
   return (
     <header className="w-full pt-1.5 sm:pt-4 md:pt-6 px-2.5 sm:px-6 md:px-8 max-w-7xl mx-auto relative z-30">
       <nav className="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-full px-3 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 shadow-pill border border-slate-100/90 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 transition-all duration-300">
         
         {/* Top Row on Mobile / Left Section on Desktop */}
         <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto">
-          {/* Brand Logo (Crisp, proportional, zero negative margin glitches) */}
+          {/* Brand Logo */}
           <button
             onClick={() => handleTabChange('Inicio')}
             className="flex items-center focus:outline-none focus:ring-2 focus:ring-[#FF5200] rounded-xl cursor-pointer bg-transparent border-0 p-0"
@@ -49,21 +44,8 @@ export const Navbar: FC<NavbarProps> = ({
             <Logo className="h-8 sm:h-12 md:h-14 lg:h-16 w-auto" />
           </button>
 
-          {/* Quick Actions (WhatsApp & Cart) visible on mobile header row */}
+          {/* Quick Action (Cart) visible on mobile header row */}
           <div className="flex sm:hidden items-center space-x-1.5">
-            {/* WhatsApp Quick Button */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-full text-emerald-600 hover:bg-emerald-50 active:scale-90 transition-all flex items-center justify-center cursor-pointer"
-              aria-label="Chat de WhatsApp con PetLife (+56 9 8253 5868)"
-              title="Escríbenos por WhatsApp"
-            >
-              <WhatsAppIcon className="w-5 h-5" />
-            </a>
-
-            {/* Shopping Cart Button */}
             <button
               onClick={onOpenCart}
               aria-label={`Carrito de compras con ${cartCount} productos`}
@@ -83,7 +65,7 @@ export const Navbar: FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Center: Search Bar ("Busca tu producto") - Full width on mobile, elongated center on desktop */}
+        {/* Center: Search Bar ("Busca tu producto") */}
         <form
           onSubmit={handleSearchSubmit}
           className="w-full sm:flex-1 sm:mx-4 md:mx-8 sm:max-w-2xl"
@@ -110,21 +92,8 @@ export const Navbar: FC<NavbarProps> = ({
           </div>
         </form>
 
-        {/* Right Section: Desktop only actions (WhatsApp + Shopping Cart) */}
-        <div className="hidden sm:flex items-center space-x-2 shrink-0 pr-1">
-          {/* WhatsApp Direct Chat Desktop */}
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 sm:p-2.5 rounded-full text-emerald-600 hover:bg-emerald-50 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
-            aria-label="Contactar por WhatsApp (+56 9 8253 5868)"
-            title="WhatsApp: +56 9 8253 5868"
-          >
-            <WhatsAppIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-          </a>
-
-          {/* Cart Button Desktop */}
+        {/* Right Section: Desktop Shopping Cart */}
+        <div className="hidden sm:flex items-center shrink-0 pr-1">
           <button
             onClick={onOpenCart}
             aria-label={`Carrito de compras con ${cartCount} productos`}

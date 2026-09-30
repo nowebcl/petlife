@@ -61,7 +61,7 @@ export default function App() {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
-    }, 3200);
+    }, 4200);
   };
 
   const refreshProducts = async () => {
@@ -261,16 +261,27 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col justify-between selection:bg-[#FF5200] selection:text-white relative bg-[#F8FAFC]">
-      {/* Top Floating Notification Toast */}
+      {/* Top Floating Notification Toast / Minimal Quick Cart Action */}
       {toastMessage && (
-        <div className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 bg-[#061F3D] text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-2xl flex items-center space-x-2.5 sm:space-x-3 border border-slate-700 animate-in fade-in slide-in-from-top-4 duration-300 max-w-[90vw] sm:max-w-md">
+        <div className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50 bg-[#061F3D]/95 backdrop-blur-md text-white pl-4 pr-2.5 sm:pl-5 sm:pr-3 py-2 sm:py-2.5 rounded-full shadow-2xl flex items-center space-x-2.5 sm:space-x-3 border border-slate-700/80 animate-in fade-in slide-in-from-top-4 duration-300 max-w-[95vw] sm:max-w-lg">
           <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 shrink-0" />
-          <span className="text-xs sm:text-sm font-semibold truncate">{toastMessage}</span>
+          <span className="text-xs sm:text-sm font-semibold truncate flex-1">{toastMessage}</span>
+          <button
+            onClick={() => {
+              setToastMessage(null);
+              handleNavigateToCart();
+            }}
+            className="px-3.5 py-1.5 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white text-xs font-black shrink-0 transition-transform active:scale-95 cursor-pointer shadow-sm flex items-center space-x-1.5"
+          >
+            <span>Ir al Carrito</span>
+            <span className="text-[11px]">→</span>
+          </button>
           <button
             onClick={() => setToastMessage(null)}
-            className="text-slate-400 hover:text-white ml-1 shrink-0 cursor-pointer"
+            className="text-slate-400 hover:text-white p-1 rounded-full hover:bg-white/10 shrink-0 cursor-pointer transition-colors"
+            aria-label="Cerrar notificación"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
       )}

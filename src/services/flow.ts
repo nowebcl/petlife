@@ -1,49 +1,13 @@
 /**
- * Servicio de Integración de Pagos en Producción con Flow.cl
- * API REST Oficial Flow Chile (Webpay Plus, Tarjetas de Débito, Crédito, Prepago)
+ * Servicio de Integración de Pagos con Webpay Plus
+ * Pasarela Oficial en Producción (Tarjetas de Débito, Crédito, Prepago)
  */
 
-export const FLOW_CONFIG = {
+export const WEBPAY_CONFIG = {
   apiKey: '56EC0FE0-1DAB-487B-93BE-22LC27EC1B24',
   secretKey: '4d36d14f697419812207fc8fc13fe87bc698b431',
   whatsappNumber: '56982535868',
-  endpoint: '/api/flow/payment/create', // Proxied vía Vite / backend
-  directEndpoint: 'https://www.flow.cl/api/payment/create',
 };
-
-/**
- * Calcula la firma HMAC-SHA256 requerida por Flow
- * Ordena las llaves alfabéticamente, concatena llave+valor y aplica HMAC-SHA256
- */
-export async function signFlowParams(
-  params: Record<string, any>,
-  secretKey: string = FLOW_CONFIG.secretKey
-): Promise<string> {
-  const sortedKeys = Object.keys(params).sort();
-  let toSign = '';
-  for (const k of sortedKeys) {
-    if (params[k] !== undefined && params[k] !== null) {
-      toSign += `${k}${params[k]}`;
-    }
-  }
-
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(secretKey);
-  const msgData = encoder.encode(toSign);
-
-  const cryptoKey = await crypto.subtle.importKey(
-    'raw',
-    keyData,
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
-  );
-
-  const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, msgData);
-  return Array.from(new Uint8Array(signatureBuffer))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-}
 
 export interface FlowPaymentRequest {
   commerceOrder: string;
@@ -64,82 +28,109 @@ export interface FlowPaymentResponse {
 }
 
 /**
- * Crea una orden de pago en Flow en producción y retorna la URL de redirección
+ * Crea una orden de pago en Webpay Plus y retorna la URL de redirección oficial
  */
 export async function createFlowPayment(
   data: FlowPaymentRequest
 ): Promise<FlowPaymentResponse> {
   try {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://tiendapetlife.cl';
+    const origin =
+      typeof window !== 'undefined' ? window.location.origin : 'https://tiendapetlife.cl';
     const urlReturn =
       data.urlReturn || `${origin}/checkout?status=success&order=${data.commerceOrder}`;
     const urlConfirmation =
-      data.urlConfirmation || `https://tiendapetlife.cl/api/flow-confirm`;
+      data.urlConfirmation || 'https://tiendapetlife.cl/api/flow-confirm';
 
-    const params: Record<string, any> = {
-      apiKey: FLOW_CONFIG.apiKey,
-      amount: Math.round(data.amount),
+    const payload = {
       commerceOrder: data.commerceOrder,
-      currency: 'CLP',
+      amount: Math.round(data.amount),
       email: data.email.trim(),
       subject: data.subject.trim(),
       urlConfirmation,
       urlReturn,
     };
 
-    // Generar firma digital HMAC-SHA256
-    const signature = await signFlowParams(params, FLOW_CONFIG.secretKey);
-    params.s = signature;
-
-    const postBody = new URLSearchParams(params).toString();
-
-    // 1. Intentar por el proxy local / Vite
+    // 1. Invocar endpoint serverless oficial /api/flow
     let res: Response | null = null;
     try {
-      res = await fetch(FLOW_CONFIG.endpoint, {
+      res = await fetch('/api/flow', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json',
         },
-        body: postBody,
+        body: JSON.stringify(payload),
       });
     } catch {
-      // Fallback si el proxy no responde
       res = null;
     }
 
+    // 2. Si /api/flow no respondió o falló, intentar fallback /api/flow/payment/create
     if (!res || !res.ok) {
-      // Intento directo con el endpoint oficial
-      res = await fetch(FLOW_CONFIG.directEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: postBody,
-      });
+      try {
+        res = await fetch('/api/flow/payment/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+      } catch {
+        // Fallback catch
+      }
     }
 
-    const json = await res.json();
-
-    if (json.url && json.token) {
-      const redirectUrl = `${json.url}?token=${json.token}`;
+    if (res && res.ok) {
+      const json = await res.json();
+      if (json.success && json.redirectUrl) {
+        return {
+          success: true,
+          url: json.url,
+          token: json.token,
+          flowOrder: json.flowOrder,
+          redirectUrl: json.redirectUrl,
+        };
+      }
+      if (json.url && json.token) {
+        return {
+          success: true,
+          url: json.url,
+          token: json.token,
+          flowOrder: json.flowOrder,
+          redirectUrl: `${json.url}?token=${json.token}`,
+        };
+      }
       return {
-        success: true,
-        url: json.url,
-        token: json.token,
-        flowOrder: json.flowOrder,
-        redirectUrl,
+        success: false,
+        error: json.error || 'No se pudo generar la transacción en Webpay Plus.',
       };
     }
 
+    // Si hubo respuesta con error
+    if (res) {
+      try {
+        const errJson = await res.json();
+        return {
+          success: false,
+          error:
+            errJson.error ||
+            'Error al comunicarse con Webpay Plus. Por favor reintenta en un momento.',
+        };
+      } catch {
+        // Fall through
+      }
+    }
+
     return {
       success: false,
-      error: json.message || `Error Flow: ${JSON.stringify(json)}`,
+      error:
+        'No se pudo conectar con el servidor de pagos Webpay Plus. Por favor intenta nuevamente.',
     };
   } catch (err: any) {
+    console.error('Error al procesar pago con Webpay Plus:', err);
     return {
       success: false,
-      error: err.message || 'Error de conexión con la pasarela Flow',
+      error:
+        'Error al iniciar el pago con Webpay Plus. Por favor verifica tus datos e intenta nuevamente.',
     };
   }
 }
@@ -154,7 +145,7 @@ export function buildWhatsAppCoordinationUrl(order: {
   customerAddress?: string;
   customerCity?: string;
 }): string {
-  const number = FLOW_CONFIG.whatsappNumber;
+  const number = WEBPAY_CONFIG.whatsappNumber;
   const totalFormatted = '$' + Math.round(order.total).toLocaleString('es-CL');
   const addressLine = order.customerAddress
     ? `\n📍 *Dirección de Despacho:* ${order.customerAddress}${
@@ -163,7 +154,7 @@ export function buildWhatsAppCoordinationUrl(order: {
     : '';
 
   const message =
-    `¡Hola PetLife! 🐾 Acabo de realizar mi compra mediante Flow.\n\n` +
+    `¡Hola PetLife! 🐾 Acabo de realizar mi compra mediante Webpay Plus.\n\n` +
     `📦 *Orden N°:* ${order.orderNumber}\n` +
     `👤 *Cliente:* ${order.customerName}\n` +
     `💰 *Monto Pagado:* ${totalFormatted}` +

@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/flow/payment/create",
+      "destination": "/api/flow"
+    },
+    {
+      "source": "/((?!api/|assets/|favicon|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

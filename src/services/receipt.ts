@@ -84,12 +84,12 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
   doc.setTextColor(6, 95, 70); // emerald-800
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
-  doc.text('PAGO APROBADO EXITOSAMENTE VIA FLOW', margin + 6, y + 6);
+  doc.text('PAGO APROBADO EXITOSAMENTE VIA WEBPAY PLUS', margin + 6, y + 6);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
-  const paymentDetails = `Pasarela: Flow.cl (${data.paymentMethod || 'Webpay Plus / Débito / Crédito'})${
-    data.flowOrder ? ` • N° Transacción Flow: #${data.flowOrder}` : ''
+  const paymentDetails = `Medio de Pago: ${data.paymentMethod || 'Webpay Plus (Débito / Crédito)'}${
+    data.flowOrder ? ` • N° Transacción: #${data.flowOrder}` : ''
   }`;
   doc.text(paymentDetails, margin + 6, y + 10.5);
 
