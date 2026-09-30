@@ -70,11 +70,11 @@ export async function createFlowPayment(
   data: FlowPaymentRequest
 ): Promise<FlowPaymentResponse> {
   try {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://petlife.noweb.cl';
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://tiendapetlife.cl';
     const urlReturn =
       data.urlReturn || `${origin}/checkout?status=success&order=${data.commerceOrder}`;
     const urlConfirmation =
-      data.urlConfirmation || `https://petlife.noweb.cl/api/flow-confirm`;
+      data.urlConfirmation || `https://tiendapetlife.cl/api/flow-confirm`;
 
     const params: Record<string, any> = {
       apiKey: FLOW_CONFIG.apiKey,

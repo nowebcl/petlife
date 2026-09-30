@@ -2,7 +2,7 @@ import type { Product } from '../data/products.ts';
 import { PRODUCTS_DATABASE } from '../data/products.ts';
 
 export const POCKETBASE_URL =
-  (import.meta as any).env?.VITE_POCKETBASE_URL || 'https://petlife.noweb.cl';
+  (import.meta as any).env?.VITE_POCKETBASE_URL || 'https://tiendapetlife.cl';
 
 export interface PocketBaseRecord {
   id: string;
