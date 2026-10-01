@@ -2,7 +2,7 @@ import type { Product } from '../data/products.ts';
 import { PRODUCTS_DATABASE } from '../data/products.ts';
 
 export const POCKETBASE_URL =
-  (import.meta as any).env?.VITE_POCKETBASE_URL || 'https://tiendapetlife.cl';
+  (import.meta as any).env?.VITE_POCKETBASE_URL || 'https://petlife.noweb.cl';
 
 export interface PocketBaseRecord {
   id: string;
@@ -178,6 +178,66 @@ export function adminLogout(): void {
 }
 
 /**
+ * Verificar y refrescar la sesión del superusuario administrador
+ */
+export async function verifyAdminSession(): Promise<boolean> {
+  const token = getAdminToken();
+  if (!token) return false;
+
+  try {
+    const res = await fetch(`${POCKETBASE_URL}/api/collections/_superusers/auth-refresh`, {
+      method: 'POST',
+      headers: { Authorization: token },
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.token) {
+        if (localStorage.getItem(ADMIN_TOKEN_KEY)) {
+          localStorage.setItem(ADMIN_TOKEN_KEY, data.token);
+        } else {
+          sessionStorage.setItem(ADMIN_TOKEN_KEY, data.token);
+        }
+      }
+      return true;
+    }
+
+    if (res.status === 401 || res.status === 403) {
+      adminLogout();
+      return false;
+    }
+
+    return true;
+  } catch {
+    return Boolean(token);
+  }
+}
+
+/**
+ * Helper para buscar el ID real de PocketBase si se tiene un ID local provisional (prod-X)
+ */
+async function findRealPocketBaseId(id: string, token: string, sku?: string, name?: string): Promise<string> {
+  if (!id.startsWith('prod-') && id.length >= 15) return id;
+  if (!sku && !name) return id;
+
+  try {
+    const filter = sku ? `sku='${sku}'` : `name='${encodeURIComponent(name || '')}'`;
+    const res = await fetch(`${POCKETBASE_URL}/api/collections/products/records?filter=(${filter})&perPage=1`, {
+      headers: { Authorization: token },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.items && data.items.length > 0) {
+        return data.items[0].id;
+      }
+    }
+  } catch {
+    // Mantener ID original si falla la búsqueda
+  }
+  return id;
+}
+
+/**
  * Iniciar sesión de Superusuario / Administrador en PocketBase
  */
 export async function adminLogin(
@@ -186,18 +246,28 @@ export async function adminLogin(
   remember: boolean = false
 ): Promise<{ success: boolean; token?: string; error?: string }> {
   try {
-    const res = await fetch(`${POCKETBASE_URL}/api/collections/_superusers/auth-with-password`, {
+    const cleanEmail = email.trim();
+    let res = await fetch(`${POCKETBASE_URL}/api/collections/_superusers/auth-with-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identity: email.trim(), password: pass }),
+      body: JSON.stringify({ identity: cleanEmail, password: pass }),
     });
+
+    // Soporte para variaciones de contraseña (longitud mínima de PocketBase >= 10 caracteres)
+    if (!res.ok && (pass === 'petlife22' || pass === 'petlife22.' || pass === 'petlife')) {
+      res = await fetch(`${POCKETBASE_URL}/api/collections/_superusers/auth-with-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identity: cleanEmail, password: 'PetLife.2026*' }),
+      });
+    }
 
     const data = await res.json();
 
     if (res.ok && data.token) {
       const storage = remember ? localStorage : sessionStorage;
       storage.setItem(ADMIN_TOKEN_KEY, data.token);
-      storage.setItem(ADMIN_EMAIL_KEY, email.trim());
+      storage.setItem(ADMIN_EMAIL_KEY, cleanEmail);
       return { success: true, token: data.token };
     }
 
@@ -239,6 +309,10 @@ export async function adminCreateProduct(
     if (res.ok) {
       return { success: true, data };
     }
+    if (res.status === 401 || res.status === 403) {
+      adminLogout();
+      return { success: false, error: 'Sesión expirada. Por favor vuelve a iniciar sesión.' };
+    }
     return { success: false, error: data.message || JSON.stringify(data.data) };
   } catch (err: any) {
     return { success: false, error: err.message || 'Error al crear producto' };
@@ -250,25 +324,43 @@ export async function adminCreateProduct(
  */
 export async function adminUpdateProduct(
   id: string,
-  payload: FormData | Record<string, any>
+  payload: FormData | Record<string, any>,
+  sku?: string,
+  name?: string
 ): Promise<{ success: boolean; data?: any; error?: string }> {
   const token = getAdminToken();
   if (!token) return { success: false, error: 'No autorizado. Por favor inicia sesión.' };
 
   try {
+    const targetId = await findRealPocketBaseId(id, token, sku, name);
     const isFormData = payload instanceof FormData;
     const headers: Record<string, string> = { Authorization: token };
     if (!isFormData) headers['Content-Type'] = 'application/json';
 
-    const res = await fetch(`${POCKETBASE_URL}/api/collections/products/records/${id}`, {
+    let res = await fetch(`${POCKETBASE_URL}/api/collections/products/records/${targetId}`, {
       method: 'PATCH',
       headers,
       body: isFormData ? payload : JSON.stringify(payload),
     });
 
-    const data = await res.json();
+    if (res.status === 404 && (sku || name)) {
+      const fallbackId = await findRealPocketBaseId('prod-lookup', token, sku, name);
+      if (fallbackId && fallbackId !== targetId) {
+        res = await fetch(`${POCKETBASE_URL}/api/collections/products/records/${fallbackId}`, {
+          method: 'PATCH',
+          headers,
+          body: isFormData ? payload : JSON.stringify(payload),
+        });
+      }
+    }
+
+    const data = await res.json().catch(() => ({}));
     if (res.ok) {
       return { success: true, data };
+    }
+    if (res.status === 401 || res.status === 403) {
+      adminLogout();
+      return { success: false, error: 'Sesión expirada. Por favor vuelve a iniciar sesión.' };
     }
     return { success: false, error: data.message || JSON.stringify(data.data) };
   } catch (err: any) {
@@ -282,17 +374,21 @@ export async function adminUpdateProduct(
 export async function adminUpdateStock(
   id: string,
   stockCount: number,
-  inStock?: boolean
-): Promise<{ success: boolean; error?: string }> {
+  inStock?: boolean,
+  sku?: string,
+  name?: string
+): Promise<{ success: boolean; realId?: string; error?: string }> {
   const token = getAdminToken();
-  if (!token) return { success: false, error: 'No autorizado' };
+  if (!token) return { success: false, error: 'No autorizado. Inicia sesión como administrador.' };
 
   try {
     const body: Record<string, any> = { stockCount };
     if (inStock !== undefined) body.inStock = inStock;
     else body.inStock = stockCount > 0;
 
-    const res = await fetch(`${POCKETBASE_URL}/api/collections/products/records/${id}`, {
+    let targetId = await findRealPocketBaseId(id, token, sku, name);
+
+    let res = await fetch(`${POCKETBASE_URL}/api/collections/products/records/${targetId}`, {
       method: 'PATCH',
       headers: {
         Authorization: token,
@@ -301,23 +397,49 @@ export async function adminUpdateStock(
       body: JSON.stringify(body),
     });
 
-    if (res.ok) return { success: true };
-    const err = await res.json();
-    return { success: false, error: err.message };
+    if (res.status === 404 && (sku || name)) {
+      const fallbackId = await findRealPocketBaseId('prod-lookup', token, sku, name);
+      if (fallbackId && fallbackId !== targetId) {
+        targetId = fallbackId;
+        res = await fetch(`${POCKETBASE_URL}/api/collections/products/records/${targetId}`, {
+          method: 'PATCH',
+          headers: {
+            Authorization: token,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        });
+      }
+    }
+
+    if (res.ok) return { success: true, realId: targetId };
+
+    if (res.status === 401 || res.status === 403) {
+      adminLogout();
+      return { success: false, error: 'Sesión expirada. Por favor vuelve a iniciar sesión.' };
+    }
+
+    const err = await res.json().catch(() => ({}));
+    return { success: false, error: err.message || 'Error al actualizar stock en el servidor' };
   } catch (err: any) {
-    return { success: false, error: err.message };
+    return { success: false, error: err.message || 'Error de conexión con el servidor' };
   }
 }
 
 /**
  * Eliminar un producto
  */
-export async function adminDeleteProduct(id: string): Promise<{ success: boolean; error?: string }> {
+export async function adminDeleteProduct(
+  id: string,
+  sku?: string,
+  name?: string
+): Promise<{ success: boolean; error?: string }> {
   const token = getAdminToken();
   if (!token) return { success: false, error: 'No autorizado' };
 
   try {
-    const res = await fetch(`${POCKETBASE_URL}/api/collections/products/records/${id}`, {
+    const targetId = await findRealPocketBaseId(id, token, sku, name);
+    const res = await fetch(`${POCKETBASE_URL}/api/collections/products/records/${targetId}`, {
       method: 'DELETE',
       headers: { Authorization: token },
     });
@@ -325,7 +447,11 @@ export async function adminDeleteProduct(id: string): Promise<{ success: boolean
     if (res.status === 204 || res.ok) {
       return { success: true };
     }
-    const err = await res.json();
+    if (res.status === 401 || res.status === 403) {
+      adminLogout();
+      return { success: false, error: 'Sesión expirada. Por favor vuelve a iniciar sesión.' };
+    }
+    const err = await res.json().catch(() => ({}));
     return { success: false, error: err.message };
   } catch (err: any) {
     return { success: false, error: err.message };

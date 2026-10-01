@@ -28,6 +28,7 @@ import {
   adminLogout,
   isUserAdmin,
   getAdminEmail,
+  verifyAdminSession,
   adminCreateProduct,
   adminUpdateProduct,
   adminDeleteProduct,
@@ -122,6 +123,30 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
       setIsLoadingOrders(false);
     }
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    const checkAuthAndInit = async () => {
+      if (isUserAdmin()) {
+        const valid = await verifyAdminSession();
+        if (!isMounted) return;
+        if (!valid) {
+          setIsAuthenticated(false);
+          showToast('Tu sesión ha expirado. Por favor inicia sesión nuevamente.', 'error');
+        } else {
+          setIsAuthenticated(true);
+          loadProducts();
+          loadOrders();
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuthAndInit();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -260,7 +285,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
 
     try {
       if (editingProduct) {
-        const res = await adminUpdateProduct(editingProduct.id, formData);
+        const res = await adminUpdateProduct(editingProduct.id, formData, editingProduct.sku, editingProduct.name);
         if (res.success) {
           showToast(`Producto "${formName}" actualizado con éxito`);
           setActiveView('dashboard');
@@ -268,6 +293,9 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
           onRefreshProducts?.();
         } else {
           setProductFormError(res.error || 'Error al actualizar el producto');
+          if (res.error?.includes('expirada') || res.error?.includes('autorizado') || res.error?.includes('sesión')) {
+            setIsAuthenticated(false);
+          }
         }
       } else {
         const res = await adminCreateProduct(formData);
@@ -278,6 +306,9 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
           onRefreshProducts?.();
         } else {
           setProductFormError(res.error || 'Error al crear el producto');
+          if (res.error?.includes('expirada') || res.error?.includes('autorizado') || res.error?.includes('sesión')) {
+            setIsAuthenticated(false);
+          }
         }
       }
     } catch (err: any) {
@@ -292,13 +323,16 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     if (!window.confirm(`¿Estás seguro de que deseas eliminar permanentemente "${p.name}"?`)) {
       return;
     }
-    const res = await adminDeleteProduct(p.id);
+    const res = await adminDeleteProduct(p.id, p.sku, p.name);
     if (res.success) {
       showToast(`Producto "${p.name}" eliminado de la base de datos`);
       await loadProducts();
       onRefreshProducts?.();
     } else {
       showToast(res.error || 'Error al eliminar producto', 'error');
+      if (res.error?.includes('expirada') || res.error?.includes('autorizado') || res.error?.includes('sesión')) {
+        setIsAuthenticated(false);
+      }
     }
   };
 
@@ -313,11 +347,20 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
       )
     );
 
-    const res = await adminUpdateStock(product.id, newStock, newInStock);
+    const res = await adminUpdateStock(product.id, newStock, newInStock, product.sku, product.name);
     if (!res.success) {
-      showToast('Error al actualizar stock', 'error');
+      showToast(res.error || 'Error al actualizar stock', 'error');
+      if (res.error?.includes('expirada') || res.error?.includes('autorizado') || res.error?.includes('sesión')) {
+        setIsAuthenticated(false);
+      }
       await loadProducts();
     } else {
+      showToast(`Stock de "${product.name.slice(0, 24)}..." actualizado a ${newStock}`);
+      if (res.realId && res.realId !== product.id) {
+        setProducts((prev) =>
+          prev.map((item) => (item.id === product.id ? { ...item, id: res.realId! } : item))
+        );
+      }
       onRefreshProducts?.();
     }
   };
@@ -328,11 +371,20 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     setProducts((prev) =>
       prev.map((item) => (item.id === product.id ? { ...item, inStock: newInStock } : item))
     );
-    const res = await adminUpdateStock(product.id, product.stockCount || 0, newInStock);
+    const res = await adminUpdateStock(product.id, product.stockCount || 0, newInStock, product.sku, product.name);
     if (!res.success) {
-      showToast('Error al cambiar disponibilidad', 'error');
+      showToast(res.error || 'Error al cambiar disponibilidad', 'error');
+      if (res.error?.includes('expirada') || res.error?.includes('autorizado') || res.error?.includes('sesión')) {
+        setIsAuthenticated(false);
+      }
       await loadProducts();
     } else {
+      showToast(newInStock ? '✓ Producto marcado como En Stock' : '⚠️ Producto marcado como Agotado');
+      if (res.realId && res.realId !== product.id) {
+        setProducts((prev) =>
+          prev.map((item) => (item.id === product.id ? { ...item, id: res.realId! } : item))
+        );
+      }
       onRefreshProducts?.();
     }
   };
@@ -349,7 +401,10 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         setSelectedOrder({ ...selectedOrder, status });
       }
     } else {
-      showToast('Error al actualizar estado del pedido', 'error');
+      showToast(res.error || 'Error al actualizar estado del pedido', 'error');
+      if (res.error?.includes('expirada') || res.error?.includes('autorizado') || res.error?.includes('sesión')) {
+        setIsAuthenticated(false);
+      }
     }
   };
 
