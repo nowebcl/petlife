@@ -54,6 +54,33 @@ export interface Product {
 
 export const PRODUCTS_DATABASE: Product[] = [
   {
+    id: "heidj1uq0zxe1yp",
+    name: "🧪 Producto de Prueba (Test Webpay)",
+    brand: "PetLife Test",
+    category: "snacks",
+    categoryLabel: "Snacks & Premios",
+    petType: "ambos",
+    lifeStage: "todas",
+    price: 350,
+    rating: 5.0,
+    reviewsCount: 1,
+    weightOrSize: "1 unidad",
+    icon: "🧪",
+    bgGradient: "from-emerald-500/10 to-teal-500/10 text-emerald-600",
+    description: "Producto habilitado para probar el pago con Webpay Plus / Flow. Monto mínimo permitido por la pasarela: $350 CLP.",
+    longDescription: "Este producto está configurado con el valor mínimo permitido por Flow / Webpay Plus ($350 CLP) para probar compras reales, confirmación inmediata, descarga de comprobante PDF y enlace al WhatsApp.",
+    imageUrl: "/product-dog-food.jpg",
+    galleryImages: ["/product-dog-food.jpg"],
+    inStock: true,
+    stockCount: 999,
+    sku: "TEST-001",
+    benefits: [
+      "Prueba de pago real Webpay Plus",
+      "Descarga automática de comprobante con seguimiento",
+      "Enlace directo a WhatsApp"
+    ],
+  },
+  {
     "id": "prod-1",
     "name": "Alaska Adulto Todas las Razas Carne de Vacuno",
     "brand": "Alaska",
