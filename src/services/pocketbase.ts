@@ -468,6 +468,7 @@ export async function adminDeleteProduct(
  * Crear un pedido (Público, durante el checkout del cliente)
  */
 export async function submitOrder(orderData: {
+  orderNumber?: string;
   customerName: string;
   customerEmail: string;
   customerPhone?: string;
@@ -482,7 +483,7 @@ export async function submitOrder(orderData: {
   transbankToken?: string;
 }): Promise<{ success: boolean; order?: any; error?: string }> {
   try {
-    const orderNumber = `PL-${Date.now().toString().slice(-6)}`;
+    const orderNumber = orderData.orderNumber || `PL-${Date.now().toString().slice(-6)}`;
     const payload = {
       orderNumber,
       customerName: orderData.customerName,
@@ -525,9 +526,16 @@ export async function adminFetchOrders(): Promise<{ success: boolean; orders?: O
   if (!token) return { success: false, error: 'No autorizado' };
 
   try {
-    const res = await fetch(`${POCKETBASE_URL}/api/collections/orders/records?perPage=100&sort=-created`, {
+    let res = await fetch(`${POCKETBASE_URL}/api/collections/orders/records?perPage=100&sort=-created`, {
       headers: { Authorization: token },
     });
+
+    if (!res.ok) {
+      // Fallback a ordenar por -id si sort=-created da error
+      res = await fetch(`${POCKETBASE_URL}/api/collections/orders/records?perPage=100&sort=-id`, {
+        headers: { Authorization: token },
+      });
+    }
 
     const data = await res.json();
     if (res.ok) {

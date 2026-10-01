@@ -1543,7 +1543,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                   </div>
 
                   <span className="text-[11px] text-slate-400 font-semibold pl-2 sm:pl-0">
-                    {new Date(selectedOrder.created).toLocaleString('es-CL')}
+                    {selectedOrder.created ? new Date(selectedOrder.created).toLocaleString('es-CL') : 'Reciente'}
                   </span>
                 </div>
 
@@ -1581,10 +1581,18 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                   {/* Order Status & Actions Card */}
                   <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-3">
                     <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
-                      Estado del Pedido
+                      Estado del Pedido y Pago
                     </span>
                     <div className="flex items-center space-x-2">
-                      <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase">
+                      <span
+                        className={`px-3 py-1 rounded-full font-black text-xs uppercase ${
+                          selectedOrder.status === 'pagado' || selectedOrder.status === 'entregado'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : selectedOrder.status === 'despachado' || selectedOrder.status === 'en_preparacion'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
                         {selectedOrder.status.replace('_', ' ')}
                       </span>
                       <span className="text-xs text-slate-500 font-semibold">
@@ -1593,6 +1601,30 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                           {formatPrice(selectedOrder.total)}
                         </strong>
                       </span>
+                    </div>
+
+                    <div className="bg-white/80 p-2.5 rounded-xl border border-slate-200/60 text-[11px] space-y-1">
+                      <p className="text-slate-600">
+                        <strong className="text-[#061F3D]">Método de Pago:</strong>{' '}
+                        {selectedOrder.paymentMethod || 'Webpay Plus'}
+                      </p>
+                      {selectedOrder.transbankToken && (
+                        <p className="text-slate-600">
+                          <strong className="text-[#061F3D]">N° Transacción Flow:</strong> #{selectedOrder.transbankToken}
+                        </p>
+                      )}
+                      <p className="text-slate-600 flex items-center space-x-1.5">
+                        <strong className="text-[#061F3D]">Estado del Pago:</strong>{' '}
+                        <span
+                          className={`px-2 py-0.5 rounded font-black text-[10px] uppercase ${
+                            selectedOrder.paymentStatus === 'pagado' || selectedOrder.status === 'pagado'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}
+                        >
+                          {selectedOrder.paymentStatus || (selectedOrder.status === 'pagado' ? 'pagado' : 'pendiente')}
+                        </span>
+                      </p>
                     </div>
 
                     <div>
@@ -1788,7 +1820,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                                 </span>
                               </td>
                               <td className="py-3 px-3 text-[11px] text-slate-400">
-                                {new Date(ord.created).toLocaleDateString('es-CL')}
+                                {ord.created ? new Date(ord.created).toLocaleDateString('es-CL') : 'Reciente'}
                               </td>
                               <td className="py-3 px-4 text-right">
                                 <button

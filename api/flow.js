@@ -1,13 +1,13 @@
 import crypto from 'crypto';
 
-const FLOW_CONFIG = {
+export const FLOW_CONFIG = {
   apiKey: '56EC0FE0-1DAB-487B-93BE-22LC27EC1B24',
   secretKey: '4d36d14f697419812207fc8fc13fe87bc698b431',
   createEndpoint: 'https://www.flow.cl/api/payment/create',
   statusEndpoint: 'https://www.flow.cl/api/payment/getStatus',
 };
 
-function signParams(params, secretKey) {
+export function signParams(params, secretKey) {
   const sortedKeys = Object.keys(params).sort();
   let toSign = '';
   for (const k of sortedKeys) {
@@ -16,6 +16,124 @@ function signParams(params, secretKey) {
     }
   }
   return crypto.createHmac('sha256', secretKey).update(toSign).digest('hex');
+}
+
+/**
+ * Sincroniza una orden pagada con la base de datos PocketBase y descuenta stock
+ */
+export async function syncPaidOrderWithPocketBase(statusData) {
+  try {
+    const pbUrl = process.env.POCKETBASE_URL || 'https://petlife.noweb.cl';
+    const adminEmail = process.env.POCKETBASE_ADMIN_EMAIL || 'contacto@tiendapetlife.cl';
+    const adminPass = process.env.POCKETBASE_ADMIN_PASSWORD || 'PetLife.2026*';
+
+    // 1. Iniciar sesión como superusuario en PocketBase
+    const authRes = await fetch(`${pbUrl}/api/collections/_superusers/auth-with-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identity: adminEmail, password: adminPass }),
+    });
+
+    if (!authRes.ok) {
+      console.error('PocketBase superuser auth failed in flow sync:', authRes.status);
+      return false;
+    }
+
+    const authData = await authRes.json();
+    const token = authData.token;
+
+    const commerceOrder = statusData.commerceOrder || '';
+    const flowOrder = String(statusData.flowOrder || '');
+
+    // 2. Buscar la orden por orderNumber
+    let targetOrder = null;
+    if (commerceOrder) {
+      const searchRes = await fetch(
+        `${pbUrl}/api/collections/orders/records?filter=${encodeURIComponent(`orderNumber="${commerceOrder}"`)}`,
+        { headers: { Authorization: token } }
+      );
+      if (searchRes.ok) {
+        const searchData = await searchRes.json();
+        if (searchData.items && searchData.items.length > 0) {
+          targetOrder = searchData.items[0];
+        }
+      }
+    }
+
+    // Si no la encontramos por orderNumber exacto, buscar por correo del pagador y monto
+    if (!targetOrder && statusData.payer && statusData.amount) {
+      const filter = `customerEmail="${statusData.payer}" && total=${Math.round(statusData.amount)}`;
+      const searchRes = await fetch(
+        `${pbUrl}/api/collections/orders/records?filter=${encodeURIComponent(filter)}&sort=-id`,
+        { headers: { Authorization: token } }
+      );
+      if (searchRes.ok) {
+        const searchData = await searchRes.json();
+        if (searchData.items && searchData.items.length > 0) {
+          targetOrder = searchData.items[0];
+        }
+      }
+    }
+
+    if (targetOrder) {
+      // 3. Actualizar la orden a 'pagado'
+      const patchRes = await fetch(`${pbUrl}/api/collections/orders/records/${targetOrder.id}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderNumber: commerceOrder || targetOrder.orderNumber,
+          status: 'pagado',
+          paymentStatus: 'pagado',
+          transbankToken: flowOrder,
+          transbankResponse: statusData,
+        }),
+      });
+
+      console.log(`Orden ${targetOrder.orderNumber} sincronizada con estado PAGADO:`, patchRes.status);
+
+      // 4. Si la orden tiene items y su estado anterior no era pagado, descontar stock de los productos
+      if (Array.isArray(targetOrder.items) && targetOrder.status !== 'pagado') {
+        for (const item of targetOrder.items) {
+          if (item && item.id) {
+            try {
+              const prodRes = await fetch(`${pbUrl}/api/collections/products/records/${item.id}`, {
+                headers: { Authorization: token },
+              });
+              if (prodRes.ok) {
+                const prod = await prodRes.json();
+                const currentStock = typeof prod.stockCount === 'number' ? prod.stockCount : 15;
+                const newStock = Math.max(0, currentStock - (item.quantity || 1));
+                await fetch(`${pbUrl}/api/collections/products/records/${item.id}`, {
+                  method: 'PATCH',
+                  headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    stockCount: newStock,
+                    inStock: newStock > 0,
+                  }),
+                });
+              }
+            } catch (stockErr) {
+              console.warn('Error al descontar stock del producto:', item.id, stockErr);
+            }
+          }
+        }
+      }
+
+      return true;
+    } else {
+      console.warn(`No se encontró orden en PocketBase para Flow order ${commerceOrder}`);
+      return false;
+    }
+  } catch (err) {
+    console.error('Error sincronizando orden pagada con PocketBase:', err);
+    return false;
+  }
 }
 
 export default async function handler(req, res) {
@@ -57,10 +175,20 @@ export default async function handler(req, res) {
       // 3 = Rechazada
       // 4 = Anulada
       const isPaid = statusData.status === 2;
+      let orderUpdated = false;
+
+      if (isPaid) {
+        try {
+          orderUpdated = await syncPaidOrderWithPocketBase(statusData);
+        } catch (syncErr) {
+          console.error('Error sincronizando orden en PocketBase:', syncErr);
+        }
+      }
 
       return res.status(200).json({
         success: true,
         isPaid,
+        orderUpdated,
         status: statusData.status,
         flowOrder: statusData.flowOrder,
         commerceOrder: statusData.commerceOrder,

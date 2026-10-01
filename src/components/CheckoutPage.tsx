@@ -265,6 +265,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       // 1. Registrar pedido en base de datos
       try {
         await submitOrder({
+          orderNumber: buyOrder,
           customerName: orderData.customerName,
           customerEmail: orderData.customerEmail,
           customerPhone: orderData.customerPhone || '',
