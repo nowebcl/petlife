@@ -3,7 +3,6 @@ import {
   Package,
   Layers,
   ShoppingBag,
-  CreditCard,
   Plus,
   Search,
   Edit2,
@@ -38,11 +37,6 @@ import {
   fetchAllProducts,
   type OrderRecord,
 } from '../services/pocketbase.ts';
-import {
-  getTransbankConfig,
-  saveTransbankConfig,
-  type TransbankConfig,
-} from '../services/transbank.ts';
 
 interface AdminPanelProps {
   onClose: () => void;
@@ -58,10 +52,10 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
   // Main navigation view
-  // 'dashboard' = lists (products, inventory, orders, transbank)
+  // 'dashboard' = lists (products, inventory, orders)
   // 'product_editor' = FULL-PAGE dedicated product creator/editor
   const [activeView, setActiveView] = useState<'dashboard' | 'product_editor'>('dashboard');
-  const [activeTab, setActiveTab] = useState<'products' | 'inventory' | 'orders' | 'transbank'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'inventory' | 'orders'>('products');
 
   // Products state
   const [products, setProducts] = useState<Product[]>([]);
@@ -91,10 +85,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   const [isLoadingOrders, setIsLoadingOrders] = useState<boolean>(false);
   const [orderFilter, setOrderFilter] = useState<string>('all');
   const [selectedOrder, setSelectedOrder] = useState<OrderRecord | null>(null);
-
-  // Transbank config state
-  const [tbkConfig, setTbkConfig] = useState<TransbankConfig>(getTransbankConfig());
-  const [tbkSuccessMsg, setTbkSuccessMsg] = useState<string | null>(null);
 
   // Notification Toast
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -361,15 +351,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     } else {
       showToast('Error al actualizar estado del pedido', 'error');
     }
-  };
-
-  // Transbank Save
-  const handleSaveTransbank = (e: React.FormEvent) => {
-    e.preventDefault();
-    saveTransbankConfig(tbkConfig);
-    setTbkSuccessMsg('¡Configuración de Transbank Webpay Plus guardada!');
-    showToast('Configuración de Transbank actualizada');
-    setTimeout(() => setTbkSuccessMsg(null), 4000);
   };
 
   // Filtered Products
@@ -949,20 +930,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Pedidos ({orders.length})</span>
           </button>
-          <button
-            onClick={() => {
-              setActiveTab('transbank');
-              setSelectedOrder(null);
-            }}
-            className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
-              activeTab === 'transbank'
-                ? 'bg-white text-[#FF5200] shadow-xs'
-                : 'text-slate-600 hover:text-[#061F3D]'
-            }`}
-          >
-            <CreditCard className="w-3.5 h-3.5" />
-            <span>Transbank Webpay</span>
-          </button>
         </nav>
 
         {/* Actions: View Store & Logout */}
@@ -1023,19 +990,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
           }`}
         >
           🛍️ Pedidos ({orders.length})
-        </button>
-        <button
-          onClick={() => {
-            setActiveTab('transbank');
-            setSelectedOrder(null);
-          }}
-          className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-colors ${
-            activeTab === 'transbank'
-              ? 'bg-[#FF5200] text-white shadow-xs font-black'
-              : 'bg-slate-100 text-slate-600'
-          }`}
-        >
-          💳 Transbank
         </button>
       </div>
 
@@ -1798,112 +1752,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 </div>
               </>
             )}
-          </div>
-        )}
-
-        {/* ===================================================================== */}
-        {/* TAB 4: TRANSBANK WEBPAY CONFIGURATION                                */}
-        {/* ===================================================================== */}
-        {activeTab === 'transbank' && (
-          <div className="max-w-2xl mx-auto w-full">
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-slate-200 shadow-2xs space-y-4 sm:space-y-6">
-              <div>
-                <h3 className="text-lg sm:text-xl font-black text-[#061F3D] flex items-center space-x-2">
-                  <CreditCard className="w-5 h-5 text-[#FF5200]" />
-                  <span>Transbank Webpay Plus</span>
-                </h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  Ingresa las credenciales oficiales de Transbank para procesar pagos reales con tarjetas.
-                </p>
-              </div>
-
-              {tbkSuccessMsg && (
-                <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center space-x-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{tbkSuccessMsg}</span>
-                </div>
-              )}
-
-              <form onSubmit={handleSaveTransbank} className="space-y-3.5 sm:space-y-4">
-                {/* Environment Mode */}
-                <div>
-                  <label className="block text-xs font-extrabold uppercase text-slate-500 tracking-wider mb-1.5">
-                    Ambiente de Pagos
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setTbkConfig({ ...tbkConfig, environment: 'integration' })}
-                      className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer text-left ${
-                        tbkConfig.environment === 'integration'
-                          ? 'border-[#FF5200] bg-orange-50/50 text-[#FF5200]'
-                          : 'border-slate-200 hover:bg-slate-50 text-slate-600'
-                      }`}
-                    >
-                      <span className="block font-black text-sm">🧪 Integración (Pruebas)</span>
-                      <span className="text-[11px] font-normal opacity-80">
-                        Tarjetas de prueba de Transbank
-                      </span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setTbkConfig({ ...tbkConfig, environment: 'production' })}
-                      className={`p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer text-left ${
-                        tbkConfig.environment === 'production'
-                          ? 'border-emerald-500 bg-emerald-50/50 text-emerald-700'
-                          : 'border-slate-200 hover:bg-slate-50 text-slate-600'
-                      }`}
-                    >
-                      <span className="block font-black text-sm">🔒 Producción Real</span>
-                      <span className="text-[11px] font-normal opacity-80">
-                        Cobros y dinero real en tu cuenta
-                      </span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Commerce Code */}
-                <div>
-                  <label className="block text-xs font-extrabold uppercase text-slate-500 tracking-wider mb-1.5">
-                    Código de Comercio
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={tbkConfig.commerceCode}
-                    onChange={(e) => setTbkConfig({ ...tbkConfig, commerceCode: e.target.value.trim() })}
-                    placeholder="Ej: 597055555532 o el entregado por Transbank"
-                    className="w-full px-3.5 sm:px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold focus:outline-none focus:border-[#FF5200]"
-                  />
-                </div>
-
-                {/* API Key */}
-                <div>
-                  <label className="block text-xs font-extrabold uppercase text-slate-500 tracking-wider mb-1.5">
-                    API Key Secreta
-                  </label>
-                  <input
-                    type="password"
-                    required
-                    value={tbkConfig.apiKey}
-                    onChange={(e) => setTbkConfig({ ...tbkConfig, apiKey: e.target.value.trim() })}
-                    placeholder="Pega aquí la API Key que te entrega Transbank..."
-                    className="w-full px-3.5 sm:px-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold focus:outline-none focus:border-[#FF5200]"
-                  />
-                  <span className="text-[10px] text-slate-400 mt-1 block">
-                    Se guarda de manera segura para autenticar transacciones con Webpay Plus.
-                  </span>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full py-3.5 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-sm shadow-orange-glow transition-all active:scale-95 cursor-pointer mt-2"
-                >
-                  Guardar Configuración de Transbank
-                </button>
-              </form>
-            </div>
           </div>
         )}
       </main>
