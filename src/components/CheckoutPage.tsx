@@ -61,6 +61,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [confirmedOrder, setConfirmedOrder] = useState<ReceiptData | null>(null);
+  const [rejectedOrder, setRejectedOrder] = useState<{ orderNumber: string; reason?: string } | null>(null);
   const [autoDownloadNotice, setAutoDownloadNotice] = useState(false);
 
   // Comunas activas según la región seleccionada
@@ -85,7 +86,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   const shippingCost = 0;
   const totalAmount = cartSubtotal;
 
-  // Detección de retorno desde Flow / Webpay Plus para confirmar la venta y descargar el documento
+  // Detección de retorno desde Flow / Webpay Plus para confirmar la venta o manejar rechazos
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -117,6 +118,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
 
     const processOrderConfirmation = (order: ReceiptData) => {
       setConfirmedOrder(order);
+      setRejectedOrder(null);
       sessionStorage.removeItem('petlife_pending_order');
       sessionStorage.setItem('petlife_last_order', JSON.stringify(order));
       onOrderSuccess(order.orderNumber);
@@ -130,23 +132,39 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
 
     // Si viene con token de Flow, verificar el estado real de la transacción en el servidor
     if (flowToken) {
+      setIsProcessing(true);
       checkFlowPaymentStatus(flowToken)
         .then((statusRes) => {
-          if (statusRes.success) {
+          setIsProcessing(false);
+          if (statusRes.success && statusRes.isPaid) {
+            // Pago aprobado en Webpay Plus
             if (orderData) {
               orderData.flowOrder = statusRes.flowOrder || orderData.flowOrder;
               processOrderConfirmation(orderData);
             }
-          } else if (orderData && isPaymentReturn) {
-            processOrderConfirmation(orderData);
+          } else {
+            // Pago no aprobado (Rechazado por saldo insuficiente, anulado, etc.)
+            const orderNum = query.get('order') || orderData?.orderNumber || 'PL-000000';
+            setRejectedOrder({
+              orderNumber: orderNum,
+              reason:
+                statusRes.status === 3
+                  ? 'Transacción rechazada por el banco (posiblemente saldo insuficiente o tarjeta no autorizada).'
+                  : statusRes.status === 4
+                  ? 'Transacción cancelada o anulada en el portal de Webpay.'
+                  : 'El pago no fue aprobado por la entidad bancaria.',
+            });
           }
         })
         .catch(() => {
-          if (orderData && isPaymentReturn) {
-            processOrderConfirmation(orderData);
-          }
+          setIsProcessing(false);
+          const orderNum = query.get('order') || orderData?.orderNumber || 'PL-000000';
+          setRejectedOrder({
+            orderNumber: orderNum,
+            reason: 'No fue posible confirmar la transacción bancaria.',
+          });
         });
-    } else if (orderData && isPaymentReturn) {
+    } else if (orderData && query.get('status') === 'success') {
       processOrderConfirmation(orderData);
     }
   }, [onOrderSuccess]);
@@ -237,7 +255,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
         amount: totalAmount,
         email: customerEmail.trim(),
         subject: `Compra PetLife ${buyOrder}`,
-        urlReturn: `${window.location.origin}/checkout?status=flow_return&order=${buyOrder}`,
+        urlReturn: `${window.location.origin}/api/flow-return?order=${buyOrder}`,
       });
 
       if (paymentRes.success && paymentRes.redirectUrl) {
@@ -267,6 +285,72 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       downloadOrderReceiptPDF(confirmedOrder);
     }
   };
+
+  // =========================================================================
+  // VIEW: PAGO RECHAZADO / CANCELADO (SIN SALDO O ERROR DE BANCO)
+  // =========================================================================
+  if (rejectedOrder) {
+    return (
+      <div className="w-full min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8 animate-fade-in flex items-center justify-center">
+        <div className="max-w-xl w-full bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl space-y-6 text-center">
+          <div className="w-20 h-20 mx-auto rounded-full bg-rose-50 border-2 border-rose-300 flex items-center justify-center text-rose-500 shadow-sm">
+            <AlertTriangle className="w-10 h-10" />
+          </div>
+
+          <div className="space-y-2">
+            <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-extrabold text-xs">
+              <span>Pago no completado</span>
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#061F3D]">
+              Tu pago no pudo ser procesado
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+              {rejectedOrder.reason || 'La transacción fue rechazada o cancelada por el banco (posiblemente por saldo insuficiente o tarjeta no habilitada).'}{' '}
+              <strong className="text-slate-700">No se ha realizado ningún cobro a tu cuenta.</strong>
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 text-left space-y-2">
+            <div className="flex justify-between">
+              <span className="font-semibold text-slate-500">Orden de compra:</span>
+              <span className="font-mono font-bold text-[#061F3D]">{rejectedOrder.orderNumber}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-slate-500">Estado de pago:</span>
+              <span className="font-bold text-rose-600">Rechazado / Sin cobro</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-semibold text-slate-500">Medio utilizado:</span>
+              <span className="font-semibold text-slate-700">Webpay Plus</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                setRejectedOrder(null);
+                if (typeof window !== 'undefined') {
+                  window.history.replaceState({}, document.title, window.location.pathname);
+                }
+              }}
+              className="flex-1 py-3.5 px-5 rounded-full bg-[#FF5200] hover:bg-[#FF6508] text-white font-extrabold text-sm shadow-orange-glow transition-all active:scale-95 cursor-pointer flex items-center justify-center space-x-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Reintentar Pago con Webpay</span>
+            </button>
+            <button
+              type="button"
+              onClick={onNavigateToCart}
+              className="py-3.5 px-5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-sm transition-all active:scale-95 cursor-pointer"
+            >
+              Volver al Carrito
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // =========================================================================
   // VIEW: CONFIRMACIÓN EXITOSA DE COMPRA ("MUCHAS GRACIAS POR TU COMPRA")

@@ -73,7 +73,7 @@ export async function createFlowPayment(
     const origin =
       typeof window !== 'undefined' ? window.location.origin : 'https://tiendapetlife.cl';
     const urlReturn =
-      data.urlReturn || `${origin}/checkout?status=success&order=${data.commerceOrder}`;
+      data.urlReturn || `${origin}/api/flow-return?order=${data.commerceOrder}`;
     const urlConfirmation =
       data.urlConfirmation || 'https://tiendapetlife.cl/api/flow-confirm';
 

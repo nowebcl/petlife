@@ -77,7 +77,7 @@ export default async function handler(req, res) {
     }
   }
 
-  // 2. POST: Crear nueva orden de pago en Flow
+  // 2. POST: Crear nueva orden de pago en Flow (o procesar retorno de Flow)
   if (req.method === 'POST') {
     try {
       let data = req.body;
@@ -90,6 +90,18 @@ export default async function handler(req, res) {
       }
       data = data || {};
 
+      // Si Flow hace POST de retorno a este endpoint con un token y sin monto
+      const url = new URL(req.url, 'http://localhost');
+      const action = url.searchParams.get('action') || (req.query && req.query.action);
+      if (action === 'return' || (data.token && !data.amount)) {
+        const token = data.token || url.searchParams.get('token') || '';
+        const order = url.searchParams.get('order') || data.order || data.commerceOrder || '';
+        res.writeHead(302, {
+          Location: `/checkout?status=flow_return&order=${encodeURIComponent(order)}&token=${encodeURIComponent(token)}`,
+        });
+        return res.end();
+      }
+
       const commerceOrder = data.commerceOrder || `PL-${Date.now().toString().slice(-6)}`;
       const amount = Math.round(Number(data.amount) || 0);
       const email = (data.email || 'contacto@tiendapetlife.cl').trim();
@@ -97,7 +109,7 @@ export default async function handler(req, res) {
       const urlConfirmation =
         data.urlConfirmation || 'https://tiendapetlife.cl/api/flow-confirm';
       const urlReturn =
-        data.urlReturn || `https://tiendapetlife.cl/checkout?status=flow_return&order=${commerceOrder}`;
+        data.urlReturn || `https://tiendapetlife.cl/api/flow-return?order=${commerceOrder}`;
 
       if (amount <= 0) {
         return res.status(400).json({ success: false, error: 'Monto de orden inválido' });
