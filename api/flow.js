@@ -75,6 +75,24 @@ export async function syncPaidOrderWithPocketBase(statusData) {
       }
     }
 
+    // Si aún no se encuentra y es sandbox o fallback, buscar la orden pendiente más reciente
+    if (!targetOrder) {
+      try {
+        const searchRes = await fetch(
+          `${pbUrl}/api/collections/orders/records?filter=${encodeURIComponent('status="pendiente"')}&sort=-created&perPage=1`,
+          { headers: { Authorization: token } }
+        );
+        if (searchRes.ok) {
+          const searchData = await searchRes.json();
+          if (searchData.items && searchData.items.length > 0) {
+            targetOrder = searchData.items[0];
+          }
+        }
+      } catch (fallbackErr) {
+        console.warn('Error buscando orden pendiente reciente:', fallbackErr);
+      }
+    }
+
     if (targetOrder) {
       // 3. Actualizar la orden a 'pagado'
       const patchRes = await fetch(`${pbUrl}/api/collections/orders/records/${targetOrder.id}`, {
@@ -93,6 +111,14 @@ export async function syncPaidOrderWithPocketBase(statusData) {
       });
 
       console.log(`Orden ${targetOrder.orderNumber} sincronizada con estado PAGADO:`, patchRes.status);
+      let updatedOrder = targetOrder;
+      if (patchRes.ok) {
+        try {
+          updatedOrder = await patchRes.json();
+        } catch {
+          updatedOrder = { ...targetOrder, status: 'pagado', paymentStatus: 'pagado', transbankToken: flowOrder };
+        }
+      }
 
       // 4. Si la orden tiene items y su estado anterior no era pagado, descontar stock de los productos
       if (Array.isArray(targetOrder.items) && targetOrder.status !== 'pagado') {
@@ -125,14 +151,14 @@ export async function syncPaidOrderWithPocketBase(statusData) {
         }
       }
 
-      return true;
+      return { success: true, order: updatedOrder };
     } else {
       console.warn(`No se encontró orden en PocketBase para Flow order ${commerceOrder}`);
-      return false;
+      return { success: false, order: null };
     }
   } catch (err) {
     console.error('Error sincronizando orden pagada con PocketBase:', err);
-    return false;
+    return { success: false, order: null };
   }
 }
 
@@ -154,9 +180,50 @@ export default async function handler(req, res) {
     try {
       const url = new URL(req.url, 'http://localhost');
       const token = url.searchParams.get('token') || (req.query && req.query.token);
+      const commerceOrderParam = url.searchParams.get('order') || (req.query && req.query.order) || '';
 
       if (!token) {
         return res.status(400).json({ success: false, error: 'Token de pago requerido' });
+      }
+
+      // MODO SANDBOX: Simulación 100% gratuita y funcional para pruebas
+      const isSandboxToken =
+        token.startsWith('sandbox') ||
+        token.startsWith('SANDBOX') ||
+        token.toLowerCase().includes('sandbox');
+
+      if (isSandboxToken) {
+        const mockStatusData = {
+          status: 2, // 2 = Pagada en Flow
+          flowOrder: 'SANDBOX-' + Date.now().toString().slice(-6),
+          commerceOrder: commerceOrderParam || `PL-${Date.now().toString().slice(-6)}`,
+          amount: 0,
+          payer: 'sandbox@tiendapetlife.cl',
+          requestDate: new Date().toISOString(),
+        };
+
+        let syncResult = null;
+        try {
+          syncResult = await syncPaidOrderWithPocketBase(mockStatusData);
+        } catch (syncErr) {
+          console.warn('Sandbox sync error:', syncErr);
+        }
+
+        const orderRecord = syncResult && syncResult.order ? syncResult.order : null;
+
+        return res.status(200).json({
+          success: true,
+          isPaid: true,
+          status: 2,
+          orderUpdated: Boolean(orderRecord),
+          flowOrder: mockStatusData.flowOrder,
+          commerceOrder: (orderRecord && orderRecord.orderNumber) || mockStatusData.commerceOrder,
+          amount: (orderRecord && orderRecord.total) || 0,
+          requestDate: mockStatusData.requestDate,
+          order: orderRecord,
+          isSandbox: true,
+          data: mockStatusData,
+        });
       }
 
       const params = {
@@ -176,10 +243,12 @@ export default async function handler(req, res) {
       // 4 = Anulada
       const isPaid = statusData.status === 2;
       let orderUpdated = false;
+      let syncResult = null;
 
       if (isPaid) {
         try {
-          orderUpdated = await syncPaidOrderWithPocketBase(statusData);
+          syncResult = await syncPaidOrderWithPocketBase(statusData);
+          orderUpdated = Boolean(syncResult && syncResult.success);
         } catch (syncErr) {
           console.error('Error sincronizando orden en PocketBase:', syncErr);
         }
@@ -194,6 +263,7 @@ export default async function handler(req, res) {
         commerceOrder: statusData.commerceOrder,
         amount: statusData.amount,
         requestDate: statusData.requestDate,
+        order: syncResult && syncResult.order ? syncResult.order : null,
         data: statusData,
       });
     } catch (err) {
@@ -217,6 +287,20 @@ export default async function handler(req, res) {
         }
       }
       data = data || {};
+
+      // Si se solicita modo Sandbox de prueba gratuita
+      if (data.isSandbox === true) {
+        const commerceOrder = data.commerceOrder || `PL-${Date.now().toString().slice(-6)}`;
+        const sandboxToken = `sandbox_${Date.now()}`;
+        return res.status(200).json({
+          success: true,
+          isSandbox: true,
+          token: sandboxToken,
+          flowOrder: `SANDBOX-${Date.now().toString().slice(-6)}`,
+          url: '/checkout',
+          redirectUrl: `/checkout?status=flow_return&order=${encodeURIComponent(commerceOrder)}&token=${encodeURIComponent(sandboxToken)}`,
+        });
+      }
 
       // Si Flow hace POST de retorno a este endpoint con un token y sin monto
       const url = new URL(req.url, 'http://localhost');

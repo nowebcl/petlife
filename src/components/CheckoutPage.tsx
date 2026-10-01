@@ -65,7 +65,8 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   const [autoDownloadNotice, setAutoDownloadNotice] = useState(false);
 
   // Guardas para evitar ejecuciones repetidas y bucles infinitos de descarga
-  const hasProcessedRef = useRef(false);
+  const hasCheckedFlowTokenRef = useRef(false);
+  const hasConfirmedOrderRef = useRef(false);
   const hasDownloadedPdfRef = useRef(false);
   const onOrderSuccessRef = useRef(onOrderSuccess);
   useEffect(() => {
@@ -94,18 +95,50 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   const shippingCost = 0;
   const totalAmount = cartSubtotal;
 
-  // Detección de retorno desde Flow / Webpay Plus para confirmar la venta o manejar rechazos
+  // Función oficial de confirmación de pedido: muestra Thank You page y descarga PDF único
+  const processOrderConfirmation = (order: ReceiptData) => {
+    if (hasConfirmedOrderRef.current) return;
+    hasConfirmedOrderRef.current = true;
+
+    setConfirmedOrder(order);
+    setRejectedOrder(null);
+    sessionStorage.removeItem('petlife_pending_order');
+    sessionStorage.setItem('petlife_last_order', JSON.stringify(order));
+
+    // Limpiar URL query params para que no vuelva a procesarse al re-renderizar
+    try {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } catch (err) {
+      // Ignorar
+    }
+
+    onOrderSuccessRef.current(order.orderNumber);
+
+    // Descarga automática ÚNICA del comprobante con número de seguimiento
+    const downloadKey = `petlife_receipt_downloaded_${order.orderNumber}`;
+    if (!hasDownloadedPdfRef.current && !sessionStorage.getItem(downloadKey)) {
+      hasDownloadedPdfRef.current = true;
+      sessionStorage.setItem(downloadKey, 'true');
+      setAutoDownloadNotice(true);
+      setTimeout(() => {
+        downloadOrderReceiptPDF(order);
+      }, 700);
+    }
+  };
+
+  // Detección de retorno desde Flow / Webpay Plus o Sandbox para confirmar la venta o manejar rechazos
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (hasProcessedRef.current) return;
+    if (hasConfirmedOrderRef.current) return;
 
     const query = new URLSearchParams(window.location.search);
     const flowToken = query.get('token');
+    const orderParam = query.get('order');
     const isPaymentReturn =
       query.get('status') === 'flow_return' ||
       query.get('status') === 'success' ||
       Boolean(flowToken) ||
-      Boolean(query.get('order'));
+      Boolean(orderParam);
 
     if (!isPaymentReturn && !flowToken) return;
 
@@ -127,57 +160,89 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       }
     }
 
-    const processOrderConfirmation = (order: ReceiptData) => {
-      if (hasProcessedRef.current) return;
-      hasProcessedRef.current = true;
-
-      setConfirmedOrder(order);
-      setRejectedOrder(null);
-      sessionStorage.removeItem('petlife_pending_order');
-      sessionStorage.setItem('petlife_last_order', JSON.stringify(order));
-
-      // Limpiar URL query params para que no vuelva a procesarse al re-renderizar
-      try {
-        window.history.replaceState({}, document.title, window.location.pathname);
-      } catch (err) {
-        // Ignorar
-      }
-
-      onOrderSuccessRef.current(order.orderNumber);
-
-      // Descarga automática ÚNICA del comprobante con número de seguimiento
-      const downloadKey = `petlife_receipt_downloaded_${order.orderNumber}`;
-      if (!hasDownloadedPdfRef.current && !sessionStorage.getItem(downloadKey)) {
-        hasDownloadedPdfRef.current = true;
-        sessionStorage.setItem(downloadKey, 'true');
-        setAutoDownloadNotice(true);
-        setTimeout(() => {
-          downloadOrderReceiptPDF(order);
-        }, 800);
-      }
-    };
-
-    // Si viene con token de Flow, verificar el estado real de la transacción en el servidor
+    // Si viene con token de Flow (o sandbox), verificar el estado real de la transacción en el servidor
     if (flowToken) {
-      hasProcessedRef.current = true;
+      if (hasCheckedFlowTokenRef.current) return;
+      hasCheckedFlowTokenRef.current = true;
       setIsProcessing(true);
-      checkFlowPaymentStatus(flowToken)
+
+      checkFlowPaymentStatus(flowToken, orderParam || undefined)
         .then((statusRes) => {
           setIsProcessing(false);
-          // Limpiar URL
-          try {
-            window.history.replaceState({}, document.title, window.location.pathname);
-          } catch {}
 
           if (statusRes.success && statusRes.isPaid) {
-            // Pago aprobado en Webpay Plus
-            if (orderData) {
-              orderData.flowOrder = statusRes.flowOrder || orderData.flowOrder;
-              processOrderConfirmation(orderData);
+            // Pago aprobado en Webpay Plus o Simulado en Sandbox
+            let finalOrder = orderData;
+
+            // Si orderData no estaba en sessionStorage, reconstruirlo a partir de la orden de PocketBase
+            if (!finalOrder && statusRes.order) {
+              const pbOrd = statusRes.order;
+              finalOrder = {
+                orderNumber: pbOrd.orderNumber || orderParam || 'PL-000000',
+                customerName: pbOrd.customerName || 'Cliente PetLife',
+                customerEmail: pbOrd.customerEmail || '',
+                customerPhone: pbOrd.customerPhone || '',
+                customerAddress: pbOrd.customerAddress || 'Chile',
+                customerCity: pbOrd.customerCity || '',
+                customerRegion: '',
+                customerNotes: pbOrd.customerNotes || '',
+                items: Array.isArray(pbOrd.items)
+                  ? pbOrd.items.map((it: any) => ({
+                      name: it.name || 'Producto',
+                      price: it.price || 0,
+                      quantity: it.quantity || 1,
+                      weightOrSize: it.weightOrSize || '',
+                    }))
+                  : [],
+                subtotal: pbOrd.subtotal || Number(statusRes.amount) || totalAmount,
+                shippingCost: pbOrd.shippingCost || 0,
+                total: pbOrd.total || Number(statusRes.amount) || totalAmount,
+                paymentMethod: pbOrd.paymentMethod || 'Webpay Plus (Débito / Crédito)',
+                flowOrder: statusRes.flowOrder,
+                date: pbOrd.created
+                  ? new Date(pbOrd.created).toLocaleDateString('es-CL', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
+                  : new Date().toLocaleDateString('es-CL'),
+              };
             }
+
+            // Fallback si ni orderData ni statusRes.order existían
+            if (!finalOrder) {
+              finalOrder = {
+                orderNumber: statusRes.commerceOrder || orderParam || 'PL-000000',
+                customerName: 'Cliente PetLife',
+                customerEmail: '',
+                customerAddress: 'Chile',
+                items: cartItems.length > 0
+                  ? cartItems.map((ci) => ({
+                      name: ci.product.name,
+                      price: ci.product.price,
+                      quantity: ci.quantity,
+                      weightOrSize: ci.product.weightOrSize,
+                    }))
+                  : [{ name: 'Compra PetLife', price: Number(statusRes.amount) || totalAmount, quantity: 1 }],
+                subtotal: Number(statusRes.amount) || totalAmount,
+                shippingCost: 0,
+                total: Number(statusRes.amount) || totalAmount,
+                paymentMethod: 'Webpay Plus (Débito / Crédito)',
+                flowOrder: statusRes.flowOrder,
+                date: new Date().toLocaleDateString('es-CL'),
+              };
+            }
+
+            if (statusRes.flowOrder) {
+              finalOrder.flowOrder = statusRes.flowOrder;
+            }
+
+            processOrderConfirmation(finalOrder);
           } else {
             // Pago no aprobado (Rechazado por saldo insuficiente, anulado, etc.)
-            const orderNum = query.get('order') || orderData?.orderNumber || 'PL-000000';
+            const orderNum = orderParam || orderData?.orderNumber || 'PL-000000';
             setRejectedOrder({
               orderNumber: orderNum,
               reason:
@@ -191,7 +256,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
         })
         .catch(() => {
           setIsProcessing(false);
-          const orderNum = query.get('order') || orderData?.orderNumber || 'PL-000000';
+          const orderNum = orderParam || orderData?.orderNumber || 'PL-000000';
           setRejectedOrder({
             orderNumber: orderNum,
             reason: 'No fue posible confirmar la transacción bancaria.',
@@ -310,6 +375,106 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       }
     } catch (err: any) {
       setErrorMessage(err.message || 'Error de conexión con la pasarela de pagos.');
+      setIsProcessing(false);
+    }
+  };
+
+  const handleSandboxCheckout = async () => {
+    if (cartItems.length === 0) {
+      setErrorMessage('Tu carrito está vacío. Agrega productos antes de realizar la prueba.');
+      return;
+    }
+
+    const name = customerName.trim() || 'Cliente Prueba Sandbox';
+    const email = customerEmail.trim() || 'sandbox.test@tiendapetlife.cl';
+    const address = customerAddress.trim() || 'Av. Los Alerces 1234';
+    const phone = customerPhone.trim() || '+56 9 1234 5678';
+
+    setIsProcessing(true);
+    setErrorMessage(null);
+
+    const buyOrder = `PL-${Date.now().toString().slice(-6)}`;
+
+    const orderData: ReceiptData = {
+      orderNumber: buyOrder,
+      customerName: name,
+      customerEmail: email,
+      customerPhone: phone,
+      customerAddress: address,
+      customerCity: customerCity.trim(),
+      customerRegion: customerRegion.trim(),
+      customerNotes: customerNotes.trim() || 'Prueba de compra en modo Sandbox (Gratis $0)',
+      items: cartItems.map((ci) => ({
+        name: ci.product.name,
+        price: ci.product.price,
+        quantity: ci.quantity,
+        weightOrSize: ci.product.weightOrSize,
+      })),
+      subtotal: cartSubtotal,
+      shippingCost,
+      total: totalAmount,
+      paymentMethod: 'Webpay Plus (Modo Sandbox)',
+      date: new Date().toLocaleDateString('es-CL', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    };
+
+    sessionStorage.setItem('petlife_pending_order', JSON.stringify(orderData));
+    sessionStorage.setItem('petlife_last_order', JSON.stringify(orderData));
+
+    const dbItems: OrderItem[] = cartItems.map((item) => ({
+      id: item.product.id,
+      name: item.product.name,
+      price: item.product.price,
+      quantity: item.quantity,
+      weightOrSize: item.product.weightOrSize,
+      imageUrl: item.product.imageUrl,
+    }));
+
+    try {
+      // 1. Registrar pedido en base de datos PocketBase
+      try {
+        await submitOrder({
+          orderNumber: buyOrder,
+          customerName: name,
+          customerEmail: email,
+          customerPhone: phone,
+          customerAddress: `${address}, ${customerCity} (${customerRegion})`,
+          customerCity: customerCity || 'Puerto Montt',
+          customerNotes: 'Prueba en Modo Sandbox (Gratis $0)',
+          items: dbItems,
+          subtotal: cartSubtotal,
+          shippingCost,
+          total: totalAmount,
+          paymentMethod: 'Webpay Plus (Sandbox)',
+          transbankToken: 'SANDBOX-TEST',
+        });
+      } catch (dbErr) {
+        console.warn('Registro de orden en backend advertencia:', dbErr);
+      }
+
+      // 2. Simular pago aprobado en Sandbox
+      const paymentRes = await createFlowPayment({
+        commerceOrder: buyOrder,
+        amount: totalAmount,
+        email: email,
+        subject: `Prueba PetLife Sandbox ${buyOrder}`,
+        isSandbox: true,
+      });
+
+      if (paymentRes.success && paymentRes.redirectUrl) {
+        window.location.href = paymentRes.redirectUrl;
+      } else {
+        // Confirmación directa si no hay redirección
+        orderData.flowOrder = paymentRes.flowOrder || `SANDBOX-${Date.now().toString().slice(-6)}`;
+        processOrderConfirmation(orderData);
+      }
+    } catch (err: any) {
+      setErrorMessage(err.message || 'Error al iniciar la prueba sandbox.');
       setIsProcessing(false);
     }
   };
@@ -854,6 +1019,22 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                     <span>Pagar con Webpay Plus {formatPrice(totalAmount)}</span>
                   )}
                 </button>
+
+                {/* Botón de Modo Sandbox / Simulación Gratis $0 */}
+                <div className="pt-3 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={handleSandboxCheckout}
+                    disabled={isProcessing || cartItems.length === 0}
+                    className="w-full py-3 px-4 rounded-full bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-400 text-emerald-900 font-black text-xs transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center space-x-2 shadow-xs"
+                  >
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    <span>🧪 Probar Compra en Modo Sandbox (Test Gratis $0)</span>
+                  </button>
+                  <p className="text-[10.5px] text-emerald-700 text-center mt-1.5 font-medium leading-tight">
+                    Simulación 100% gratuita sin gastar dinero real: registra el pedido, aprueba el pago y descarga el comprobante oficial con número de seguimiento.
+                  </p>
+                </div>
 
                 <p className="text-[11px] text-slate-400 text-center">
                   Al confirmar, serás redirigido de forma segura para pagar con Webpay Plus. Descargarás tu comprobante con tu número de seguimiento automáticamente.

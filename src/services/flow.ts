@@ -16,6 +16,7 @@ export interface FlowPaymentRequest {
   subject: string;
   urlReturn?: string;
   urlConfirmation?: string;
+  isSandbox?: boolean;
 }
 
 export interface FlowPaymentResponse {
@@ -24,6 +25,7 @@ export interface FlowPaymentResponse {
   token?: string;
   flowOrder?: number | string;
   redirectUrl?: string;
+  isSandbox?: boolean;
   error?: string;
 }
 
@@ -35,15 +37,23 @@ export interface FlowStatusResponse {
   commerceOrder?: string;
   amount?: number | string;
   requestDate?: string;
+  order?: any;
+  isSandbox?: boolean;
   error?: string;
 }
 
 /**
  * Consulta el estado real de pago en Flow para verificar cuándo la venta fue pagada con éxito
  */
-export async function checkFlowPaymentStatus(token: string): Promise<FlowStatusResponse> {
+export async function checkFlowPaymentStatus(
+  token: string,
+  commerceOrder?: string
+): Promise<FlowStatusResponse> {
   try {
-    const res = await fetch(`/api/flow?token=${encodeURIComponent(token)}`);
+    const url = `/api/flow?token=${encodeURIComponent(token)}${
+      commerceOrder ? `&order=${encodeURIComponent(commerceOrder)}` : ''
+    }`;
+    const res = await fetch(url);
     if (!res.ok) {
       return { success: false, isPaid: false, error: 'No se pudo verificar el estado en Flow' };
     }
@@ -56,6 +66,8 @@ export async function checkFlowPaymentStatus(token: string): Promise<FlowStatusR
       commerceOrder: data.commerceOrder,
       amount: data.amount,
       requestDate: data.requestDate,
+      order: data.order,
+      isSandbox: data.isSandbox,
     };
   } catch (err: any) {
     console.error('Error al verificar estado de pago Flow:', err);
@@ -84,6 +96,7 @@ export async function createFlowPayment(
       subject: data.subject.trim(),
       urlConfirmation,
       urlReturn,
+      isSandbox: data.isSandbox === true,
     };
 
     let res: Response | null = null;
