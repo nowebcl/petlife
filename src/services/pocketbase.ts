@@ -56,10 +56,11 @@ export interface OrderRecord extends PocketBaseRecord {
   subtotal: number;
   shippingCost: number;
   total: number;
-  status: 'pendiente' | 'pagado' | 'en_preparacion' | 'despachado' | 'entregado' | 'cancelado';
+  status: 'pendiente' | 'pagado' | 'en_preparacion' | 'despachado' | 'entregado' | 'cancelado' | 'archivado';
   paymentMethod: string;
   paymentStatus: string;
   transbankToken?: string;
+  archived?: boolean;
 }
 
 const ADMIN_TOKEN_KEY = 'petlife_pb_admin_token';
@@ -574,3 +575,32 @@ export async function adminUpdateOrderStatus(
     return { success: false, error: err.message };
   }
 }
+
+/**
+ * Archivar o desarchivar un pedido (Solo Admin)
+ */
+export async function adminArchiveOrder(
+  id: string,
+  archived: boolean
+): Promise<{ success: boolean; error?: string }> {
+  const token = getAdminToken();
+  if (!token) return { success: false, error: 'No autorizado' };
+
+  try {
+    const res = await fetch(`${POCKETBASE_URL}/api/collections/orders/records/${id}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ archived }),
+    });
+
+    if (res.ok) return { success: true };
+    const err = await res.json();
+    return { success: false, error: err.message };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+

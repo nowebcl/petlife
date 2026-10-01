@@ -20,6 +20,8 @@ import {
   MapPin,
   ArrowLeft,
   Check,
+  Archive,
+  ArchiveRestore,
 } from 'lucide-react';
 import type { Product } from '../data/products.ts';
 import { formatPrice } from '../data/products.ts';
@@ -35,6 +37,7 @@ import {
   adminUpdateStock,
   adminFetchOrders,
   adminUpdateOrderStatus,
+  adminArchiveOrder,
   fetchAllProducts,
   type OrderRecord,
 } from '../services/pocketbase.ts';
@@ -56,7 +59,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   // 'dashboard' = lists (products, inventory, orders)
   // 'product_editor' = FULL-PAGE dedicated product creator/editor
   const [activeView, setActiveView] = useState<'dashboard' | 'product_editor'>('dashboard');
-  const [activeTab, setActiveTab] = useState<'products' | 'inventory' | 'orders'>('products');
+  const [activeTab, setActiveTab] = useState<'products' | 'inventory' | 'orders' | 'archived'>('products');
 
   // Products state
   const [products, setProducts] = useState<Product[]>([]);
@@ -85,6 +88,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   const [orders, setOrders] = useState<OrderRecord[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState<boolean>(false);
   const [orderFilter, setOrderFilter] = useState<string>('all');
+  const [archivedSearch, setArchivedSearch] = useState<string>('');
   const [selectedOrder, setSelectedOrder] = useState<OrderRecord | null>(null);
 
   // Notification Toast
@@ -408,6 +412,27 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     }
   };
 
+  // Archivar o desarchivar pedido
+  const handleArchiveOrder = async (orderId: string, shouldArchive: boolean) => {
+    const target = orders.find((o) => o.id === orderId);
+    const res = await adminArchiveOrder(orderId, shouldArchive);
+    if (res.success) {
+      setOrders((prev) =>
+        prev.map((ord) => (ord.id === orderId ? { ...ord, archived: shouldArchive } : ord))
+      );
+      if (selectedOrder && selectedOrder.id === orderId) {
+        setSelectedOrder((prev) => (prev ? { ...prev, archived: shouldArchive } : null));
+      }
+      showToast(
+        shouldArchive
+          ? `Pedido ${target?.orderNumber || ''} archivado. Puedes consultarlo en "Archivados".`
+          : `Pedido ${target?.orderNumber || ''} restaurado a pedidos activos.`
+      );
+    } else {
+      showToast(res.error || 'Error al archivar el pedido', 'error');
+    }
+  };
+
   // Filtered Products
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -422,11 +447,34 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     });
   }, [products, productSearch, selectedCategory]);
 
-  // Filtered Orders
+  // Separación de Pedidos Activos y Archivados
+  const activeOrders = useMemo(() => {
+    return orders.filter((o) => !o.archived && o.status !== 'archivado');
+  }, [orders]);
+
+  const archivedOrders = useMemo(() => {
+    return orders.filter((o) => o.archived === true || o.status === 'archivado');
+  }, [orders]);
+
+  // Pedidos activos con filtro de estado
   const filteredOrders = useMemo(() => {
-    if (orderFilter === 'all') return orders;
-    return orders.filter((o) => o.status === orderFilter);
-  }, [orders, orderFilter]);
+    if (orderFilter === 'all') return activeOrders;
+    return activeOrders.filter((o) => o.status === orderFilter);
+  }, [activeOrders, orderFilter]);
+
+  // Pedidos archivados con buscador
+  const filteredArchivedOrders = useMemo(() => {
+    if (!archivedSearch.trim()) return archivedOrders;
+    const q = archivedSearch.toLowerCase().trim();
+    return archivedOrders.filter(
+      (o) =>
+        o.orderNumber.toLowerCase().includes(q) ||
+        o.customerName.toLowerCase().includes(q) ||
+        o.customerEmail.toLowerCase().includes(q) ||
+        (o.customerPhone && o.customerPhone.toLowerCase().includes(q)) ||
+        (o.customerCity && o.customerCity.toLowerCase().includes(q))
+    );
+  }, [archivedOrders, archivedSearch]);
 
   // Overall Stats
   const totalStockCount = useMemo(() => {
@@ -975,7 +1023,10 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
             <span>Inventario</span>
           </button>
           <button
-            onClick={() => setActiveTab('orders')}
+            onClick={() => {
+              setActiveTab('orders');
+              setSelectedOrder(null);
+            }}
             className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
               activeTab === 'orders'
                 ? 'bg-white text-[#FF5200] shadow-xs'
@@ -983,7 +1034,21 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
             }`}
           >
             <ShoppingBag className="w-3.5 h-3.5" />
-            <span>Pedidos ({orders.length})</span>
+            <span>Pedidos ({activeOrders.length})</span>
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('archived');
+              setSelectedOrder(null);
+            }}
+            className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center space-x-1.5 ${
+              activeTab === 'archived'
+                ? 'bg-white text-[#FF5200] shadow-xs'
+                : 'text-slate-600 hover:text-[#061F3D]'
+            }`}
+          >
+            <Archive className="w-3.5 h-3.5" />
+            <span>Archivados ({archivedOrders.length})</span>
           </button>
         </nav>
 
@@ -1037,14 +1102,30 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
           📊 Inventario
         </button>
         <button
-          onClick={() => setActiveTab('orders')}
+          onClick={() => {
+            setActiveTab('orders');
+            setSelectedOrder(null);
+          }}
           className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-colors ${
             activeTab === 'orders'
               ? 'bg-[#FF5200] text-white shadow-xs font-black'
               : 'bg-slate-100 text-slate-600'
           }`}
         >
-          🛍️ Pedidos ({orders.length})
+          🛍️ Pedidos ({activeOrders.length})
+        </button>
+        <button
+          onClick={() => {
+            setActiveTab('archived');
+            setSelectedOrder(null);
+          }}
+          className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-colors ${
+            activeTab === 'archived'
+              ? 'bg-[#FF5200] text-white shadow-xs font-black'
+              : 'bg-slate-100 text-slate-600'
+          }`}
+        >
+          🗄️ Archivados ({archivedOrders.length})
         </button>
       </div>
 
@@ -1095,9 +1176,9 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex items-center justify-between">
           <div>
             <span className="text-[9px] sm:text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block truncate">
-              Pedidos
+              Pedidos Activos
             </span>
-            <p className="text-lg sm:text-xl font-black text-[#061F3D]">{orders.length}</p>
+            <p className="text-lg sm:text-xl font-black text-[#061F3D]">{activeOrders.length}</p>
           </div>
           <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
             <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -1540,6 +1621,11 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     <span className="text-xs font-black text-[#FF5200] uppercase tracking-wider">
                       {selectedOrder.orderNumber}
                     </span>
+                    {selectedOrder.archived && (
+                      <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase border border-slate-200">
+                        Archivado
+                      </span>
+                    )}
                   </div>
 
                   <span className="text-[11px] text-slate-400 font-semibold pl-2 sm:pl-0">
@@ -1649,6 +1735,27 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                         )}
                       </div>
                     </div>
+
+                    {/* Botón rápido de Archivar / Desarchivar */}
+                    <div className="pt-2 border-t border-slate-200/80">
+                      {selectedOrder.archived ? (
+                        <button
+                          onClick={() => handleArchiveOrder(selectedOrder.id, false)}
+                          className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-xs active:scale-95"
+                        >
+                          <ArchiveRestore className="w-4 h-4 text-emerald-400" />
+                          <span>Desarchivar (Restaurar a Pedidos Activos)</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleArchiveOrder(selectedOrder.id, true)}
+                          className="w-full py-2.5 px-3 rounded-xl border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer active:scale-95"
+                        >
+                          <Archive className="w-4 h-4 text-slate-500" />
+                          <span>Archivar Pedido</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -1683,32 +1790,58 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                 </div>
               </div>
             ) : (
-              /* TABLA Y CARDS DE PEDIDOS */
+              /* TABLA Y CARDS DE PEDIDOS ACTIVOS */
               <>
-                <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 mb-3 sm:mb-4 flex items-center justify-between gap-2 shadow-2xs">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs font-bold text-slate-500 hidden sm:inline">Filtrar:</span>
-                    <select
-                      value={orderFilter}
-                      onChange={(e) => setOrderFilter(e.target.value)}
-                      className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#FF5200] bg-white cursor-pointer"
+                <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 mb-3 sm:mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs">
+                  {/* Selector de Sección: Activos vs Archivados */}
+                  <div className="flex items-center space-x-1.5 p-1 bg-slate-100 rounded-xl w-fit">
+                    <button
+                      onClick={() => {
+                        setActiveTab('orders');
+                        setSelectedOrder(null);
+                      }}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 bg-white text-[#FF5200] shadow-xs"
                     >
-                      <option value="all">Todos los pedidos</option>
-                      <option value="pendiente">Pendiente</option>
-                      <option value="pagado">Pagado</option>
-                      <option value="en_preparacion">En preparación</option>
-                      <option value="despachado">Despachado</option>
-                      <option value="entregado">Entregado</option>
-                    </select>
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      <span>Activos ({activeOrders.length})</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveTab('archived');
+                        setSelectedOrder(null);
+                      }}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 text-slate-600 hover:text-[#061F3D]"
+                    >
+                      <Archive className="w-3.5 h-3.5" />
+                      <span>Archivados ({archivedOrders.length})</span>
+                    </button>
                   </div>
 
-                  <button
-                    onClick={loadOrders}
-                    className="py-1.5 px-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs flex items-center space-x-1.5 cursor-pointer shrink-0"
-                  >
-                    <RefreshCw className={`w-3.5 h-3.5 ${isLoadingOrders ? 'animate-spin' : ''}`} />
-                    <span className="hidden sm:inline">Actualizar</span>
-                  </button>
+                  <div className="flex items-center justify-between sm:justify-end space-x-2">
+                    <div className="flex items-center space-x-1.5">
+                      <span className="text-xs font-bold text-slate-500 hidden sm:inline">Filtrar:</span>
+                      <select
+                        value={orderFilter}
+                        onChange={(e) => setOrderFilter(e.target.value)}
+                        className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:border-[#FF5200] bg-white cursor-pointer"
+                      >
+                        <option value="all">Todos los pedidos</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="pagado">Pagado</option>
+                        <option value="en_preparacion">En preparación</option>
+                        <option value="despachado">Despachado</option>
+                        <option value="entregado">Entregado</option>
+                      </select>
+                    </div>
+
+                    <button
+                      onClick={loadOrders}
+                      className="py-1.5 px-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs flex items-center space-x-1.5 cursor-pointer shrink-0"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${isLoadingOrders ? 'animate-spin' : ''}`} />
+                      <span className="hidden sm:inline">Actualizar</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* MOBILE ONLY: Order Cards */}
@@ -1751,12 +1884,21 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                           <span className="font-black text-sm text-[#061F3D]">
                             {formatPrice(ord.total)}
                           </span>
-                          <button
-                            onClick={() => setSelectedOrder(ord)}
-                            className="px-3 py-1.5 rounded-xl bg-orange-50 active:bg-orange-100 text-[#FF5200] font-bold text-xs transition-colors cursor-pointer"
-                          >
-                            Ver Detalle →
-                          </button>
+                          <div className="flex items-center space-x-1.5">
+                            <button
+                              onClick={() => handleArchiveOrder(ord.id, true)}
+                              className="p-1.5 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-800 hover:bg-slate-50 transition-colors cursor-pointer"
+                              title="Archivar pedido"
+                            >
+                              <Archive className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => setSelectedOrder(ord)}
+                              className="px-3 py-1.5 rounded-xl bg-orange-50 active:bg-orange-100 text-[#FF5200] font-bold text-xs transition-colors cursor-pointer"
+                            >
+                              Ver Detalle →
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ))
@@ -1823,12 +1965,415 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                                 {ord.created ? new Date(ord.created).toLocaleDateString('es-CL') : 'Reciente'}
                               </td>
                               <td className="py-3 px-4 text-right">
-                                <button
-                                  onClick={() => setSelectedOrder(ord)}
-                                  className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-[#FF5200] hover:text-white font-bold text-xs transition-colors cursor-pointer"
-                                >
-                                  Ver Detalle
-                                </button>
+                                <div className="flex items-center justify-end space-x-1.5">
+                                  <button
+                                    onClick={() => setSelectedOrder(ord)}
+                                    className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-[#FF5200] hover:text-white font-bold text-xs transition-colors cursor-pointer"
+                                  >
+                                    Ver Detalle
+                                  </button>
+                                  <button
+                                    onClick={() => handleArchiveOrder(ord.id, true)}
+                                    className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                                    title="Archivar pedido"
+                                  >
+                                    <Archive className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* ===================================================================== */}
+        {/* TAB 4: PEDIDOS ARCHIVADOS                                            */}
+        {/* ===================================================================== */}
+        {activeTab === 'archived' && (
+          <div className="flex-1 flex flex-col">
+            {selectedOrder ? (
+              /* DETALLE DEL PEDIDO ARCHIVADO */
+              <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 border border-slate-200 shadow-2xs space-y-4 sm:space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 sm:pb-4 border-b border-slate-100">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => setSelectedOrder(null)}
+                      className="p-1.5 sm:p-2 rounded-xl text-slate-500 hover:text-[#061F3D] hover:bg-slate-100 transition-colors flex items-center space-x-1 text-xs font-bold cursor-pointer"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      <span>Volver a archivados</span>
+                    </button>
+                    <span className="text-slate-300">/</span>
+                    <span className="text-xs font-black text-[#FF5200] uppercase tracking-wider">
+                      {selectedOrder.orderNumber}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase border border-slate-200">
+                      Archivado
+                    </span>
+                  </div>
+
+                  <span className="text-[11px] text-slate-400 font-semibold pl-2 sm:pl-0">
+                    {selectedOrder.created ? new Date(selectedOrder.created).toLocaleString('es-CL') : 'Reciente'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                  {/* Customer Info Card */}
+                  <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-2 text-xs text-slate-600">
+                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
+                      Datos de Despacho y Contacto
+                    </span>
+                    <p className="text-sm sm:text-base font-black text-[#061F3D]">
+                      {selectedOrder.customerName}
+                    </p>
+                    <p className="flex items-center space-x-2 text-slate-600">
+                      <Mail className="w-4 h-4 text-slate-400 shrink-0" />
+                      <a href={`mailto:${selectedOrder.customerEmail}`} className="text-blue-600 hover:underline">
+                        {selectedOrder.customerEmail}
+                      </a>
+                    </p>
+                    {selectedOrder.customerPhone && (
+                      <p className="flex items-center space-x-2 text-slate-600">
+                        <Phone className="w-4 h-4 text-slate-400 shrink-0" />
+                        <a href={`tel:${selectedOrder.customerPhone}`} className="text-blue-600 hover:underline">
+                          {selectedOrder.customerPhone}
+                        </a>
+                      </p>
+                    )}
+                    <p className="flex items-center space-x-2 text-slate-600">
+                      <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                      <span>
+                        {selectedOrder.customerAddress}, {selectedOrder.customerCity || 'Santiago'}
+                      </span>
+                    </p>
+                  </div>
+
+                  {/* Order Status & Actions Card */}
+                  <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-3">
+                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
+                      Estado del Pedido y Pago
+                    </span>
+                    <div className="flex items-center space-x-2">
+                      <span
+                        className={`px-3 py-1 rounded-full font-black text-xs uppercase ${
+                          selectedOrder.status === 'pagado' || selectedOrder.status === 'entregado'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : selectedOrder.status === 'despachado' || selectedOrder.status === 'en_preparacion'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
+                        {selectedOrder.status.replace('_', ' ')}
+                      </span>
+                      <span className="text-xs text-slate-500 font-semibold">
+                        Total:{' '}
+                        <strong className="text-sm sm:text-base font-black text-[#061F3D]">
+                          {formatPrice(selectedOrder.total)}
+                        </strong>
+                      </span>
+                    </div>
+
+                    <div className="bg-white/80 p-2.5 rounded-xl border border-slate-200/60 text-[11px] space-y-1">
+                      <p className="text-slate-600">
+                        <strong className="text-[#061F3D]">Método de Pago:</strong>{' '}
+                        {selectedOrder.paymentMethod || 'Webpay Plus'}
+                      </p>
+                      {selectedOrder.transbankToken && (
+                        <p className="text-slate-600">
+                          <strong className="text-[#061F3D]">N° Transacción Flow:</strong> #{selectedOrder.transbankToken}
+                        </p>
+                      )}
+                      <p className="text-slate-600 flex items-center space-x-1.5">
+                        <strong className="text-[#061F3D]">Estado del Pago:</strong>{' '}
+                        <span
+                          className={`px-2 py-0.5 rounded font-black text-[10px] uppercase ${
+                            selectedOrder.paymentStatus === 'pagado' || selectedOrder.status === 'pagado'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}
+                        >
+                          {selectedOrder.paymentStatus || (selectedOrder.status === 'pagado' ? 'pagado' : 'pendiente')}
+                        </span>
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-200/80">
+                      <button
+                        onClick={() => handleArchiveOrder(selectedOrder.id, false)}
+                        className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-xs active:scale-95"
+                      >
+                        <ArchiveRestore className="w-4 h-4 text-emerald-400" />
+                        <span>Desarchivar (Restaurar a Pedidos Activos)</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Items in this Order */}
+                <div>
+                  <h4 className="text-[11px] font-black uppercase text-slate-400 tracking-wider mb-2.5">
+                    Productos del Pedido ({selectedOrder.items?.length || 0})
+                  </h4>
+                  <div className="border border-slate-200 rounded-2xl divide-y divide-slate-100 overflow-hidden">
+                    {selectedOrder.items?.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3 sm:p-4 flex items-center justify-between text-xs sm:text-sm bg-white"
+                      >
+                        <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0 pr-2">
+                          <span className="w-6 h-6 rounded-lg bg-orange-50 text-[#FF5200] font-black flex items-center justify-center text-xs shrink-0">
+                            {item.quantity}x
+                          </span>
+                          <div className="min-w-0">
+                            <span className="font-bold text-[#061F3D] block truncate">{item.name}</span>
+                            <span className="text-[10px] text-slate-400">
+                              {formatPrice(item.price)} c/u
+                            </span>
+                          </div>
+                        </div>
+                        <span className="font-black text-[#061F3D] shrink-0">
+                          {formatPrice(item.price * item.quantity)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* TABLA Y CARDS DE PEDIDOS ARCHIVADOS */
+              <>
+                <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 mb-3 sm:mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-2xs">
+                  {/* Selector de Sección */}
+                  <div className="flex items-center space-x-1.5 p-1 bg-slate-100 rounded-xl w-fit">
+                    <button
+                      onClick={() => {
+                        setActiveTab('orders');
+                        setSelectedOrder(null);
+                      }}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 text-slate-600 hover:text-[#061F3D]"
+                    >
+                      <ShoppingBag className="w-3.5 h-3.5" />
+                      <span>Activos ({activeOrders.length})</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveTab('archived');
+                        setSelectedOrder(null);
+                      }}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 bg-white text-[#FF5200] shadow-xs"
+                    >
+                      <Archive className="w-3.5 h-3.5" />
+                      <span>Archivados ({archivedOrders.length})</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center space-x-2 flex-1 sm:max-w-xs">
+                    <div className="relative flex-1">
+                      <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        placeholder="Buscar en archivados..."
+                        value={archivedSearch}
+                        onChange={(e) => setArchivedSearch(e.target.value)}
+                        className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF5200] bg-white"
+                      />
+                    </div>
+                    <button
+                      onClick={loadOrders}
+                      className="py-1.5 px-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs flex items-center space-x-1.5 cursor-pointer shrink-0"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${isLoadingOrders ? 'animate-spin' : ''}`} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Banner Informativo */}
+                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 sm:p-4 mb-3 flex items-start sm:items-center justify-between gap-3 text-xs text-slate-600">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-xl bg-slate-200/80 text-slate-700 flex items-center justify-center shrink-0">
+                      <Archive className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="font-black text-[#061F3D]">Sección de Pedidos Archivados</p>
+                      <p className="text-[11px] text-slate-500">
+                        La información de clientes, montos, productos y pagos se conserva 100% intacta. Puedes restaurar cualquier pedido a la lista activa cuando lo desees.
+                      </p>
+                    </div>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-slate-200 text-slate-700 font-black text-xs shrink-0">
+                    {filteredArchivedOrders.length} pedido(s)
+                  </span>
+                </div>
+
+                {/* MOBILE ONLY: Archived Order Cards */}
+                <div className="md:hidden space-y-2.5">
+                  {filteredArchivedOrders.length === 0 ? (
+                    <div className="bg-white rounded-2xl p-8 text-center text-slate-400 text-xs font-semibold border border-slate-200 space-y-2">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                        <Archive className="w-6 h-6" />
+                      </div>
+                      <p className="font-bold text-[#061F3D]">No hay pedidos archivados</p>
+                      <p className="text-slate-400 text-[11px]">
+                        Los pedidos que archives desde la pestaña "Pedidos" aparecerán aquí.
+                      </p>
+                    </div>
+                  ) : (
+                    filteredArchivedOrders.map((ord) => (
+                      <div
+                        key={ord.id}
+                        className="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-2xs space-y-2"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-black text-xs text-[#FF5200]">
+                            {ord.orderNumber}
+                          </span>
+                          <div className="flex items-center space-x-1.5">
+                            <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-100 text-slate-600 border border-slate-200">
+                              Archivado
+                            </span>
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold border ${
+                                ord.status === 'pagado' || ord.status === 'entregado'
+                                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                  : ord.status === 'despachado' || ord.status === 'en_preparacion'
+                                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                  : 'bg-amber-50 text-amber-700 border-amber-200'
+                              }`}
+                            >
+                              {ord.status.replace('_', ' ')}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div>
+                          <p className="font-bold text-xs text-[#061F3D]">{ord.customerName}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">
+                            {ord.customerEmail} • {ord.customerCity || 'Santiago'}
+                          </p>
+                        </div>
+
+                        <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                          <span className="font-black text-sm text-[#061F3D]">
+                            {formatPrice(ord.total)}
+                          </span>
+                          <div className="flex items-center space-x-1.5">
+                            <button
+                              onClick={() => handleArchiveOrder(ord.id, false)}
+                              className="px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 font-bold text-xs transition-colors flex items-center space-x-1 cursor-pointer"
+                              title="Restaurar a pedidos activos"
+                            >
+                              <ArchiveRestore className="w-3.5 h-3.5" />
+                              <span>Restaurar</span>
+                            </button>
+                            <button
+                              onClick={() => setSelectedOrder(ord)}
+                              className="px-3 py-1.5 rounded-xl bg-orange-50 active:bg-orange-100 text-[#FF5200] font-bold text-xs transition-colors cursor-pointer"
+                            >
+                              Ver Detalle →
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* DESKTOP ONLY: Archived Orders Table */}
+                <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 border-b border-slate-200 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+                        <tr>
+                          <th className="py-3 px-4">N° Pedido</th>
+                          <th className="py-3 px-3">Cliente</th>
+                          <th className="py-3 px-3">Contacto</th>
+                          <th className="py-3 px-3">Total</th>
+                          <th className="py-3 px-3">Estado Original</th>
+                          <th className="py-3 px-3">Fecha</th>
+                          <th className="py-3 px-4 text-right">Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 font-semibold text-[#061F3D]">
+                        {filteredArchivedOrders.length === 0 ? (
+                          <tr>
+                            <td colSpan={7} className="py-12 text-center text-slate-400 font-medium">
+                              <div className="max-w-xs mx-auto space-y-2">
+                                <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+                                  <Archive className="w-6 h-6" />
+                                </div>
+                                <p className="font-bold text-[#061F3D]">No hay pedidos archivados</p>
+                                <p className="text-slate-400 text-xs">
+                                  Cuando archives pedidos desde la sección de pedidos activos, se guardarán aquí para consultas futuras.
+                                </p>
+                              </div>
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredArchivedOrders.map((ord) => (
+                            <tr key={ord.id} className="hover:bg-slate-50/80">
+                              <td className="py-3 px-4 font-black text-[#FF5200]">
+                                {ord.orderNumber}
+                              </td>
+                              <td className="py-3 px-3">
+                                <span className="font-bold text-xs text-[#061F3D] block">
+                                  {ord.customerName}
+                                </span>
+                                <span className="text-[10px] text-slate-400">
+                                  {ord.customerCity || 'Santiago'}
+                                </span>
+                              </td>
+                              <td className="py-3 px-3">
+                                <span className="text-[11px] text-slate-600 block">{ord.customerEmail}</span>
+                                <span className="text-[10px] text-slate-400">{ord.customerPhone}</span>
+                              </td>
+                              <td className="py-3 px-3 font-black text-[#061F3D]">
+                                {formatPrice(ord.total)}
+                              </td>
+                              <td className="py-3 px-3">
+                                <div className="flex items-center space-x-1.5">
+                                  <span
+                                    className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border ${
+                                      ord.status === 'pagado' || ord.status === 'entregado'
+                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                        : ord.status === 'despachado' || ord.status === 'en_preparacion'
+                                        ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                        : 'bg-amber-50 text-amber-700 border-amber-200'
+                                    }`}
+                                  >
+                                    {ord.status.replace('_', ' ')}
+                                  </span>
+                                  <span className="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-slate-100 text-slate-600 border border-slate-200">
+                                    Archivado
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="py-3 px-3 text-[11px] text-slate-400">
+                                {ord.created ? new Date(ord.created).toLocaleDateString('es-CL') : 'Reciente'}
+                              </td>
+                              <td className="py-3 px-4 text-right">
+                                <div className="flex items-center justify-end space-x-1.5">
+                                  <button
+                                    onClick={() => setSelectedOrder(ord)}
+                                    className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-[#FF5200] hover:text-white font-bold text-xs transition-colors cursor-pointer"
+                                  >
+                                    Ver Detalle
+                                  </button>
+                                  <button
+                                    onClick={() => handleArchiveOrder(ord.id, false)}
+                                    className="px-2.5 py-1.5 rounded-xl border border-slate-200 hover:border-slate-300 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 font-bold text-xs transition-colors flex items-center space-x-1 cursor-pointer"
+                                    title="Restaurar a pedidos activos"
+                                  >
+                                    <ArchiveRestore className="w-3.5 h-3.5" />
+                                    <span>Restaurar</span>
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           ))
