@@ -279,6 +279,13 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       return;
     }
 
+    if (totalAmount < 350) {
+      setErrorMessage(
+        '⚠️ Flow / Webpay Plus exige un monto mínimo de $350 CLP para pagar con tarjeta bancaria real (debido a normativas de Transbank en Chile). Para probar con tarjeta real usa el "Producto de Prueba de $350 CLP", o prueba gratis sin gastar dinero con el botón "🧪 Probar Compra en Modo Sandbox ($0)".'
+      );
+      return;
+    }
+
     setIsProcessing(true);
     setErrorMessage(null);
 
