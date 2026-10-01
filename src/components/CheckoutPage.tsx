@@ -281,7 +281,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
 
     if (totalAmount < 350) {
       setErrorMessage(
-        '⚠️ Flow / Webpay Plus exige un monto mínimo de $350 CLP para pagar con tarjeta bancaria real (debido a normativas de Transbank en Chile). Para probar con tarjeta real usa el "Producto de Prueba de $350 CLP", o prueba gratis sin gastar dinero con el botón "🧪 Probar Compra en Modo Sandbox ($0)".'
+        '⚠️ El monto mínimo permitido por Webpay Plus (Transbank) en Chile es de $350 CLP por transacción bancaria.'
       );
       return;
     }
@@ -382,106 +382,6 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       }
     } catch (err: any) {
       setErrorMessage(err.message || 'Error de conexión con la pasarela de pagos.');
-      setIsProcessing(false);
-    }
-  };
-
-  const handleSandboxCheckout = async () => {
-    if (cartItems.length === 0) {
-      setErrorMessage('Tu carrito está vacío. Agrega productos antes de realizar la prueba.');
-      return;
-    }
-
-    const name = customerName.trim() || 'Cliente Prueba Sandbox';
-    const email = customerEmail.trim() || 'sandbox.test@tiendapetlife.cl';
-    const address = customerAddress.trim() || 'Av. Los Alerces 1234';
-    const phone = customerPhone.trim() || '+56 9 1234 5678';
-
-    setIsProcessing(true);
-    setErrorMessage(null);
-
-    const buyOrder = `PL-${Date.now().toString().slice(-6)}`;
-
-    const orderData: ReceiptData = {
-      orderNumber: buyOrder,
-      customerName: name,
-      customerEmail: email,
-      customerPhone: phone,
-      customerAddress: address,
-      customerCity: customerCity.trim(),
-      customerRegion: customerRegion.trim(),
-      customerNotes: customerNotes.trim() || 'Prueba de compra en modo Sandbox (Gratis $0)',
-      items: cartItems.map((ci) => ({
-        name: ci.product.name,
-        price: ci.product.price,
-        quantity: ci.quantity,
-        weightOrSize: ci.product.weightOrSize,
-      })),
-      subtotal: cartSubtotal,
-      shippingCost,
-      total: totalAmount,
-      paymentMethod: 'Webpay Plus (Modo Sandbox)',
-      date: new Date().toLocaleDateString('es-CL', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-    };
-
-    sessionStorage.setItem('petlife_pending_order', JSON.stringify(orderData));
-    sessionStorage.setItem('petlife_last_order', JSON.stringify(orderData));
-
-    const dbItems: OrderItem[] = cartItems.map((item) => ({
-      id: item.product.id,
-      name: item.product.name,
-      price: item.product.price,
-      quantity: item.quantity,
-      weightOrSize: item.product.weightOrSize,
-      imageUrl: item.product.imageUrl,
-    }));
-
-    try {
-      // 1. Registrar pedido en base de datos PocketBase
-      try {
-        await submitOrder({
-          orderNumber: buyOrder,
-          customerName: name,
-          customerEmail: email,
-          customerPhone: phone,
-          customerAddress: `${address}, ${customerCity} (${customerRegion})`,
-          customerCity: customerCity || 'Puerto Montt',
-          customerNotes: 'Prueba en Modo Sandbox (Gratis $0)',
-          items: dbItems,
-          subtotal: cartSubtotal,
-          shippingCost,
-          total: totalAmount,
-          paymentMethod: 'Webpay Plus (Sandbox)',
-          transbankToken: 'SANDBOX-TEST',
-        });
-      } catch (dbErr) {
-        console.warn('Registro de orden en backend advertencia:', dbErr);
-      }
-
-      // 2. Simular pago aprobado en Sandbox
-      const paymentRes = await createFlowPayment({
-        commerceOrder: buyOrder,
-        amount: totalAmount,
-        email: email,
-        subject: `Prueba PetLife Sandbox ${buyOrder}`,
-        isSandbox: true,
-      });
-
-      if (paymentRes.success && paymentRes.redirectUrl) {
-        window.location.href = paymentRes.redirectUrl;
-      } else {
-        // Confirmación directa si no hay redirección
-        orderData.flowOrder = paymentRes.flowOrder || `SANDBOX-${Date.now().toString().slice(-6)}`;
-        processOrderConfirmation(orderData);
-      }
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Error al iniciar la prueba sandbox.');
       setIsProcessing(false);
     }
   };
@@ -1026,22 +926,6 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                     <span>Pagar con Webpay Plus {formatPrice(totalAmount)}</span>
                   )}
                 </button>
-
-                {/* Botón de Modo Sandbox / Simulación Gratis $0 */}
-                <div className="pt-3 border-t border-slate-100">
-                  <button
-                    type="button"
-                    onClick={handleSandboxCheckout}
-                    disabled={isProcessing || cartItems.length === 0}
-                    className="w-full py-3 px-4 rounded-full bg-emerald-50 hover:bg-emerald-100 border-2 border-emerald-400 text-emerald-900 font-black text-xs transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center space-x-2 shadow-xs"
-                  >
-                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                    <span>🧪 Probar Compra en Modo Sandbox (Test Gratis $0)</span>
-                  </button>
-                  <p className="text-[10.5px] text-emerald-700 text-center mt-1.5 font-medium leading-tight">
-                    Simulación 100% gratuita sin gastar dinero real: registra el pedido, aprueba el pago y descarga el comprobante oficial con número de seguimiento.
-                  </p>
-                </div>
 
                 <p className="text-[11px] text-slate-400 text-center">
                   Al confirmar, serás redirigido de forma segura para pagar con Webpay Plus. Descargarás tu comprobante con tu número de seguimiento automáticamente.
