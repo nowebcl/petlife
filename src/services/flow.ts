@@ -60,11 +60,12 @@ export async function createFlowPayment(
         },
         body: JSON.stringify(payload),
       });
-    } catch {
+    } catch (fetchErr) {
+      console.warn('Error al invocar /api/flow:', fetchErr);
       res = null;
     }
 
-    // 2. Si /api/flow no respondió o falló, intentar fallback /api/flow/payment/create
+    // 2. Si /api/flow falló o retornó status >= 400, intentar fallback /api/flow/payment/create
     if (!res || !res.ok) {
       try {
         res = await fetch('/api/flow/payment/create', {
@@ -74,8 +75,8 @@ export async function createFlowPayment(
           },
           body: JSON.stringify(payload),
         });
-      } catch {
-        // Fallback catch
+      } catch (fallbackErr) {
+        console.warn('Error al invocar fallback /api/flow/payment/create:', fallbackErr);
       }
     }
 
@@ -105,7 +106,7 @@ export async function createFlowPayment(
       };
     }
 
-    // Si hubo respuesta con error
+    // Si hubo respuesta pero con error del servidor
     if (res) {
       try {
         const errJson = await res.json();
@@ -116,14 +117,22 @@ export async function createFlowPayment(
             'Error al comunicarse con Webpay Plus. Por favor reintenta en un momento.',
         };
       } catch {
-        // Fall through
+        const rawText = await res.text().catch(() => '');
+        console.error('Servidor retornó error no JSON:', res.status, rawText);
+        return {
+          success: false,
+          error:
+            res.status === 500
+              ? 'Error en el servidor de pagos. Reintenta en breves segundos.'
+              : 'Error al conectar con Webpay Plus (Código: ' + res.status + ').',
+        };
       }
     }
 
     return {
       success: false,
       error:
-        'No se pudo conectar con el servidor de pagos Webpay Plus. Por favor intenta nuevamente.',
+        'No se pudo conectar con el servidor de pagos Webpay Plus. Por favor verifica tu conexión e intenta nuevamente.',
     };
   } catch (err: any) {
     console.error('Error al procesar pago con Webpay Plus:', err);

@@ -1,2 +1,2 @@
-const handler = require('../../flow.js');
-module.exports = handler;
+import handler from '../../flow.js';
+export default handler;

@@ -1,5 +1,5 @@
-const crypto = require('crypto');
-const https = require('https');
+import crypto from 'node:crypto';
+import https from 'node:https';
 
 const FLOW_CONFIG = {
   apiKey: '56EC0FE0-1DAB-487B-93BE-22LC27EC1B24',
@@ -18,7 +18,7 @@ function signParams(params, secretKey) {
   return crypto.createHmac('sha256', secretKey).update(toSign).digest('hex');
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // Configuración de cabeceras CORS universales
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -40,13 +40,26 @@ module.exports = async function handler(req, res) {
 
   try {
     let data = req.body;
-    if (typeof data === 'string') {
+    if (!data && typeof req.on === 'function') {
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(chunk);
+      }
+      const raw = Buffer.concat(chunks).toString('utf8');
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        data = Object.fromEntries(new URLSearchParams(raw));
+      }
+    } else if (typeof data === 'string') {
       try {
         data = JSON.parse(data);
       } catch {
         data = Object.fromEntries(new URLSearchParams(data));
       }
     }
+
+    data = data || {};
 
     const commerceOrder = data.commerceOrder || `PL-${Date.now().toString().slice(-6)}`;
     const amount = Math.round(Number(data.amount) || 0);
@@ -74,10 +87,9 @@ module.exports = async function handler(req, res) {
     };
 
     params.s = signParams(params, FLOW_CONFIG.secretKey);
-
     const postData = new URLSearchParams(params).toString();
 
-    const flowRequest = new Promise((resolve, reject) => {
+    const flowRes = await new Promise((resolve, reject) => {
       const apiReq = https.request(
         FLOW_CONFIG.endpoint,
         {
@@ -92,8 +104,7 @@ module.exports = async function handler(req, res) {
           apiRes.on('data', (chunk) => (body += chunk));
           apiRes.on('end', () => {
             try {
-              const parsed = JSON.parse(body);
-              resolve({ statusCode: apiRes.statusCode, data: parsed });
+              resolve({ statusCode: apiRes.statusCode, data: JSON.parse(body) });
             } catch {
               resolve({ statusCode: apiRes.statusCode, raw: body });
             }
@@ -109,8 +120,6 @@ module.exports = async function handler(req, res) {
       apiReq.write(postData);
       apiReq.end();
     });
-
-    const flowRes = await flowRequest;
 
     if (flowRes.data && flowRes.data.url && flowRes.data.token) {
       res.status(200).json({
@@ -136,4 +145,4 @@ module.exports = async function handler(req, res) {
       error: err.message || 'Error interno del servidor de pagos',
     });
   }
-};
+}
