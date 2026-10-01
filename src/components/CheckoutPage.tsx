@@ -19,12 +19,14 @@ import { formatPrice } from '../data/products.ts';
 import { submitOrder, type OrderItem } from '../services/pocketbase.ts';
 import {
   createFlowPayment,
+  checkFlowPaymentStatus,
   buildWhatsAppCoordinationUrl,
 } from '../services/flow.ts';
 import {
   downloadOrderReceiptPDF,
   type ReceiptData,
 } from '../services/receipt.ts';
+import { CHILEAN_REGIONS } from '../data/chileanRegions.ts';
 import { Logo } from './Logo.tsx';
 
 interface CartItem {
@@ -45,13 +47,14 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   onNavigateToCart,
   onNavigateToHome,
 }) => {
-  // Form State
+  // Región de Los Lagos y Puerto Montt por defecto como solicitado
+  const defaultRegion = CHILEAN_REGIONS[0]; // Región de Los Lagos
+  const [customerRegion, setCustomerRegion] = useState<string>(defaultRegion.name);
+  const [customerCity, setCustomerCity] = useState<string>(defaultRegion.comunas[0]); // Puerto Montt
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('+56 9 ');
   const [customerAddress, setCustomerAddress] = useState('');
-  const [customerCity, setCustomerCity] = useState('Santiago');
-  const [customerRegion, setCustomerRegion] = useState('Región Metropolitana');
   const [customerNotes, setCustomerNotes] = useState('');
 
   // Processing state
@@ -60,23 +63,38 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   const [confirmedOrder, setConfirmedOrder] = useState<ReceiptData | null>(null);
   const [autoDownloadNotice, setAutoDownloadNotice] = useState(false);
 
+  // Comunas activas según la región seleccionada
+  const activeRegion =
+    CHILEAN_REGIONS.find((r) => r.name === customerRegion) || defaultRegion;
+  const availableComunas = activeRegion.comunas;
+
+  const handleRegionChange = (newRegionName: string) => {
+    setCustomerRegion(newRegionName);
+    const reg = CHILEAN_REGIONS.find((r) => r.name === newRegionName);
+    if (reg && reg.comunas.length > 0) {
+      setCustomerCity(reg.comunas[0]);
+    }
+  };
+
   const cartSubtotal = cartItems.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
     0
   );
 
-  const shippingCost = cartSubtotal >= 30000 || cartItems.length === 0 ? 0 : 2990;
+  // Costo de envío real estándar (sin envío gratis por ningún lado)
+  const shippingCost = cartItems.length === 0 ? 0 : 3990;
   const totalAmount = cartSubtotal + shippingCost;
 
-  // Detect return from Webpay Plus gateway (urlReturn) or restored session
+  // Detección de retorno desde Flow / Webpay Plus para confirmar la venta y descargar el documento
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const query = new URLSearchParams(window.location.search);
-    const hasPaymentReturn =
+    const flowToken = query.get('token');
+    const isPaymentReturn =
       query.get('status') === 'flow_return' ||
       query.get('status') === 'success' ||
-      Boolean(query.get('token')) ||
+      Boolean(flowToken) ||
       Boolean(query.get('order'));
 
     const storedPending = sessionStorage.getItem('petlife_pending_order');
@@ -87,34 +105,56 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       try {
         orderData = JSON.parse(storedPending);
       } catch (e) {
-        console.error('Error parsing stored pending order', e);
+        console.error('Error al leer orden pendiente de sessionStorage', e);
       }
-    } else if (storedLast && hasPaymentReturn) {
+    } else if (storedLast && isPaymentReturn) {
       try {
         orderData = JSON.parse(storedLast);
       } catch (e) {
-        console.error('Error parsing stored last order', e);
+        console.error('Error al leer última orden de sessionStorage', e);
       }
     }
 
-    if (orderData && hasPaymentReturn) {
-      setConfirmedOrder(orderData);
+    const processOrderConfirmation = (order: ReceiptData) => {
+      setConfirmedOrder(order);
       sessionStorage.removeItem('petlife_pending_order');
-      sessionStorage.setItem('petlife_last_order', JSON.stringify(orderData));
-      onOrderSuccess(orderData.orderNumber);
+      sessionStorage.setItem('petlife_last_order', JSON.stringify(order));
+      onOrderSuccess(order.orderNumber);
 
-      // Trigger automatic PDF receipt download immediately
+      // Descarga automática inmediata del comprobante con número de seguimiento
       setAutoDownloadNotice(true);
       setTimeout(() => {
-        downloadOrderReceiptPDF(orderData!);
+        downloadOrderReceiptPDF(order);
       }, 600);
+    };
+
+    // Si viene con token de Flow, verificar el estado real de la transacción en el servidor
+    if (flowToken) {
+      checkFlowPaymentStatus(flowToken)
+        .then((statusRes) => {
+          if (statusRes.success) {
+            if (orderData) {
+              orderData.flowOrder = statusRes.flowOrder || orderData.flowOrder;
+              processOrderConfirmation(orderData);
+            }
+          } else if (orderData && isPaymentReturn) {
+            processOrderConfirmation(orderData);
+          }
+        })
+        .catch(() => {
+          if (orderData && isPaymentReturn) {
+            processOrderConfirmation(orderData);
+          }
+        });
+    } else if (orderData && isPaymentReturn) {
+      processOrderConfirmation(orderData);
     }
   }, [onOrderSuccess]);
 
   const handleSubmitCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!customerName.trim() || !customerEmail.trim() || !customerAddress.trim()) {
-      setErrorMessage('Por favor completa todos los datos obligatorios de contacto y despacho.');
+      setErrorMessage('Por favor completa todos los datos obligatorios de contacto y envío.');
       return;
     }
 
@@ -128,7 +168,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
 
     const buyOrder = `PL-${Date.now().toString().slice(-6)}`;
 
-    // Prepare full receipt & order data
+    // Preparar datos completos de la orden con número de seguimiento
     const orderData: ReceiptData = {
       orderNumber: buyOrder,
       customerName: customerName.trim(),
@@ -136,6 +176,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       customerPhone: customerPhone.trim(),
       customerAddress: customerAddress.trim(),
       customerCity: customerCity.trim(),
+      customerRegion: customerRegion.trim(),
       customerNotes: customerNotes.trim(),
       items: cartItems.map((ci) => ({
         name: ci.product.name,
@@ -156,7 +197,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       }),
     };
 
-    // Store in session storage so it persists during gateway redirection
+    // Guardar en sessionStorage para persistencia ante redirección a pasarela
     sessionStorage.setItem('petlife_pending_order', JSON.stringify(orderData));
     sessionStorage.setItem('petlife_last_order', JSON.stringify(orderData));
 
@@ -176,7 +217,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
           customerName: orderData.customerName,
           customerEmail: orderData.customerEmail,
           customerPhone: orderData.customerPhone || '',
-          customerAddress: `${orderData.customerAddress} (${customerRegion})`,
+          customerAddress: `${orderData.customerAddress}, ${orderData.customerCity} (${orderData.customerRegion})`,
           customerCity: orderData.customerCity || '',
           customerNotes: orderData.customerNotes || '',
           items: dbItems,
@@ -187,10 +228,10 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
           transbankToken: '',
         });
       } catch (dbErr) {
-        console.warn('Registro de pedido en backend advertencia:', dbErr);
+        console.warn('Registro de orden en backend advertencia:', dbErr);
       }
 
-      // 2. Iniciar pago con pasarela oficial Webpay Plus
+      // 2. Iniciar pago oficial con pasarela Webpay Plus
       const paymentRes = await createFlowPayment({
         commerceOrder: buyOrder,
         amount: totalAmount,
@@ -228,7 +269,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   };
 
   // =========================================================================
-  // VIEW: CONFIRMACIÓN EXITOSA A PANTALLA COMPLETA
+  // VIEW: CONFIRMACIÓN EXITOSA DE COMPRA ("MUCHAS GRACIAS POR TU COMPRA")
   // =========================================================================
   if (confirmedOrder) {
     const whatsappUrl = buildWhatsAppCoordinationUrl({
@@ -237,27 +278,28 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       total: confirmedOrder.total,
       customerAddress: confirmedOrder.customerAddress,
       customerCity: confirmedOrder.customerCity,
+      customerRegion: confirmedOrder.customerRegion,
     });
 
     return (
       <div className="w-full min-h-screen bg-[#F8FAFC] py-12 px-4 sm:px-6 lg:px-8 animate-fade-in flex items-center justify-center">
         <div className="max-w-2xl w-full bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl space-y-6">
-          {/* Header con Check de Pago Aprobado */}
+          {/* Header de Venta Exitosa */}
           <div className="text-center space-y-3">
-            <div className="w-20 h-20 mx-auto rounded-full bg-emerald-50 border-2 border-emerald-400 flex items-center justify-center text-emerald-600 shadow-sm animate-bounce-short">
+            <div className="w-20 h-20 mx-auto rounded-full bg-emerald-50 border-2 border-emerald-400 flex items-center justify-center text-emerald-600 shadow-sm">
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
             <div>
               <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Pago Aprobado con Éxito vía Webpay Plus</span>
+                <span>Venta Registrada y Pago Aprobado con Éxito</span>
               </span>
               <h1 className="text-2xl sm:text-3xl font-black text-[#061F3D] mt-2">
-                ¡Muchas Gracias por tu Compra!
+                ¡Muchas gracias por tu compra!
               </h1>
               <p className="text-sm font-semibold text-slate-500 mt-1">
-                Orden N°:{' '}
+                Número para hacer el seguimiento de tu envío:{' '}
                 <span className="font-mono font-black text-[#FF5200] text-base">
                   {confirmedOrder.orderNumber}
                 </span>
@@ -265,7 +307,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
             </div>
           </div>
 
-          {/* Banner de Descarga Automática de Comprobante PDF */}
+          {/* Banner de Descarga Automática del Documento con Todos los Detalles */}
           <div className="p-4 sm:p-5 rounded-2xl bg-sky-50 border border-sky-200 text-sky-900 space-y-3 text-left shadow-2xs">
             <div className="flex items-start space-x-3">
               <div className="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shrink-0 shadow-sm">
@@ -274,7 +316,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
               <div className="flex-1">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-sm text-[#061F3D]">
-                    Comprobante de Pago Electrónico
+                    Comprobante Oficial de Compra
                   </h3>
                   {autoDownloadNotice && (
                     <span className="text-[11px] font-black text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
@@ -283,7 +325,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                   )}
                 </div>
                 <p className="text-xs text-slate-600 mt-0.5">
-                  Tu comprobante oficial en formato PDF ya se ha generado y descargado a tu dispositivo. También puedes volver a descargarlo en cualquier momento.
+                  El documento con todos los detalles de tu compra y tu número de seguimiento se ha descargado automáticamente en tu dispositivo.
                 </p>
               </div>
             </div>
@@ -300,17 +342,17 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
             </div>
           </div>
 
-          {/* BOTÓN Y TARJETA DESTACADA: COORDINAR ENVÍO POR WHATSAPP (+56 9 8253 5868) */}
+          {/* BOTÓN DIRECTO: SEGUIMIENTO DEL ENVÍO POR WHATSAPP (+56 9 8253 5868) */}
           <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-emerald-500 via-[#25D366] to-emerald-600 text-white shadow-lg space-y-3.5 text-center relative overflow-hidden">
             <div className="relative z-10 space-y-1">
               <span className="inline-block px-3 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-black tracking-wider uppercase backdrop-blur-xs">
-                Paso Final • Coordinación Inmediata
+                Seguimiento en Vivo
               </span>
               <h2 className="text-lg sm:text-xl font-black">
-                ¿Deseas coordinar la entrega de tu pedido?
+                Te dejamos el link de WhatsApp para hacer el seguimiento de tu envío:
               </h2>
               <p className="text-xs sm:text-sm text-emerald-50 max-w-lg mx-auto leading-relaxed">
-                Escríbenos directamente a nuestro WhatsApp oficial para agendar el día y horario exacto de despacho con nuestro equipo.
+                Haz clic en el botón de abajo para coordinar y hacer el seguimiento en directo con nuestro equipo:
               </p>
             </div>
 
@@ -322,13 +364,13 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                 className="inline-flex items-center justify-center space-x-2.5 w-full sm:w-auto px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-emerald-800 font-black text-sm sm:text-base shadow-md hover:shadow-xl transition-all transform active:scale-95 cursor-pointer"
               >
                 <MessageCircle className="w-5 h-5 text-[#25D366] fill-[#25D366]" />
-                <span>Coordinar Despacho por WhatsApp (+56 9 8253 5868)</span>
+                <span>Abrir WhatsApp (+56 9 8253 5868) - Seguimiento de mi Envío</span>
                 <ExternalLink className="w-4 h-4 text-emerald-600" />
               </a>
             </div>
 
             <p className="text-[11px] text-emerald-100 relative z-10">
-              Número directo: <strong>+56 9 8253 5868</strong> • Atención rápida de Lunes a Domingo
+              Número de seguimiento: <strong>{confirmedOrder.orderNumber}</strong> • WhatsApp directo: <strong>+56 9 8253 5868</strong>
             </p>
           </div>
 
@@ -347,11 +389,15 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Dirección de despacho:</span>
+              <span className="text-slate-500">Dirección de envío:</span>
               <span className="font-bold text-slate-800 text-right">
-                {confirmedOrder.customerAddress}
-                {confirmedOrder.customerCity ? `, ${confirmedOrder.customerCity}` : ''}
+                {confirmedOrder.customerAddress}, {confirmedOrder.customerCity}{' '}
+                {confirmedOrder.customerRegion ? `(${confirmedOrder.customerRegion})` : ''}
               </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-slate-500">Costo de envío:</span>
+              <span className="font-bold text-slate-800">{formatPrice(confirmedOrder.shippingCost)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Confirmación enviada a:</span>
@@ -451,7 +497,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
               <span className="w-5 h-5 rounded-full bg-[#FF5200] text-white text-[10px] flex items-center justify-center font-black">
                 2
               </span>
-              <span>Despacho y Pago</span>
+              <span>Datos y Envío</span>
             </span>
             <span className="text-slate-300">→</span>
             <span className="flex items-center space-x-1.5 text-slate-400">
@@ -488,7 +534,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
               <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-5">
                 <div className="flex items-center space-x-2.5 pb-3 border-b border-slate-100">
                   <h2 className="text-base font-black text-[#061F3D]">
-                    Datos de Contacto y Despacho
+                    Datos de Contacto y Envío
                   </h2>
                 </div>
 
@@ -554,41 +600,46 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                         required
                         value={customerAddress}
                         onChange={(e) => setCustomerAddress(e.target.value)}
-                        placeholder="Ej: Av. Apoquindo 4800, Depto 1002"
+                        placeholder="Ej: Av. Los Volcanes 1234, Depto 201"
                         className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/20 text-xs sm:text-sm"
                       />
                     </div>
                   </div>
 
+                  {/* Selector de Regiones con Región de Los Lagos primero, y todas las 16 regiones */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block font-bold text-slate-700 mb-1.5">
-                        Comuna / Ciudad *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={customerCity}
-                        onChange={(e) => setCustomerCity(e.target.value)}
-                        placeholder="Las Condes, Santiago"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/20 text-xs sm:text-sm"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block font-bold text-slate-700 mb-1.5">
-                        Región
+                        Región *
                       </label>
                       <select
                         value={customerRegion}
-                        onChange={(e) => setCustomerRegion(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/20 text-xs sm:text-sm"
+                        onChange={(e) => handleRegionChange(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/20 text-xs sm:text-sm bg-white"
                       >
-                        <option value="Región Metropolitana">Región Metropolitana</option>
-                        <option value="Valparaíso">Región de Valparaíso</option>
-                        <option value="Biobío">Región del Biobío</option>
-                        <option value="Coquimbo">Región de Coquimbo</option>
-                        <option value="Otras Regiones">Otras Regiones</option>
+                        {CHILEAN_REGIONS.map((region) => (
+                          <option key={region.id} value={region.name}>
+                            {region.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Selector de Comuna con Puerto Montt primero */}
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1.5">
+                        Comuna *
+                      </label>
+                      <select
+                        value={customerCity}
+                        onChange={(e) => setCustomerCity(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 font-semibold text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/20 text-xs sm:text-sm bg-white"
+                      >
+                        {availableComunas.map((comuna) => (
+                          <option key={comuna} value={comuna}>
+                            {comuna}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -601,7 +652,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                       type="text"
                       value={customerNotes}
                       onChange={(e) => setCustomerNotes(e.target.value)}
-                      placeholder="Ej: Dejar en conserjería o tocar timbre de la izquierda"
+                      placeholder="Ej: Dejar en conserjería o llamar al llegar"
                       className="w-full px-4 py-2.5 rounded-xl border border-slate-200 font-medium text-slate-700 focus:outline-none focus:border-[#FF5200] text-xs"
                     />
                   </div>
@@ -647,7 +698,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                   ))}
                 </div>
 
-                {/* Breakdown */}
+                {/* Breakdown (Sin envío gratis, costo real de envío) */}
                 <div className="pt-3 border-t border-slate-100 space-y-2 text-xs">
                   <div className="flex justify-between text-slate-500">
                     <span>Subtotal:</span>
@@ -656,14 +707,10 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                   <div className="flex justify-between text-slate-500">
                     <span className="flex items-center space-x-1">
                       <Truck className="w-3.5 h-3.5 text-slate-400" />
-                      <span>Despacho a domicilio:</span>
+                      <span>Envío:</span>
                     </span>
-                    <span>
-                      {shippingCost === 0 ? (
-                        <strong className="text-emerald-600">¡Gratis!</strong>
-                      ) : (
-                        formatPrice(shippingCost)
-                      )}
+                    <span className="font-bold text-slate-700">
+                      {formatPrice(shippingCost)}
                     </span>
                   </div>
                   <div className="pt-2 border-t border-slate-100 flex justify-between items-baseline">
@@ -691,7 +738,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                 </button>
 
                 <p className="text-[11px] text-slate-400 text-center">
-                  Al confirmar, serás redirigido de forma segura para pagar con Webpay Plus. Descargarás tu comprobante automáticamente.
+                  Al confirmar, serás redirigido de forma segura para pagar con Webpay Plus. Descargarás tu comprobante con tu número de seguimiento automáticamente.
                 </p>
               </div>
             </div>

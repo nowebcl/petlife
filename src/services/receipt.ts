@@ -8,6 +8,7 @@ export interface ReceiptData {
   customerPhone?: string;
   customerAddress: string;
   customerCity?: string;
+  customerRegion?: string;
   customerNotes?: string;
   items: Array<{
     name: string;
@@ -25,6 +26,7 @@ export interface ReceiptData {
 
 /**
  * Genera el documento PDF del comprobante de compra con diseño oficial PetLife
+ * Incluye todos los detalles de la venta y el número de seguimiento para el envío
  */
 export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
   const doc = new jsPDF({
@@ -55,14 +57,19 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
   doc.setFontSize(9);
   doc.text('Todo para tu Mascota • Alimentos, Higiene & Accesorios', margin, 23);
 
-  // Badge Comprobante y Fecha en el extremo derecho
+  // Badge Comprobante y N° Seguimiento en el extremo derecho
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
-  doc.text('COMPROBANTE DE PAGO', pageWidth - margin, 14, { align: 'right' });
+  doc.text('COMPROBANTE DE COMPRA', pageWidth - margin, 14, { align: 'right' });
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9.5);
+  doc.setTextColor(255, 200, 150);
+  doc.text(`Seguimiento: ${data.orderNumber}`, pageWidth - margin, 20, { align: 'right' });
 
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.text(`Orden: ${data.orderNumber}`, pageWidth - margin, 20, { align: 'right' });
+  doc.setFontSize(8.5);
+  doc.setTextColor(255, 255, 255);
   const displayDate =
     data.date ||
     new Date().toLocaleDateString('es-CL', {
@@ -84,7 +91,7 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
   doc.setTextColor(6, 95, 70); // emerald-800
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
-  doc.text('PAGO APROBADO EXITOSAMENTE VIA WEBPAY PLUS', margin + 6, y + 6);
+  doc.text('VENTA REGISTRADA Y PAGO APROBADO EXITOSAMENTE', margin + 6, y + 6);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
@@ -103,7 +110,7 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
   doc.setTextColor(6, 31, 61);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9.5);
-  doc.text('DATOS DEL CLIENTE Y DESPACHO', margin + 4, y + 5.5);
+  doc.text('DATOS DEL CLIENTE Y ENVÍO', margin + 4, y + 5.5);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
@@ -117,7 +124,8 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
   // Columna Derecha
   const colRightX = margin + 95;
   doc.text(`Dirección: ${data.customerAddress}`, colRightX, y + 12);
-  doc.text(`Ciudad/Comuna: ${data.customerCity || 'Santiago, Chile'}`, colRightX, y + 17);
+  const locationText = `${data.customerCity || 'Puerto Montt'}, ${data.customerRegion || 'Región de Los Lagos'}`;
+  doc.text(`Comuna/Región: ${locationText}`, colRightX, y + 17);
   if (data.customerNotes) {
     doc.text(`Notas: ${data.customerNotes.slice(0, 45)}`, colRightX, y + 22);
   }
@@ -158,7 +166,6 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
     doc.text(`${item.quantity}x`, margin + 4, y + 5.2);
 
     doc.setFont('helvetica', 'normal');
-    // Truncar si el nombre es muy largo
     const cleanName = item.name.length > 55 ? item.name.slice(0, 52) + '...' : item.name;
     doc.text(cleanName, margin + 20, y + 5.2);
 
@@ -176,7 +183,7 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
 
   y += 4;
 
-  // 5. Bloque de Totales
+  // 5. Bloque de Totales (Sin envío gratis, valor real de envío)
   const totalsBoxX = margin + 105;
 
   doc.setFont('helvetica', 'normal');
@@ -185,9 +192,9 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
   doc.text('Subtotal:', totalsBoxX, y + 4);
   doc.text(formatPrice(data.subtotal), pageWidth - margin - 4, y + 4, { align: 'right' });
 
-  doc.text('Despacho:', totalsBoxX, y + 9);
+  doc.text('Envío:', totalsBoxX, y + 9);
   doc.text(
-    data.shippingCost === 0 ? 'Gratis' : formatPrice(data.shippingCost),
+    formatPrice(data.shippingCost),
     pageWidth - margin - 4,
     y + 9,
     { align: 'right' }
@@ -204,7 +211,7 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
 
   y += 26;
 
-  // 6. Tarjeta destacada de Coordinación por WhatsApp (+56 9 8253 5868)
+  // 6. Tarjeta destacada: SEGUIMIENTO DEL ENVÍO VÍA WHATSAPP (+56 9 8253 5868)
   doc.setFillColor(240, 253, 244); // green-50
   doc.setDrawColor(37, 211, 102); // WhatsApp green (#25D366)
   doc.setLineWidth(0.8);
@@ -213,13 +220,13 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
   doc.setTextColor(18, 140, 126); // WhatsApp dark green
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10.5);
-  doc.text('COORDINACION DE DESPACHO INMEDIATA VIA WHATSAPP', margin + 6, y + 6.5);
+  doc.text('SEGUIMIENTO DEL ENVÍO VÍA WHATSAPP (+56 9 8253 5868)', margin + 6, y + 6.5);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
   doc.setTextColor(51, 65, 85);
   doc.text(
-    'Para coordinar el día y horario de entrega, por favor envía este comprobante al WhatsApp oficial:',
+    'Para hacer el seguimiento de tu envío y coordinar la entrega, contáctanos a nuestro WhatsApp oficial:',
     margin + 6,
     y + 11.5
   );
@@ -232,14 +239,14 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
   doc.setTextColor(100, 116, 139);
-  doc.text('(Indica tu número de orden ' + data.orderNumber + ')', margin + 46, y + 17);
+  doc.text(`(Tu número de seguimiento es: ${data.orderNumber})`, margin + 46, y + 17);
 
   // 7. Pie de página del documento
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(148, 163, 184);
   doc.text(
-    'PetLife Store Chile • contacto@tiendapetlife.cl • Comprobante electrónico de transacción comercial',
+    'PetLife Store Chile • tiendapetlife.cl • contacto@tiendapetlife.cl • Comprobante electrónico de transacción comercial',
     pageWidth / 2,
     285,
     { align: 'center' }
@@ -249,12 +256,12 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
 }
 
 /**
- * Dispara la descarga automática del comprobante de pago en el navegador del cliente
+ * Dispara la descarga automática del comprobante de compra con número de seguimiento
  */
 export function downloadOrderReceiptPDF(data: ReceiptData): void {
   try {
     const doc = generateOrderReceiptPDF(data);
-    doc.save(`Comprobante_PetLife_${data.orderNumber}.pdf`);
+    doc.save(`Comprobante_PetLife_Seguimiento_${data.orderNumber}.pdf`);
   } catch (err) {
     console.error('Error al generar comprobante de pago PDF:', err);
   }

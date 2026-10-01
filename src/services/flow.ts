@@ -1,5 +1,5 @@
 /**
- * Servicio de Integración de Pagos con Webpay Plus
+ * Servicio de Integración de Pagos con Webpay Plus (Flow Chile)
  * Pasarela Oficial en Producción (Tarjetas de Débito, Crédito, Prepago)
  */
 
@@ -27,6 +27,42 @@ export interface FlowPaymentResponse {
   error?: string;
 }
 
+export interface FlowStatusResponse {
+  success: boolean;
+  isPaid: boolean;
+  status?: number; // 1: pendiente, 2: pagada, 3: rechazada, 4: anulada
+  flowOrder?: number | string;
+  commerceOrder?: string;
+  amount?: number | string;
+  requestDate?: string;
+  error?: string;
+}
+
+/**
+ * Consulta el estado real de pago en Flow para verificar cuándo la venta fue pagada con éxito
+ */
+export async function checkFlowPaymentStatus(token: string): Promise<FlowStatusResponse> {
+  try {
+    const res = await fetch(`/api/flow?token=${encodeURIComponent(token)}`);
+    if (!res.ok) {
+      return { success: false, isPaid: false, error: 'No se pudo verificar el estado en Flow' };
+    }
+    const data = await res.json();
+    return {
+      success: true,
+      isPaid: data.isPaid === true || data.status === 2,
+      status: data.status,
+      flowOrder: data.flowOrder,
+      commerceOrder: data.commerceOrder,
+      amount: data.amount,
+      requestDate: data.requestDate,
+    };
+  } catch (err: any) {
+    console.error('Error al verificar estado de pago Flow:', err);
+    return { success: false, isPaid: false, error: err.message };
+  }
+}
+
 /**
  * Crea una orden de pago en Webpay Plus y retorna la URL de redirección oficial
  */
@@ -50,7 +86,6 @@ export async function createFlowPayment(
       urlReturn,
     };
 
-    // 1. Invocar endpoint serverless oficial /api/flow
     let res: Response | null = null;
     try {
       res = await fetch('/api/flow', {
@@ -65,7 +100,6 @@ export async function createFlowPayment(
       res = null;
     }
 
-    // 2. Si /api/flow falló o retornó status >= 400, intentar fallback /api/flow/payment/create
     if (!res || !res.ok) {
       try {
         res = await fetch('/api/flow/payment/create', {
@@ -106,7 +140,6 @@ export async function createFlowPayment(
       };
     }
 
-    // Si hubo respuesta pero con error del servidor
     if (res) {
       try {
         const errJson = await res.json();
@@ -145,7 +178,7 @@ export async function createFlowPayment(
 }
 
 /**
- * Genera el enlace directo a WhatsApp (+56 9 8253 5868) con el mensaje de coordinación pre-cargado
+ * Genera el enlace directo a WhatsApp (+56 9 8253 5868) para el seguimiento del envío
  */
 export function buildWhatsAppCoordinationUrl(order: {
   orderNumber: string;
@@ -153,22 +186,23 @@ export function buildWhatsAppCoordinationUrl(order: {
   total: number;
   customerAddress?: string;
   customerCity?: string;
+  customerRegion?: string;
 }): string {
   const number = WEBPAY_CONFIG.whatsappNumber;
   const totalFormatted = '$' + Math.round(order.total).toLocaleString('es-CL');
-  const addressLine = order.customerAddress
+  const locationLine = order.customerAddress
     ? `\n📍 *Dirección de Despacho:* ${order.customerAddress}${
         order.customerCity ? `, ${order.customerCity}` : ''
-      }`
+      }${order.customerRegion ? ` (${order.customerRegion})` : ''}`
     : '';
 
   const message =
-    `¡Hola PetLife! 🐾 Acabo de realizar mi compra mediante Webpay Plus.\n\n` +
-    `📦 *Orden N°:* ${order.orderNumber}\n` +
+    `¡Hola PetLife! 🐾 Acabo de realizar mi compra.\n\n` +
+    `📦 *Número de Seguimiento / Orden:* ${order.orderNumber}\n` +
     `👤 *Cliente:* ${order.customerName}\n` +
     `💰 *Monto Pagado:* ${totalFormatted}` +
-    `${addressLine}\n\n` +
-    `Adjunto mi comprobante de pago para coordinar el envío. ¡Muchas gracias!`;
+    `${locationLine}\n\n` +
+    `Adjunto mi comprobante para coordinar el seguimiento de mi envío. ¡Muchas gracias!`;
 
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }

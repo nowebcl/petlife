@@ -45,12 +45,8 @@ export const CartPage: FC<CartPageProps> = ({
     0
   );
 
-  const freeShippingThreshold = 30000;
-  const isFreeShipping = cartSubtotal >= freeShippingThreshold;
-  const shippingCost = isFreeShipping || cartItems.length === 0 ? 0 : 2990;
+  const shippingCost = cartItems.length === 0 ? 0 : 3990;
   const totalAmount = cartSubtotal + shippingCost;
-  const progressPercent = Math.min(100, Math.round((cartSubtotal / freeShippingThreshold) * 100));
-  const amountNeeded = freeShippingThreshold - cartSubtotal;
 
   return (
     <div className="w-full min-h-screen bg-[#F8FAFC] pb-24 animate-fade-in">
@@ -132,34 +128,6 @@ export const CartPage: FC<CartPageProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Left 8 Columns: Cart Items Table/List */}
             <div className="lg:col-span-8 space-y-4">
-              {/* Free Shipping Progress Card */}
-              <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-2xs">
-                <div className="flex items-center justify-between text-xs font-bold mb-2">
-                  <span className="flex items-center space-x-2 text-[#061F3D]">
-                    <Truck className="w-4 h-4 text-[#FF5200]" />
-                    <span>
-                      {isFreeShipping ? (
-                        <span className="text-emerald-600">¡Genial! Tienes Envío GRATIS a domicilio</span>
-                      ) : (
-                        <span>
-                          Agrega <strong className="text-[#FF5200]">{formatPrice(amountNeeded)}</strong> más para obtener <strong>Envío GRATIS</strong>
-                        </span>
-                      )}
-                    </span>
-                  </span>
-                  <span className="text-slate-400 font-black">{progressPercent}%</span>
-                </div>
-                <div className="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      isFreeShipping
-                        ? 'bg-emerald-500'
-                        : 'bg-gradient-to-r from-[#FF5200] to-amber-400'
-                    }`}
-                    style={{ width: `${progressPercent}%` }}
-                  />
-                </div>
-              </div>
 
               {/* Items Card List */}
               <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
@@ -301,14 +269,10 @@ export const CartPage: FC<CartPageProps> = ({
                   <div className="flex justify-between text-slate-500">
                     <span className="flex items-center space-x-1">
                       <Truck className="w-3.5 h-3.5 text-slate-400" />
-                      <span>Costo de despacho:</span>
+                      <span>Envío:</span>
                     </span>
-                    <span className="font-bold">
-                      {shippingCost === 0 ? (
-                        <span className="text-emerald-600 font-extrabold">¡Gratis!</span>
-                      ) : (
-                        formatPrice(shippingCost)
-                      )}
+                    <span className="font-bold text-slate-700">
+                      {formatPrice(shippingCost)}
                     </span>
                   </div>
 
