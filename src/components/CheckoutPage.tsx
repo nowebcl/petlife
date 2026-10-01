@@ -1,4 +1,4 @@
-import { useState, useEffect, type FC } from 'react';
+import { useState, useEffect, useRef, type FC } from 'react';
 import {
   CheckCircle2,
   AlertTriangle,
@@ -64,6 +64,14 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   const [rejectedOrder, setRejectedOrder] = useState<{ orderNumber: string; reason?: string } | null>(null);
   const [autoDownloadNotice, setAutoDownloadNotice] = useState(false);
 
+  // Guardas para evitar ejecuciones repetidas y bucles infinitos de descarga
+  const hasProcessedRef = useRef(false);
+  const hasDownloadedPdfRef = useRef(false);
+  const onOrderSuccessRef = useRef(onOrderSuccess);
+  useEffect(() => {
+    onOrderSuccessRef.current = onOrderSuccess;
+  }, [onOrderSuccess]);
+
   // Comunas activas según la región seleccionada
   const activeRegion =
     CHILEAN_REGIONS.find((r) => r.name === customerRegion) || defaultRegion;
@@ -89,6 +97,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
   // Detección de retorno desde Flow / Webpay Plus para confirmar la venta o manejar rechazos
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (hasProcessedRef.current) return;
 
     const query = new URLSearchParams(window.location.search);
     const flowToken = query.get('token');
@@ -97,6 +106,8 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       query.get('status') === 'success' ||
       Boolean(flowToken) ||
       Boolean(query.get('order'));
+
+    if (!isPaymentReturn && !flowToken) return;
 
     const storedPending = sessionStorage.getItem('petlife_pending_order');
     const storedLast = sessionStorage.getItem('petlife_last_order');
@@ -108,7 +119,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
       } catch (e) {
         console.error('Error al leer orden pendiente de sessionStorage', e);
       }
-    } else if (storedLast && isPaymentReturn) {
+    } else if (storedLast) {
       try {
         orderData = JSON.parse(storedLast);
       } catch (e) {
@@ -117,25 +128,47 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
     }
 
     const processOrderConfirmation = (order: ReceiptData) => {
+      if (hasProcessedRef.current) return;
+      hasProcessedRef.current = true;
+
       setConfirmedOrder(order);
       setRejectedOrder(null);
       sessionStorage.removeItem('petlife_pending_order');
       sessionStorage.setItem('petlife_last_order', JSON.stringify(order));
-      onOrderSuccess(order.orderNumber);
 
-      // Descarga automática inmediata del comprobante con número de seguimiento
-      setAutoDownloadNotice(true);
-      setTimeout(() => {
-        downloadOrderReceiptPDF(order);
-      }, 600);
+      // Limpiar URL query params para que no vuelva a procesarse al re-renderizar
+      try {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } catch (err) {
+        // Ignorar
+      }
+
+      onOrderSuccessRef.current(order.orderNumber);
+
+      // Descarga automática ÚNICA del comprobante con número de seguimiento
+      const downloadKey = `petlife_receipt_downloaded_${order.orderNumber}`;
+      if (!hasDownloadedPdfRef.current && !sessionStorage.getItem(downloadKey)) {
+        hasDownloadedPdfRef.current = true;
+        sessionStorage.setItem(downloadKey, 'true');
+        setAutoDownloadNotice(true);
+        setTimeout(() => {
+          downloadOrderReceiptPDF(order);
+        }, 800);
+      }
     };
 
     // Si viene con token de Flow, verificar el estado real de la transacción en el servidor
     if (flowToken) {
+      hasProcessedRef.current = true;
       setIsProcessing(true);
       checkFlowPaymentStatus(flowToken)
         .then((statusRes) => {
           setIsProcessing(false);
+          // Limpiar URL
+          try {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } catch {}
+
           if (statusRes.success && statusRes.isPaid) {
             // Pago aprobado en Webpay Plus
             if (orderData) {
@@ -167,7 +200,7 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
     } else if (orderData && query.get('status') === 'success') {
       processOrderConfirmation(orderData);
     }
-  }, [onOrderSuccess]);
+  }, []);
 
   const handleSubmitCheckout = async (e: React.FormEvent) => {
     e.preventDefault();

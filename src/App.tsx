@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Navbar } from './components/Navbar.tsx';
 import { Hero } from './components/Hero.tsx';
 import { ProductsSection } from './components/ProductsSection.tsx';
@@ -211,6 +211,11 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleOrderSuccess = useCallback((orderNum: string) => {
+    setCartItems([]);
+    showToast(`¡Pedido ${orderNum} registrado con éxito! 🐾`);
+  }, []);
+
   const handleSelectProduct = (product: Product) => {
     setSelectedProduct(product);
     setCurrentView('product');
@@ -387,10 +392,7 @@ export default function App() {
             {currentView === 'checkout' && (
               <CheckoutPage
                 cartItems={cartItems}
-                onOrderSuccess={(orderNum) => {
-                  setCartItems([]);
-                  showToast(`¡Pedido ${orderNum} registrado con éxito! 🐾`);
-                }}
+                onOrderSuccess={handleOrderSuccess}
                 onNavigateToCart={handleNavigateToCart}
                 onNavigateToHome={handleNavigateToHome}
               />
