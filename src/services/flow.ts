@@ -200,9 +200,10 @@ export function buildWhatsAppCoordinationUrl(order: {
     `¡Hola PetLife! 🐾 Acabo de realizar mi compra.\n\n` +
     `📦 *Número de Seguimiento / Orden:* ${order.orderNumber}\n` +
     `👤 *Cliente:* ${order.customerName}\n` +
-    `💰 *Monto Pagado:* ${totalFormatted}` +
+    `💰 *Monto Pagado (Productos):* ${totalFormatted}\n` +
+    `🚚 *Envío:* A coordinar en la entrega` +
     `${locationLine}\n\n` +
-    `Adjunto mi comprobante para coordinar el seguimiento de mi envío. ¡Muchas gracias!`;
+    `Adjunto mi comprobante para coordinar el seguimiento y entrega de mi envío. ¡Muchas gracias!`;
 
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }

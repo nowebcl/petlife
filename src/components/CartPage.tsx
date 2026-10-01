@@ -45,8 +45,7 @@ export const CartPage: FC<CartPageProps> = ({
     0
   );
 
-  const shippingCost = cartItems.length === 0 ? 0 : 3990;
-  const totalAmount = cartSubtotal + shippingCost;
+  const totalAmount = cartSubtotal;
 
   return (
     <div className="w-full min-h-screen bg-[#F8FAFC] pb-24 animate-fade-in">
@@ -271,8 +270,8 @@ export const CartPage: FC<CartPageProps> = ({
                       <Truck className="w-3.5 h-3.5 text-slate-400" />
                       <span>Envío:</span>
                     </span>
-                    <span className="font-bold text-slate-700">
-                      {formatPrice(shippingCost)}
+                    <span className="font-semibold text-slate-700">
+                      A coordinar en la entrega
                     </span>
                   </div>
 

@@ -194,7 +194,7 @@ export function generateOrderReceiptPDF(data: ReceiptData): jsPDF {
 
   doc.text('Envío:', totalsBoxX, y + 9);
   doc.text(
-    formatPrice(data.shippingCost),
+    'A coordinar en entrega',
     pageWidth - margin - 4,
     y + 9,
     { align: 'right' }

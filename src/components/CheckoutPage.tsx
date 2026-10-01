@@ -81,9 +81,9 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
     0
   );
 
-  // Costo de envío real estándar (sin envío gratis por ningún lado)
-  const shippingCost = cartItems.length === 0 ? 0 : 3990;
-  const totalAmount = cartSubtotal + shippingCost;
+  // Envío se coordina y se ve después con la entrega (no se suma al pago)
+  const shippingCost = 0;
+  const totalAmount = cartSubtotal;
 
   // Detección de retorno desde Flow / Webpay Plus para confirmar la venta y descargar el documento
   useEffect(() => {
@@ -396,8 +396,8 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Costo de envío:</span>
-              <span className="font-bold text-slate-800">{formatPrice(confirmedOrder.shippingCost)}</span>
+              <span className="text-slate-500">Envío:</span>
+              <span className="font-bold text-slate-800">A coordinar en la entrega</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Confirmación enviada a:</span>
@@ -709,8 +709,8 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                       <Truck className="w-3.5 h-3.5 text-slate-400" />
                       <span>Envío:</span>
                     </span>
-                    <span className="font-bold text-slate-700">
-                      {formatPrice(shippingCost)}
+                    <span className="font-semibold text-slate-700">
+                      A coordinar en la entrega
                     </span>
                   </div>
                   <div className="pt-2 border-t border-slate-100 flex justify-between items-baseline">
