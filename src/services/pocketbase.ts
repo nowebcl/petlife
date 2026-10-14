@@ -138,6 +138,8 @@ export function mapRecordToProduct(r: PocketBaseProductRecord): Product {
     stockCount: Number(r.stockCount) || 0,
     sku: r.sku || '',
     featured: Boolean(r.featured),
+    created: r.created || '',
+    updated: r.updated || '',
     benefits:
       benefitsList.length > 0
         ? benefitsList
@@ -148,13 +150,14 @@ export function mapRecordToProduct(r: PocketBaseProductRecord): Product {
 /**
  * Obtener todos los productos reales desde PocketBase
  * Con tolerancia a fallos (fallback a base local si no hay conexión)
+ * Ordenados con los últimos subidos en primer lugar (-created, -id)
  */
 export async function fetchAllProducts(): Promise<Product[]> {
   try {
     const timestamp = Date.now();
-    // Consulta directa a PocketBase con cache-busting real para evitar datos en caché
+    // Consulta directa a PocketBase ordenando por los últimos subidos (-created, -id)
     let res = await fetch(
-      `${POCKETBASE_URL}/api/collections/products/records?perPage=200&sort=-id&_t=${timestamp}`,
+      `${POCKETBASE_URL}/api/collections/products/records?perPage=200&sort=-created,-id&_t=${timestamp}`,
       {
         cache: 'no-store',
         headers: {
@@ -164,7 +167,21 @@ export async function fetchAllProducts(): Promise<Product[]> {
       }
     );
 
-    // Si sort=-id no responde 200, intentar sin sort
+    // Si sort=-created,-id no responde 200, intentar sort=-id
+    if (!res.ok) {
+      res = await fetch(
+        `${POCKETBASE_URL}/api/collections/products/records?perPage=200&sort=-id&_t=${timestamp}`,
+        {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+          },
+        }
+      );
+    }
+
+    // Si tampoco responde, intentar sin sort
     if (!res.ok) {
       res = await fetch(
         `${POCKETBASE_URL}/api/collections/products/records?perPage=200&_t=${timestamp}`,

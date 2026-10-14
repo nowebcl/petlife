@@ -480,9 +480,19 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     }
   };
 
+  // Sorted products: los últimos subidos aparecen en primer lugar
+  const sortedProducts = useMemo(() => {
+    return [...products].sort((a, b) => {
+      const timeA = a.created ? new Date(a.created).getTime() : 0;
+      const timeB = b.created ? new Date(b.created).getTime() : 0;
+      if (timeB !== timeA) return timeB - timeA; // más reciente primero
+      return b.id.localeCompare(a.id); // desempate por id descendente
+    });
+  }, [products]);
+
   // Filtered Products
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
+    return sortedProducts.filter((p) => {
       const matchSearch =
         !productSearch.trim() ||
         p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
@@ -492,7 +502,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
       const matchCat = selectedCategory === 'all' || p.category === selectedCategory;
       return matchSearch && matchCat;
     });
-  }, [products, productSearch, selectedCategory]);
+  }, [sortedProducts, productSearch, selectedCategory]);
 
   // Separación de Pedidos Activos y Archivados
   const activeOrders = useMemo(() => {
@@ -1602,7 +1612,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
 
             {/* MOBILE ONLY: Inventory Cards */}
             <div className="md:hidden space-y-2.5">
-              {products.map((p) => (
+              {sortedProducts.map((p) => (
                 <div
                   key={p.id}
                   className="bg-white rounded-2xl p-3 border border-slate-200 shadow-2xs flex flex-col space-y-2"
@@ -1680,7 +1690,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 font-semibold text-[#061F3D]">
-                    {products.map((p) => (
+                    {sortedProducts.map((p) => (
                       <tr key={p.id} className="hover:bg-slate-50/80">
                         <td className="py-3 px-4">
                           <span className="font-bold text-xs text-[#061F3D] block truncate max-w-xs">
