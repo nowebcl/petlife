@@ -34,6 +34,7 @@ export interface Product {
   rating: number;
   reviewsCount: number;
   badge?: string;
+  featured?: boolean;
   weightOrSize: string;
   icon: string;
   bgGradient: string;

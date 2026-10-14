@@ -22,6 +22,7 @@ import {
   Check,
   Archive,
   ArchiveRestore,
+  Star,
 } from 'lucide-react';
 import type { Product } from '../data/products.ts';
 import { formatPrice } from '../data/products.ts';
@@ -72,12 +73,18 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   const [formName, setFormName] = useState<string>('');
   const [formBrand, setFormBrand] = useState<string>('');
   const [formCategory, setFormCategory] = useState<'perros' | 'gatos' | 'higiene' | 'snacks' | 'accesorios'>('perros');
+  const [formPetType, setFormPetType] = useState<'perro' | 'gato' | 'ambos'>('perro');
+  const [formLifeStage, setFormLifeStage] = useState<'cachorro' | 'adulto' | 'senior' | 'todas'>('adulto');
   const [formPrice, setFormPrice] = useState<number>(19900);
   const [formWeightOrSize, setFormWeightOrSize] = useState<string>('');
   const [formStock, setFormStock] = useState<number>(25);
   const [formInStock, setFormInStock] = useState<boolean>(true);
+  const [formFeatured, setFormFeatured] = useState<boolean>(false);
   const [formSku, setFormSku] = useState<string>('');
   const [formDescription, setFormDescription] = useState<string>('');
+  const [formLongDescription, setFormLongDescription] = useState<string>('');
+  const [formBenefits, setFormBenefits] = useState<string>('');
+  const [formImageUrl, setFormImageUrl] = useState<string>('');
   const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [productFormError, setProductFormError] = useState<string | null>(null);
@@ -191,12 +198,18 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     setFormName('');
     setFormBrand('');
     setFormCategory('perros');
+    setFormPetType('perro');
+    setFormLifeStage('adulto');
     setFormPrice(19900);
-    setFormWeightOrSize('');
+    setFormWeightOrSize('15 kg');
     setFormStock(25);
     setFormInStock(true);
+    setFormFeatured(false);
     setFormSku(`PL-${Math.floor(100 + Math.random() * 900)}`);
     setFormDescription('');
+    setFormLongDescription('');
+    setFormBenefits('Excelente calidad garantizada\nNutrición 100% balanceada');
+    setFormImageUrl('');
     setSelectedImageFile(null);
     setImagePreview(null);
     setProductFormError(null);
@@ -207,20 +220,26 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   // Navigate to Full-Page Editor for Editing Existing Product
   const handleOpenEditProduct = (p: Product) => {
     setEditingProduct(p);
-    setFormName(p.name);
+    setFormName(p.name || '');
     setFormBrand(p.brand || '');
     setFormCategory(
       (p.category as any) ||
         (p.name.toLowerCase().includes('gato') || p.petType === 'gato' ? 'gatos' : 'perros')
     );
-    setFormPrice(p.price);
+    setFormPetType(p.petType || (p.category === 'gatos' ? 'gato' : 'perro'));
+    setFormLifeStage(p.lifeStage || 'adulto');
+    setFormPrice(p.price || 0);
     setFormWeightOrSize(p.weightOrSize || '');
     setFormStock(p.stockCount !== undefined ? p.stockCount : 15);
     setFormInStock(p.inStock);
+    setFormFeatured(Boolean(p.featured));
     setFormSku(p.sku || `PL-${p.id.slice(0, 4)}`);
     setFormDescription(p.description || '');
+    setFormLongDescription(p.longDescription || p.description || '');
+    setFormBenefits(Array.isArray(p.benefits) ? p.benefits.join('\n') : '');
+    setFormImageUrl(p.imageUrl || '');
     setSelectedImageFile(null);
-    setImagePreview(p.imageUrl);
+    setImagePreview(p.imageUrl || null);
     setProductFormError(null);
     setActiveView('product_editor');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -254,11 +273,6 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     setIsSavingProduct(true);
     setProductFormError(null);
 
-    const formData = new FormData();
-    formData.append('name', formName.trim());
-    formData.append('brand', formBrand.trim());
-    formData.append('category', formCategory);
-
     const categoryLabel =
       formCategory === 'perros'
         ? 'Alimentos Perros'
@@ -269,50 +283,83 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         : formCategory === 'snacks'
         ? 'Snacks & Premios'
         : 'Accesorios';
-    formData.append('categoryLabel', categoryLabel);
 
-    const inferredPetType =
-      formCategory === 'gatos' ? 'gato' : formCategory === 'perros' ? 'perro' : 'ambos';
-    formData.append('petType', inferredPetType);
-    formData.append('lifeStage', 'adulto');
-    formData.append('price', String(formPrice));
-    formData.append('weightOrSize', formWeightOrSize.trim());
-    formData.append('stockCount', String(formStock));
-    formData.append('inStock', String(formInStock));
-    formData.append('sku', formSku.trim() || `PL-${Math.floor(100 + Math.random() * 900)}`);
-    formData.append('description', formDescription.trim());
-    formData.append('benefits', JSON.stringify([]));
+    // Parse benefits line by line
+    const parsedBenefits = formBenefits
+      .split('\n')
+      .map((b) => b.trim())
+      .filter((b) => b.length > 0);
 
-    if (selectedImageFile) {
-      formData.append('image', selectedImageFile);
-    }
+    const finalSku = formSku.trim() || `PL-${Math.floor(100 + Math.random() * 900)}`;
 
     try {
-      if (editingProduct) {
-        const res = await adminUpdateProduct(editingProduct.id, formData, editingProduct.sku, editingProduct.name);
-        if (res.success) {
-          showToast(`Producto "${formName}" actualizado con éxito`);
-          setActiveView('dashboard');
-          await loadProducts();
-          onRefreshProducts?.();
+      let res: { success: boolean; data?: any; error?: string };
+
+      if (selectedImageFile) {
+        // Multi-part FormData if a binary image was chosen
+        const formData = new FormData();
+        formData.append('name', formName.trim());
+        formData.append('brand', formBrand.trim());
+        formData.append('category', formCategory);
+        formData.append('categoryLabel', categoryLabel);
+        formData.append('petType', formPetType);
+        formData.append('lifeStage', formLifeStage);
+        formData.append('price', String(formPrice));
+        formData.append('weightOrSize', formWeightOrSize.trim());
+        formData.append('stockCount', String(formStock));
+        formData.append('inStock', String(formInStock));
+        formData.append('sku', finalSku);
+        formData.append('description', formDescription.trim());
+        formData.append('longDescription', formLongDescription.trim());
+        formData.append('featured', String(formFeatured));
+        formData.append('benefits', JSON.stringify(parsedBenefits));
+        formData.append('image', selectedImageFile);
+
+        if (editingProduct) {
+          res = await adminUpdateProduct(editingProduct.id, formData, editingProduct.sku, editingProduct.name);
         } else {
-          setProductFormError(res.error || 'Error al actualizar el producto');
-          if (res.error?.includes('expirada') || res.error?.includes('autorizado') || res.error?.includes('sesión')) {
-            setIsAuthenticated(false);
-          }
+          res = await adminCreateProduct(formData);
         }
       } else {
-        const res = await adminCreateProduct(formData);
-        if (res.success) {
-          showToast(`Producto "${formName}" creado exitosamente`);
-          setActiveView('dashboard');
-          await loadProducts();
-          onRefreshProducts?.();
+        // Clean JSON payload with typed fields
+        const jsonPayload: Record<string, any> = {
+          name: formName.trim(),
+          brand: formBrand.trim(),
+          category: formCategory,
+          categoryLabel,
+          petType: formPetType,
+          lifeStage: formLifeStage,
+          price: Number(formPrice),
+          weightOrSize: formWeightOrSize.trim(),
+          stockCount: Number(formStock),
+          inStock: Boolean(formInStock),
+          sku: finalSku,
+          description: formDescription.trim(),
+          longDescription: formLongDescription.trim(),
+          featured: Boolean(formFeatured),
+          benefits: parsedBenefits,
+        };
+
+        if (formImageUrl.trim()) {
+          jsonPayload.imageUrl = formImageUrl.trim();
+        }
+
+        if (editingProduct) {
+          res = await adminUpdateProduct(editingProduct.id, jsonPayload, editingProduct.sku, editingProduct.name);
         } else {
-          setProductFormError(res.error || 'Error al crear el producto');
-          if (res.error?.includes('expirada') || res.error?.includes('autorizado') || res.error?.includes('sesión')) {
-            setIsAuthenticated(false);
-          }
+          res = await adminCreateProduct(jsonPayload);
+        }
+      }
+
+      if (res.success) {
+        showToast(`Producto "${formName}" guardado exitosamente en la base de datos`);
+        setActiveView('dashboard');
+        await loadProducts();
+        onRefreshProducts?.();
+      } else {
+        setProductFormError(res.error || 'Error al guardar el producto');
+        if (res.error?.includes('expirada') || res.error?.includes('autorizado') || res.error?.includes('sesión')) {
+          setIsAuthenticated(false);
         }
       }
     } catch (err: any) {
@@ -761,17 +808,80 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                   </div>
                 </div>
 
+                {/* Pet Type & Life Stage Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Tipo de Mascota
+                    </label>
+                    <select
+                      value={formPetType}
+                      onChange={(e) => setFormPetType(e.target.value as any)}
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-bold text-xs sm:text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all bg-white"
+                    >
+                      <option value="perro">🐕 Perro</option>
+                      <option value="gato">🐱 Gato</option>
+                      <option value="ambos">🐾 Ambos / General</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Etapa de Vida
+                    </label>
+                    <select
+                      value={formLifeStage}
+                      onChange={(e) => setFormLifeStage(e.target.value as any)}
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-bold text-xs sm:text-sm text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all bg-white"
+                    >
+                      <option value="adulto">Adulto</option>
+                      <option value="cachorro">Cachorro / Kitten</option>
+                      <option value="senior">Senior (+7 años)</option>
+                      <option value="todas">Todas las edades</option>
+                    </select>
+                  </div>
+                </div>
+
                 {/* Description */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                    Descripción del Producto (Opcional)
+                    Descripción Corta / Resumen
                   </label>
                   <textarea
-                    rows={3}
+                    rows={2}
                     value={formDescription}
                     onChange={(e) => setFormDescription(e.target.value)}
                     placeholder="Escribe una breve descripción del alimento, beneficios nutricionales o recomendaciones de uso..."
                     className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-medium text-xs sm:text-sm text-slate-700 focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                  />
+                </div>
+
+                {/* Long Description */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    Descripción Detallada / Ficha Técnica (Página de Detalle)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={formLongDescription}
+                    onChange={(e) => setFormLongDescription(e.target.value)}
+                    placeholder="Detalles sobre ingredientes, balance nutricional, beneficios específicos para la salud y recomendaciones de uso..."
+                    className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-medium text-xs sm:text-sm text-slate-700 focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                  />
+                </div>
+
+                {/* Benefits */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                    <span>Beneficios Nutricionales y Clave</span>
+                    <span className="text-[11px] font-normal text-slate-400">1 beneficio por línea</span>
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={formBenefits}
+                    onChange={(e) => setFormBenefits(e.target.value)}
+                    placeholder="Carne de vacuno seleccionada como fuente principal&#10;Digestión óptima y heces firmes&#10;Pelaje brillante y piel hidratada"
+                    className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-medium text-xs sm:text-sm text-slate-700 focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all font-mono"
                   />
                 </div>
               </div>
@@ -783,7 +893,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
               <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-2xs space-y-3.5">
                 <h3 className="text-xs sm:text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
                   <span className="w-2 h-2 rounded-full bg-[#FF5200]" />
-                  <span>Foto Principal</span>
+                  <span>Foto del Producto</span>
                 </h3>
 
                 <div className="w-full aspect-square max-h-48 sm:max-h-56 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center p-3 relative overflow-hidden group mx-auto">
@@ -816,15 +926,34 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                   className="w-full py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer active:scale-95"
                 >
                   <Upload className="w-4 h-4 text-[#FF5200]" />
-                  <span>{imagePreview ? 'Cambiar Imagen' : 'Subir Imagen'}</span>
+                  <span>{imagePreview ? 'Cambiar Imagen (Archivo)' : 'Subir Imagen (Archivo)'}</span>
                 </button>
+
+                {/* Direct Image URL input */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    O URL / Ruta de Imagen
+                  </label>
+                  <input
+                    type="text"
+                    value={formImageUrl}
+                    onChange={(e) => {
+                      setFormImageUrl(e.target.value);
+                      if (!selectedImageFile) {
+                        setImagePreview(e.target.value || null);
+                      }
+                    }}
+                    placeholder="/productos/nombre-imagen.jpeg"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono text-[#061F3D] focus:outline-none focus:border-[#FF5200]"
+                  />
+                </div>
               </div>
 
               {/* Card 3: Stock & Availability */}
               <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-2xs space-y-3.5">
                 <h3 className="text-xs sm:text-sm font-black text-[#061F3D] uppercase tracking-wider flex items-center space-x-2">
                   <span className="w-2 h-2 rounded-full bg-[#FF5200]" />
-                  <span>Inventario</span>
+                  <span>Inventario y Visibilidad</span>
                 </h3>
 
                 <div>
@@ -873,10 +1002,29 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                   </button>
                 </div>
 
+                {/* Featured in Home Switch */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    Destacado en Portada
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setFormFeatured(!formFeatured)}
+                    className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all cursor-pointer border active:scale-95 ${
+                      formFeatured
+                        ? 'bg-amber-50 text-amber-800 border-amber-200 shadow-xs'
+                        : 'bg-slate-50 text-slate-600 border-slate-200'
+                    }`}
+                  >
+                    <Star className={`w-4 h-4 ${formFeatured ? 'text-amber-500 fill-amber-500' : 'text-slate-400'}`} />
+                    <span>{formFeatured ? '★ Destacado en Inicio' : '☆ Producto Normal'}</span>
+                  </button>
+                </div>
+
                 {/* SKU Code */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                    Código SKU (Opcional)
+                    Código SKU
                   </label>
                   <input
                     type="text"

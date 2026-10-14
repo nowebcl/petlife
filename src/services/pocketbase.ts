@@ -106,14 +106,24 @@ export function mapRecordToProduct(r: PocketBaseProductRecord): Product {
     name: r.name,
     brand: r.brand || '',
     category: r.category || 'perros',
-    categoryLabel: r.categoryLabel || 'Alimentos Perros',
-    petType: r.petType || 'perro',
+    categoryLabel:
+      r.categoryLabel ||
+      (r.category === 'gatos'
+        ? 'Alimentos Gatos'
+        : r.category === 'higiene'
+        ? 'Arenas & Higiene'
+        : r.category === 'snacks'
+        ? 'Snacks & Premios'
+        : r.category === 'accesorios'
+        ? 'Accesorios'
+        : 'Alimentos Perros'),
+    petType: r.petType || (r.category === 'gatos' ? 'gato' : 'perro'),
     lifeStage: r.lifeStage || 'adulto',
     price: Number(r.price) || 0,
     rating: Number(r.rating) || 4.8,
     reviewsCount: Number(r.reviewsCount) || 10,
     weightOrSize: r.weightOrSize || '',
-    icon: r.petType === 'gato' ? '🐱' : '🐕',
+    icon: r.petType === 'gato' || r.category === 'gatos' ? '🐱' : '🐕',
     bgGradient:
       r.category === 'gatos'
         ? 'from-purple-500/10 to-pink-500/10 text-purple-600'
@@ -121,13 +131,17 @@ export function mapRecordToProduct(r: PocketBaseProductRecord): Product {
         ? 'from-cyan-500/10 to-blue-500/10 text-cyan-600'
         : 'from-amber-500/10 to-orange-500/10 text-orange-600',
     description: r.description || '',
-    longDescription: r.longDescription || '',
+    longDescription: r.longDescription || r.description || '',
     imageUrl: resolvedImage,
     galleryImages: [resolvedImage],
-    inStock: r.inStock !== false && (Number(r.stockCount) > 0 || r.stockCount === undefined),
+    inStock: r.inStock !== false && (r.stockCount === undefined || r.stockCount === null || Number(r.stockCount) > 0),
     stockCount: Number(r.stockCount) || 0,
     sku: r.sku || '',
-    benefits: benefitsList.length > 0 ? benefitsList : ['Excelente calidad garantizada', 'Nutrición óptima'],
+    featured: Boolean(r.featured),
+    benefits:
+      benefitsList.length > 0
+        ? benefitsList
+        : ['Excelente calidad garantizada', 'Nutrición óptima'],
   };
 }
 
@@ -137,13 +151,40 @@ export function mapRecordToProduct(r: PocketBaseProductRecord): Product {
  */
 export async function fetchAllProducts(): Promise<Product[]> {
   try {
-    const res = await fetch(`${POCKETBASE_URL}/api/collections/products/records?perPage=200&sort=-created`);
+    const timestamp = Date.now();
+    // Consulta directa a PocketBase con cache-busting real para evitar datos en caché
+    let res = await fetch(
+      `${POCKETBASE_URL}/api/collections/products/records?perPage=200&sort=-id&_t=${timestamp}`,
+      {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+        },
+      }
+    );
+
+    // Si sort=-id no responde 200, intentar sin sort
+    if (!res.ok) {
+      res = await fetch(
+        `${POCKETBASE_URL}/api/collections/products/records?perPage=200&_t=${timestamp}`,
+        {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            Pragma: 'no-cache',
+          },
+        }
+      );
+    }
+
     if (!res.ok) {
       console.warn(`PocketBase returned ${res.status}, using local fallback.`);
       return PRODUCTS_DATABASE;
     }
+
     const data = await res.json();
-    if (data.items && data.items.length > 0) {
+    if (data.items && Array.isArray(data.items) && data.items.length > 0) {
       return data.items.map(mapRecordToProduct);
     }
     return PRODUCTS_DATABASE;
@@ -218,13 +259,14 @@ export async function verifyAdminSession(): Promise<boolean> {
  * Helper para buscar el ID real de PocketBase si se tiene un ID local provisional (prod-X)
  */
 async function findRealPocketBaseId(id: string, token: string, sku?: string, name?: string): Promise<string> {
-  if (!id.startsWith('prod-') && id.length >= 15) return id;
+  if (!id.startsWith('prod-') && id.length >= 10) return id;
   if (!sku && !name) return id;
 
   try {
     const filter = sku ? `sku='${sku}'` : `name='${encodeURIComponent(name || '')}'`;
-    const res = await fetch(`${POCKETBASE_URL}/api/collections/products/records?filter=(${filter})&perPage=1`, {
-      headers: { Authorization: token },
+    const res = await fetch(`${POCKETBASE_URL}/api/collections/products/records?filter=(${filter})&perPage=1&_t=${Date.now()}`, {
+      headers: { Authorization: token, 'Cache-Control': 'no-cache' },
+      cache: 'no-store',
     });
     if (res.ok) {
       const data = await res.json();
@@ -291,22 +333,26 @@ export async function adminLogin(
  */
 
 /**
- * Crear un nuevo producto en PocketBase con subida de imagen
+ * Crear un nuevo producto en PocketBase con subida de imagen o JSON
  */
 export async function adminCreateProduct(
-  formData: FormData
+  payload: FormData | Record<string, any>
 ): Promise<{ success: boolean; data?: any; error?: string }> {
   const token = getAdminToken();
   if (!token) return { success: false, error: 'No autorizado. Por favor inicia sesión.' };
 
   try {
+    const isFormData = payload instanceof FormData;
+    const headers: Record<string, string> = { Authorization: token };
+    if (!isFormData) headers['Content-Type'] = 'application/json';
+
     const res = await fetch(`${POCKETBASE_URL}/api/collections/products/records`, {
       method: 'POST',
-      headers: { Authorization: token },
-      body: formData,
+      headers,
+      body: isFormData ? payload : JSON.stringify(payload),
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     if (res.ok) {
       return { success: true, data };
     }
@@ -383,9 +429,9 @@ export async function adminUpdateStock(
   if (!token) return { success: false, error: 'No autorizado. Inicia sesión como administrador.' };
 
   try {
-    const body: Record<string, any> = { stockCount };
-    if (inStock !== undefined) body.inStock = inStock;
-    else body.inStock = stockCount > 0;
+    const body: Record<string, any> = { stockCount: Number(stockCount) };
+    if (inStock !== undefined) body.inStock = Boolean(inStock);
+    else body.inStock = Number(stockCount) > 0;
 
     let targetId = await findRealPocketBaseId(id, token, sku, name);
 

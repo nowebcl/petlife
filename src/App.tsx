@@ -69,6 +69,13 @@ export default function App() {
       const live = await fetchAllProducts();
       if (live && live.length > 0) {
         setProducts(live);
+        setSelectedProduct((prev) => (prev ? live.find((p) => p.id === prev.id) || prev : null));
+        setCartItems((prevItems) =>
+          prevItems.map((item) => {
+            const updated = live.find((p) => p.id === item.product.id);
+            return updated ? { ...item, product: updated } : item;
+          })
+        );
       }
     } catch (err) {
       console.error('Error fetching live products from PocketBase:', err);
