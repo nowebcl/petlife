@@ -107,9 +107,13 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                 <img
                   src={selectedImage}
                   alt={product.name}
+                  fetchPriority="high"
+                  decoding="sync"
                   className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                   onError={(e) => {
-                    e.currentTarget.src = product.imageUrl;
+                    if (e.currentTarget.dataset.failed) return;
+                    e.currentTarget.dataset.failed = 'true';
+                    e.currentTarget.src = '/product-dog-food.webp';
                   }}
                 />
 
@@ -140,7 +144,18 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                           : 'border-slate-200/80 hover:border-slate-300 opacity-75 hover:opacity-100'
                       }`}
                     >
-                      <img src={img} alt="" className="w-full h-full object-contain" />
+                      <img
+                        src={img}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          if (e.currentTarget.dataset.failed) return;
+                          e.currentTarget.dataset.failed = 'true';
+                          e.currentTarget.src = '/product-dog-food.webp';
+                        }}
+                      />
                     </button>
                   ))}
                 </div>
@@ -567,7 +582,14 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                       <img
                         src={rel.imageUrl}
                         alt={rel.name}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                        onError={(e) => {
+                          if (e.currentTarget.dataset.failed) return;
+                          e.currentTarget.dataset.failed = 'true';
+                          e.currentTarget.src = '/product-dog-food.webp';
+                        }}
                       />
                     </div>
                     <span className="text-[10px] font-bold text-[#FF5200] uppercase tracking-wider block">

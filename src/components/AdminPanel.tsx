@@ -288,16 +288,69 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Handle Image File Selection
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+/**
+ * Ingestion Time WebP Compression (Client-Side Canvas)
+ * Convierte cualquier foto seleccionada por el admin (ej: fotos de 5-10 MB de celular)
+ * a WebP optimizado de 40-70 KB antes de enviarla a PocketBase.
+ */
+async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.82): Promise<File> {
+  if (!file || !file.type.startsWith('image/')) return file;
+  if (file.type === 'image/webp' && file.size < 100 * 1024) return file;
+
+  return new Promise((resolve) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      let { width, height } = img;
+
+      if (width > maxDimension || height > maxDimension) {
+        if (width > height) {
+          height = Math.round((height * maxDimension) / width);
+          width = maxDimension;
+        } else {
+          width = Math.round((width * maxDimension) / height);
+          height = maxDimension;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return resolve(file);
+
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob((blob) => {
+        if (!blob) return resolve(file);
+        const cleanName = file.name.replace(/\.[^/.]+$/, '') + '.webp';
+        const optimizedFile = new File([blob], cleanName, { type: 'image/webp' });
+        resolve(optimizedFile);
+      }, 'image/webp', quality);
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(file);
+    };
+
+    img.src = objectUrl;
+  });
+}
+
+  // Handle Image File Selection with Ingestion-Time WebP Compression
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedImageFile(file);
+      const optimized = await compressImageToWebP(file);
+      setSelectedImageFile(optimized);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(optimized);
     }
   };
 
@@ -1473,9 +1526,13 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                         <img
                           src={p.imageUrl}
                           alt={p.name}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-contain"
                           onError={(e) => {
-                            e.currentTarget.src = '/product-dog-food.jpg';
+                            if (e.currentTarget.dataset.failed) return;
+                            e.currentTarget.dataset.failed = 'true';
+                            e.currentTarget.src = '/product-dog-food.webp';
                           }}
                         />
                       </div>
@@ -1570,9 +1627,13 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                               <img
                                 src={p.imageUrl}
                                 alt={p.name}
+                                loading="lazy"
+                                decoding="async"
                                 className="w-full h-full object-contain"
                                 onError={(e) => {
-                                  e.currentTarget.src = '/product-dog-food.jpg';
+                                  if (e.currentTarget.dataset.failed) return;
+                                  e.currentTarget.dataset.failed = 'true';
+                                  e.currentTarget.src = '/product-dog-food.webp';
                                 }}
                               />
                             </div>

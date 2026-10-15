@@ -552,7 +552,7 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
             ) : viewMode === 'grid' ? (
               /* GRID VIEW */
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
-                {currentProducts.map((product) => {
+                {currentProducts.map((product, index) => {
                   const isAdded = addedIds[product.id];
                   const isFav = favoriteIds[product.id];
 
@@ -568,10 +568,14 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                           <img
                             src={product.imageUrl}
                             alt={product.name}
-                            loading="lazy"
+                            loading={index < 4 ? 'eager' : 'lazy'}
+                            fetchPriority={index < 2 ? 'high' : 'auto'}
+                            decoding={index < 4 ? 'sync' : 'async'}
                             className="w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300"
                             onError={(e) => {
-                              e.currentTarget.src = '/product-dog-food.jpg';
+                              if (e.currentTarget.dataset.failed) return;
+                              e.currentTarget.dataset.failed = 'true';
+                              e.currentTarget.src = '/product-dog-food.webp';
                             }}
                           />
 
@@ -653,7 +657,7 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
             ) : (
               /* LIST VIEW */
               <div className="space-y-3.5">
-                {currentProducts.map((product) => {
+                {currentProducts.map((product, index) => {
                   const isAdded = addedIds[product.id];
                   const isFav = favoriteIds[product.id];
 
@@ -667,7 +671,15 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                         <img
                           src={product.imageUrl}
                           alt={product.name}
+                          loading={index < 4 ? 'eager' : 'lazy'}
+                          fetchPriority={index < 2 ? 'high' : 'auto'}
+                          decoding={index < 4 ? 'sync' : 'async'}
                           className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                          onError={(e) => {
+                            if (e.currentTarget.dataset.failed) return;
+                            e.currentTarget.dataset.failed = 'true';
+                            e.currentTarget.src = '/product-dog-food.webp';
+                          }}
                         />
                         <button
                           onClick={(e) => {

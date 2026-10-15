@@ -69,19 +69,50 @@ const ADMIN_EMAIL_KEY = 'petlife_pb_admin_email';
 /**
  * Obtener URL de imagen optimizada de PocketBase o URL local de respaldo
  */
+/**
+ * Obtener URL de imagen optimizada de PocketBase o URL local de respaldo
+ * Prioriza WebP local de alta velocidad (10-30 KB) para evitar el cuello de botella de 6 conexiones HTTP
+ */
 export function getProductImageUrl(p: {
   image?: string;
   collectionId?: string;
   id?: string;
   imageUrl?: string;
 }): string {
+  // 1. Si existe URL local en /productos/, servir el WebP ultra-ligero
+  if (p.imageUrl && p.imageUrl.trim()) {
+    const clean = p.imageUrl.trim();
+    if (clean.startsWith('/productos/')) {
+      return clean.replace(/\.(jpeg|jpg|png)$/i, '.webp');
+    }
+    return clean;
+  }
+  // 2. Si fue subida directamente en PocketBase (productos creados por admin)
   if (p.image && p.collectionId && p.id) {
     return `${POCKETBASE_URL}/api/files/${p.collectionId}/${p.id}/${p.image}`;
   }
-  if (p.imageUrl && p.imageUrl.trim()) {
-    return p.imageUrl;
+  return '/product-dog-food.webp';
+}
+
+/**
+ * Resuelve URLs de micro-miniaturas de alta velocidad para PocketBase o fuentes directas
+ */
+export function getOptimizedThumbUrl(url: string, thumbSize: '100x100' | '300x300' | '500x500' = '300x300'): string {
+  if (!url || typeof url !== 'string') return '/product-dog-food.webp';
+
+  // Si es un archivo subido en PocketBase
+  if (url.includes('/api/files/')) {
+    if (url.includes('thumb=')) return url;
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}thumb=${thumbSize}`;
   }
-  return '/product-dog-food.jpg';
+
+  // Si es imagen local en /productos/, asegurar extensión .webp
+  if (url.startsWith('/productos/')) {
+    return url.replace(/\.(jpeg|jpg|png)$/i, '.webp');
+  }
+
+  return url;
 }
 
 /**

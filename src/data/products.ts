@@ -82,9 +82,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Alimento completo y balanceado con carne de vacuno de alta digestibilidad para perros adultos de todas las razas.",
     "longDescription": "Alaska Adulto Carne de Vacuno ofrece un perfil de aminoácidos completo que promueve una masa muscular magra y articulaciones protegidas. Enriquecido con vitaminas esenciales y ácidos grasos Omega para una piel sana y pelaje brillante.",
-    "imageUrl": "/productos/Alaska Adulto Todas las Razas Carne de Vacuno.jpeg",
+    "imageUrl": "/productos/Alaska Adulto Todas las Razas Carne de Vacuno.webp",
     "galleryImages": [
-      "/productos/Alaska Adulto Todas las Razas Carne de Vacuno.jpeg"
+      "/productos/Alaska Adulto Todas las Razas Carne de Vacuno.webp"
     ],
     "inStock": true,
     "stockCount": 29,
@@ -177,9 +177,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
     "description": "Arena sanitaria aglutinante instantánea sin fragancia, 99.9% libre de polvo y con control superior de olores.",
     "longDescription": "Americalitter Quick Clumping forma terrones firmes en segundos al contacto con líquidos, permitiendo retirar los residuos fácilmente sin desmoronarse. Ideal para hogares con múltiples gatos y dueños sensibles a perfumes.",
-    "imageUrl": "/productos/Americalitter Quick Clumping Cat Litter Unscented.jpeg",
+    "imageUrl": "/productos/Americalitter Quick Clumping Cat Litter Unscented.webp",
     "galleryImages": [
-      "/productos/Americalitter Quick Clumping Cat Litter Unscented.jpeg"
+      "/productos/Americalitter Quick Clumping Cat Litter Unscented.webp"
     ],
     "inStock": true,
     "stockCount": 38,
@@ -268,9 +268,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Croquetas de tamaño pequeño con salsa especial instantánea al añadir agua tibia para perros exigentes.",
     "longDescription": "Elaborado en Alemania con ingredientes holísticos de la más alta calidad, Belcando Finest Croc Mini combina carne fresca de ave y pato con semillas de chía y harina de semilla de uva prensada en frío para una vitalidad inigualable.",
-    "imageUrl": "/productos/Belcando Finest Croc Mini Adult XS-M.jpeg",
+    "imageUrl": "/productos/Belcando Finest Croc Mini Adult XS-M.webp",
     "galleryImages": [
-      "/productos/Belcando Finest Croc Mini Adult XS-M.jpeg"
+      "/productos/Belcando Finest Croc Mini Adult XS-M.webp"
     ],
     "inStock": true,
     "stockCount": 25,
@@ -370,9 +370,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Nutrición mono-proteica 100% libre de granos elaborada con pollo deshidratado para gatos con digestión delicada.",
     "longDescription": "Bravery Chicken Adult Cat es un alimento super premium español formulado con pollo como única fuente de proteína animal. Libre de cereales (Grain Free) y 100% hipoalergénico con tapioca y levadura de cerveza para un sistema inmune invencible.",
-    "imageUrl": "/productos/Bravery Chicken Adult Cat 7kg.jpeg",
+    "imageUrl": "/productos/Bravery Chicken Adult Cat 7kg.webp",
     "galleryImages": [
-      "/productos/Bravery Chicken Adult Cat 7kg.jpeg"
+      "/productos/Bravery Chicken Adult Cat 7kg.webp"
     ],
     "inStock": true,
     "stockCount": 37,
@@ -465,9 +465,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Fórmula ultra digestible libre de granos para gatitos en crecimiento con alto contenido de DHA y calcio.",
     "longDescription": "Especialmente balanceado para el crecimiento acelerado de gatitos desde el destete hasta los 12 meses de edad. Proporciona energía concentrada, refuerzo óseo y desarrollo cerebral con ácidos grasos esenciales EPA y DHA.",
-    "imageUrl": "/productos/Bravery Chicken Kitten 2kg.jpeg",
+    "imageUrl": "/productos/Bravery Chicken Kitten 2kg.webp",
     "galleryImages": [
-      "/productos/Bravery Chicken Kitten 2kg.jpeg"
+      "/productos/Bravery Chicken Kitten 2kg.webp"
     ],
     "inStock": true,
     "stockCount": 24,
@@ -560,9 +560,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Alimento grain-free con arenque salvaje como única proteína, condroprotectores y omegas para razas medianas y grandes.",
     "longDescription": "Elaborado con arenque capturado responsablemente, este alimento mono-proteico sin cereales es el más recomendado por veterinarios para perros con dermatitis alérgica o estómagos ultra sensibles.",
-    "imageUrl": "/productos/Bravery Herring Adult Large Medium Breeds 12kg.jpeg",
+    "imageUrl": "/productos/Bravery Herring Adult Large Medium Breeds 12kg.webp",
     "galleryImages": [
-      "/productos/Bravery Herring Adult Large Medium Breeds 12kg.jpeg"
+      "/productos/Bravery Herring Adult Large Medium Breeds 12kg.webp"
     ],
     "inStock": true,
     "stockCount": 20,
@@ -657,9 +657,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Nutrición especializada para perros senior mayores de 7 años, baja en fósforo y con soporte articular y cognitivo.",
     "longDescription": "Formulado para proteger los órganos vitales en la vejez: cuida los riñones mediante un control estricto de fósforo, estimula la agilidad articular y mantiene la masa muscular sin acumular grasa excesiva.",
-    "imageUrl": "/productos/Bravery Herring Senior Large Medium Breeds +7 Years 12kg.jpeg",
+    "imageUrl": "/productos/Bravery Herring Senior Large Medium Breeds +7 Years 12kg.webp",
     "galleryImages": [
-      "/productos/Bravery Herring Senior Large Medium Breeds +7 Years 12kg.jpeg"
+      "/productos/Bravery Herring Senior Large Medium Breeds +7 Years 12kg.webp"
     ],
     "inStock": true,
     "stockCount": 34,
@@ -753,9 +753,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Receta sin cereales a base de salmón del Atlántico rica en ácidos grasos Omega-3 para piel saludable y pelaje radiante.",
     "longDescription": "El alimento favorito de los felinos con paladares exigentes. Rico en salmón deshidratado, previene la formación de cálculos de estruvita mediante un pH urinario controlado entre 6.0 y 6.5.",
-    "imageUrl": "/productos/Bravery Salmon Adult Cat 7kg.jpeg",
+    "imageUrl": "/productos/Bravery Salmon Adult Cat 7kg.webp",
     "galleryImages": [
-      "/productos/Bravery Salmon Adult Cat 7kg.jpeg"
+      "/productos/Bravery Salmon Adult Cat 7kg.webp"
     ],
     "inStock": true,
     "stockCount": 36,
@@ -848,9 +848,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
     "description": "Arena sanitaria aglomerante de bentonita natural con carbón activo para una máxima absorción y bloqueo de olores.",
     "longDescription": "El poder del carbón activado atrapa las moléculas de amoníaco antes de que se evaporen al ambiente. Su granulometría seleccionada evita el arrastre de piedrecitas fuera del arenero.",
-    "imageUrl": "/productos/Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg.jpeg",
+    "imageUrl": "/productos/Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg.webp",
     "galleryImages": [
-      "/productos/Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg.jpeg"
+      "/productos/Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg.webp"
     ],
     "inStock": true,
     "stockCount": 29,
@@ -933,9 +933,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Nutrición holística con pollo de libre pastoreo y arroz integral, diseñada para gatos que viven en el hogar.",
     "longDescription": "Proporciona niveles óptimos de calorías y fibra dietética para gatos sedentarios de interior. Contiene superalimentos como col rizada, arándanos y chía combinados con probióticos K9 Strain activos garantizados.",
-    "imageUrl": "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.jpeg",
+    "imageUrl": "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.webp",
     "galleryImages": [
-      "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.jpeg"
+      "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.webp"
     ],
     "inStock": true,
     "stockCount": 19,
@@ -1029,9 +1029,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Formato práctico de 2.7 kg con pollo, arroz y superalimentos para gatos de departamento.",
     "longDescription": "La presentación ideal para mantener el alimento fresco y crujiente en cada ración. Contiene taurina esencial, ácidos grasos Omega y cero subproductos de maíz o trigo.",
-    "imageUrl": "/productos/Diamond Naturals Indoor Cat Chicken and Rice.jpeg",
+    "imageUrl": "/productos/Diamond Naturals Indoor Cat Chicken and Rice.webp",
     "galleryImages": [
-      "/productos/Diamond Naturals Indoor Cat Chicken and Rice.jpeg"
+      "/productos/Diamond Naturals Indoor Cat Chicken and Rice.webp"
     ],
     "inStock": true,
     "stockCount": 38,
@@ -1117,9 +1117,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
     "description": "Sabanillas higiénicas ultra absorbentes de 60x60 cm con polímero bloqueador de líquidos para adiestramiento.",
     "longDescription": "Tecnología de 5 capas de protección con núcleo de polímero que convierte la orina en gel en segundos. Base de polietileno impermeable con bordes anti-desborde para mantener pisos impecables.",
-    "imageUrl": "/productos/DuoMai Super Absorbent Puppy Pads 60x60cm 24 pcs.jpeg",
+    "imageUrl": "/productos/DuoMai Super Absorbent Puppy Pads 60x60cm 24 pcs.webp",
     "galleryImages": [
-      "/productos/DuoMai Super Absorbent Puppy Pads 60x60cm 24 pcs.jpeg"
+      "/productos/DuoMai Super Absorbent Puppy Pads 60x60cm 24 pcs.webp"
     ],
     "inStock": true,
     "stockCount": 23,
@@ -1210,9 +1210,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
     "description": "Tapetes absorbentes con carbón vegetal de bambú que oculta manchas amarillas y neutraliza olores de pipí.",
     "longDescription": "El carbón de bambú activado proporciona una apariencia limpia de color negro que disimula las manchas visuales y neutraliza el fuerte olor a amoníaco. Tamaño ideal para razas pequeñas y transportadoras.",
-    "imageUrl": "/productos/DuoMai Super Absorbent Puppy Pads Bamboo Charcoal 33x45cm 12 pcs.jpeg",
+    "imageUrl": "/productos/DuoMai Super Absorbent Puppy Pads Bamboo Charcoal 33x45cm 12 pcs.webp",
     "galleryImages": [
-      "/productos/DuoMai Super Absorbent Puppy Pads Bamboo Charcoal 33x45cm 12 pcs.jpeg"
+      "/productos/DuoMai Super Absorbent Puppy Pads Bamboo Charcoal 33x45cm 12 pcs.webp"
     ],
     "inStock": true,
     "stockCount": 37,
@@ -1296,9 +1296,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Alimento completo desarrollado para cubrir todas las necesidades nutricionales de perros adultos con gran palatabilidad.",
     "longDescription": "Desarrollado en Chile por médicos veterinarios, Fit Formula Adulto aporta proteínas de alta calidad, vitaminas del complejo B y minerales quelados para una condición física atlética y activa.",
-    "imageUrl": "/productos/Fit Formula Perro Adulto 20kg.jpeg",
+    "imageUrl": "/productos/Fit Formula Perro Adulto 20kg.webp",
     "galleryImages": [
-      "/productos/Fit Formula Perro Adulto 20kg.jpeg"
+      "/productos/Fit Formula Perro Adulto 20kg.webp"
     ],
     "inStock": true,
     "stockCount": 23,
@@ -1384,9 +1384,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-emerald-500/10 to-teal-500/10 text-emerald-600",
     "description": "Mix balanceado de heno, cereales y vegetales deshidratados con vitamina C estabilizada para conejos y cobayos.",
     "longDescription": "Nutrición rica en fibras largas que favorece el desgaste dental fisiológico y la motilidad digestiva. Aporta vitamina C esencial no sintetizable por los cobayos para prevenir el escorbuto.",
-    "imageUrl": "/productos/Happypets Healthy Rodents Conejos y Cuyes 500g.jpeg",
+    "imageUrl": "/productos/Happypets Healthy Rodents Conejos y Cuyes 500g.webp",
     "galleryImages": [
-      "/productos/Happypets Healthy Rodents Conejos y Cuyes 500g.jpeg"
+      "/productos/Happypets Healthy Rodents Conejos y Cuyes 500g.webp"
     ],
     "inStock": true,
     "stockCount": 17,
@@ -1472,9 +1472,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-emerald-500/10 to-teal-500/10 text-emerald-600",
     "description": "Mezcla seleccionada de semillas, frutos secos y pellets de alfalfa para hámsters, ardillas y cuyes activos.",
     "longDescription": "Variedad de texturas y semillas crujientes que estimulan el forrajeo natural y previenen el estrés en roedores pequeños. 100% natural, sin conservantes químicos.",
-    "imageUrl": "/productos/Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g.jpeg",
+    "imageUrl": "/productos/Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g.webp",
     "galleryImages": [
-      "/productos/Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g.jpeg"
+      "/productos/Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g.webp"
     ],
     "inStock": true,
     "stockCount": 28,
@@ -1560,9 +1560,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Nutrición alemana super premium elaborada con carne fresca de pato y chía para gatos sibaritas.",
     "longDescription": "Leonardo Adult Duck combina carne fresca de pato con malta natural para expulsar bolas de pelo con facilidad. Fortalece el sistema inmunitario mediante ProVital a base de beta-glucanos naturales.",
-    "imageUrl": "/productos/Leonardo Adult Duck Cat Food.jpeg",
+    "imageUrl": "/productos/Leonardo Adult Duck Cat Food.webp",
     "galleryImages": [
-      "/productos/Leonardo Adult Duck Cat Food.jpeg"
+      "/productos/Leonardo Adult Duck Cat Food.webp"
     ],
     "inStock": true,
     "stockCount": 33,
@@ -1655,9 +1655,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
     "description": "Arena sanitaria aglutinante con micro-cápsulas de lavanda que liberan frescura al contacto con las patitas.",
     "longDescription": "Bentonita sódica aglomerante que neutraliza de inmediato los fuertes olores de orina. Forma esferas duras que se retiran sin ensuciar la bandeja sanitaria.",
-    "imageUrl": "/productos/Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg.jpeg",
+    "imageUrl": "/productos/Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg.webp",
     "galleryImages": [
-      "/productos/Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg.jpeg"
+      "/productos/Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg.webp"
     ],
     "inStock": true,
     "stockCount": 24,
@@ -1740,9 +1740,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Alimento con extracto de quillay, omegas y proteínas de alto valor biológico para perros medianos y grandes.",
     "longDescription": "Nomade es reconocido en todo Chile por su óptima asimilación digestiva y su aporte de saponinas naturales de Quillay que reducen drásticamente el olor de las deposiciones.",
-    "imageUrl": "/productos/Nomade Adulto Razas Medianas y Grandes 20kg.jpeg",
+    "imageUrl": "/productos/Nomade Adulto Razas Medianas y Grandes 20kg.webp",
     "galleryImages": [
-      "/productos/Nomade Adulto Razas Medianas y Grandes 20kg.jpeg"
+      "/productos/Nomade Adulto Razas Medianas y Grandes 20kg.webp"
     ],
     "inStock": true,
     "stockCount": 37,
@@ -1828,9 +1828,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
     "description": "Bentonita sódica de máxima calidad con esferas de aglutinación rápida y duradera que facilitan la limpieza.",
     "longDescription": "Su tecnología aglomerante avanzada encapsula los líquidos al instante, impidiendo que el fondo de la bandeja se moje y prolongando la vida útil del arenero.",
-    "imageUrl": "/productos/Nomade Arena Sanitaria Extra Poder Aglutinante 10kg.jpeg",
+    "imageUrl": "/productos/Nomade Arena Sanitaria Extra Poder Aglutinante 10kg.webp",
     "galleryImages": [
-      "/productos/Nomade Arena Sanitaria Extra Poder Aglutinante 10kg.jpeg"
+      "/productos/Nomade Arena Sanitaria Extra Poder Aglutinante 10kg.webp"
     ],
     "inStock": true,
     "stockCount": 24,
@@ -1912,9 +1912,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Combinación balanceada de carnes, pescado y taurina esencial para la salud cardíaca y visual de gatos adultos.",
     "longDescription": "Un alimento completo con sabor irresistible para felinos. Diseñado para mantener el tracto urinario despejado y sano con un control adecuado de minerales y cenizas.",
-    "imageUrl": "/productos/Nomade Gato Adulto Mix Proteico 10kg.jpeg",
+    "imageUrl": "/productos/Nomade Gato Adulto Mix Proteico 10kg.webp",
     "galleryImages": [
-      "/productos/Nomade Gato Adulto Mix Proteico 10kg.jpeg"
+      "/productos/Nomade Gato Adulto Mix Proteico 10kg.webp"
     ],
     "inStock": true,
     "stockCount": 16,
@@ -2000,9 +2000,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Nutrición con probióticos activos, pulpa de remolacha y control de pH urinario para gatos hogareños.",
     "longDescription": "Alimento premium formulado con ingredientes seleccionados para apoyar las defensas naturales y brindar un pelaje brillante a gatos adultos de interior y exterior.",
-    "imageUrl": "/productos/Pampa Premium Total Protection Gatos Adultos 2.jpeg",
+    "imageUrl": "/productos/Pampa Premium Total Protection Gatos Adultos 2.webp",
     "galleryImages": [
-      "/productos/Pampa Premium Total Protection Gatos Adultos 2.jpeg"
+      "/productos/Pampa Premium Total Protection Gatos Adultos 2.webp"
     ],
     "inStock": true,
     "stockCount": 28,
@@ -2088,9 +2088,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Formato económico de 15 kg para hogares con múltiples gatos, con protección inmunológica y renal.",
     "longDescription": "La opción más conveniente para alimentar a varios felinos manteniendo una nutrición balanceada y de calidad garantizada durante meses.",
-    "imageUrl": "/productos/Pampa Premium Total Protection Gatos Adultos.jpeg",
+    "imageUrl": "/productos/Pampa Premium Total Protection Gatos Adultos.webp",
     "galleryImages": [
-      "/productos/Pampa Premium Total Protection Gatos Adultos.jpeg"
+      "/productos/Pampa Premium Total Protection Gatos Adultos.webp"
     ],
     "inStock": true,
     "stockCount": 32,
@@ -2176,9 +2176,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Con tecnología Defense Plus, antioxidantes y rico sabor a pescado para proteger la vitalidad de tu gato.",
     "longDescription": "Cat Chow Pescado está formulado con fuentes naturales de fibra, antioxidantes y vitaminas que fortalecen el sistema inmunológico y protegen el tracto urinario de los felinos.",
-    "imageUrl": "/productos/Purina Cat Chow Adultos Pescado.jpeg",
+    "imageUrl": "/productos/Purina Cat Chow Adultos Pescado.webp",
     "galleryImages": [
-      "/productos/Purina Cat Chow Adultos Pescado.jpeg"
+      "/productos/Purina Cat Chow Adultos Pescado.webp"
     ],
     "inStock": true,
     "stockCount": 27,
@@ -2271,9 +2271,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Nutrición superior con carne real de pollo y salmón como ingredientes #1 para energía y digestión en 28 días.",
     "longDescription": "Purina ONE combina ingredientes naturales con croquetas crujientes y tiernas que producen cambios visibles en la salud de tu gato en solo 28 días: mayor energía, ojos brillantes y pelaje sedoso.",
-    "imageUrl": "/productos/Purina One Adultos Pollo y Salmon 2kg.jpeg",
+    "imageUrl": "/productos/Purina One Adultos Pollo y Salmon 2kg.webp",
     "galleryImages": [
-      "/productos/Purina One Adultos Pollo y Salmon 2kg.jpeg"
+      "/productos/Purina One Adultos Pollo y Salmon 2kg.webp"
     ],
     "inStock": true,
     "stockCount": 22,
@@ -2360,9 +2360,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Combinación crujiente de croquetas y bocados tiernos de pollo y cordero para músculos fuertes y articulaciones.",
     "longDescription": "Fórmula de nutrición avanzada con carne real como primer ingrediente. Diseñada para mantener el peso ideal y la masa muscular en perros de razas medianas y grandes.",
-    "imageUrl": "/productos/Purina One Perros Adultos Medianos y Grandes Pollo y Cordero.jpeg",
+    "imageUrl": "/productos/Purina One Perros Adultos Medianos y Grandes Pollo y Cordero.webp",
     "galleryImages": [
-      "/productos/Purina One Perros Adultos Medianos y Grandes Pollo y Cordero.jpeg"
+      "/productos/Purina One Perros Adultos Medianos y Grandes Pollo y Cordero.webp"
     ],
     "inStock": true,
     "stockCount": 25,
@@ -2455,9 +2455,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Bocados de tamaño adaptado a mandíbulas pequeñas con pollo y cordero para un metabolismo acelerado y activo.",
     "longDescription": "Los perros minis queman energía más rápidamente. Esta receta concentra nutrientes y calorías precisas en croquetas pequeñas que cuidan sus dientes y satisfacen su apetito exigente.",
-    "imageUrl": "/productos/Purina One Perros Adultos Minis y Pequenos Pollo y Cordero.jpeg",
+    "imageUrl": "/productos/Purina One Perros Adultos Minis y Pequenos Pollo y Cordero.webp",
     "galleryImages": [
-      "/productos/Purina One Perros Adultos Minis y Pequenos Pollo y Cordero.jpeg"
+      "/productos/Purina One Perros Adultos Minis y Pequenos Pollo y Cordero.webp"
     ],
     "inStock": true,
     "stockCount": 25,
@@ -2550,9 +2550,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Nutrición médica veterinaria con prebióticos naturales que optimizan la digestión y refuerzan las defensas.",
     "longDescription": "Purina Pro Plan con Optiprebio incluye una mezcla exclusiva de prebióticos naturales que estabilizan la microflora intestinal, optimizan la absorción de nutrientes y protegen el tracto urinario felino.",
-    "imageUrl": "/productos/Purina Pro Plan Adult Gatos Optiprebio.jpeg",
+    "imageUrl": "/productos/Purina Pro Plan Adult Gatos Optiprebio.webp",
     "galleryImages": [
-      "/productos/Purina Pro Plan Adult Gatos Optiprebio.jpeg"
+      "/productos/Purina Pro Plan Adult Gatos Optiprebio.webp"
     ],
     "inStock": true,
     "stockCount": 33,
@@ -2645,9 +2645,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Formulado con calostro materno, anticuerpos naturales y DHA para un crecimiento y cerebro óptimos en gatitos.",
     "longDescription": "Optistart con calostro vacuno extiende la ventana de inmunidad materna tras el destete, estimulando las defensas naturales y promoviendo huesos y músculos fuertes.",
-    "imageUrl": "/productos/Purina Pro Plan Kitten Optistart.jpeg",
+    "imageUrl": "/productos/Purina Pro Plan Kitten Optistart.webp",
     "galleryImages": [
-      "/productos/Purina Pro Plan Kitten Optistart.jpeg"
+      "/productos/Purina Pro Plan Kitten Optistart.webp"
     ],
     "inStock": true,
     "stockCount": 31,
@@ -2739,9 +2739,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Nutrición científica para cachorros de razas pequeñas con calostro vacuno que extiende la protección materna.",
     "longDescription": "Desarrollado para cachorros que alcanzan hasta 10 kg de peso adulto. Su croqueta pequeña favorece la prensión y masticación, mientras el calostro protege su delicado sistema digestivo.",
-    "imageUrl": "/productos/Purina Pro Plan Puppy Razas Pequenas Optistart.jpeg",
+    "imageUrl": "/productos/Purina Pro Plan Puppy Razas Pequenas Optistart.webp",
     "galleryImages": [
-      "/productos/Purina Pro Plan Puppy Razas Pequenas Optistart.jpeg"
+      "/productos/Purina Pro Plan Puppy Razas Pequenas Optistart.webp"
     ],
     "inStock": true,
     "stockCount": 39,
@@ -2834,9 +2834,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Especialmente formulado para gatos esterilizados con calorías controladas y tecnología Optirenal para riñones sanos.",
     "longDescription": "Tras la castración, el metabolismo felino disminuye un 20%. Pro Plan Sterilized evita el aumento de peso y previene la formación de urolitos gracias a minerales equilibrados y un pH urinario controlado.",
-    "imageUrl": "/productos/Purina Pro Plan Sterilized Gatos Optirenal.jpeg",
+    "imageUrl": "/productos/Purina Pro Plan Sterilized Gatos Optirenal.webp",
     "galleryImages": [
-      "/productos/Purina Pro Plan Sterilized Gatos Optirenal.jpeg"
+      "/productos/Purina Pro Plan Sterilized Gatos Optirenal.webp"
     ],
     "inStock": true,
     "stockCount": 27,
@@ -2929,9 +2929,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Protección urinaria de grado veterinario que ayuda a mantener el pH urinario óptimo y disolver cálculos.",
     "longDescription": "Recomendado por veterinarios para felinos propensos a cistitis idiopática o cálculos de estruvita. Acidifica suavemente la orina y estimula el consumo de agua para diluir la concentración de minerales.",
-    "imageUrl": "/productos/Purina Pro Plan Urinary Gatos.jpeg",
+    "imageUrl": "/productos/Purina Pro Plan Urinary Gatos.webp",
     "galleryImages": [
-      "/productos/Purina Pro Plan Urinary Gatos.jpeg"
+      "/productos/Purina Pro Plan Urinary Gatos.webp"
     ],
     "inStock": true,
     "stockCount": 36,
@@ -3024,9 +3024,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Alimento completo con delicioso sabor a pollo y leche, enriquecido con vitaminas, minerales y omegas.",
     "longDescription": "La combinación favorita de sabor lácteo y proteínas de ave para gatos adultos. Proporciona una nutrición completa a un precio muy accesible.",
-    "imageUrl": "/productos/Raza Gatos Pollo y Leche 10kg.jpeg",
+    "imageUrl": "/productos/Raza Gatos Pollo y Leche 10kg.webp",
     "galleryImages": [
-      "/productos/Raza Gatos Pollo y Leche 10kg.jpeg"
+      "/productos/Raza Gatos Pollo y Leche 10kg.webp"
     ],
     "inStock": true,
     "stockCount": 18,
@@ -3112,9 +3112,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Alimento libre de cereales con venado asado y salmón ahumado. Rica fuente de proteína salvaje para felinos.",
     "longDescription": "Inspirado en la dieta salvaje de los felinos ancestrales. Taste of the Wild Rocky Mountain combina venado asado y salmón ahumado con batatas, arándanos y frambuesas para una explosión de sabor y salud.",
-    "imageUrl": "/productos/Taste of the Wild Rocky Mountain Feline Recipe.jpeg",
+    "imageUrl": "/productos/Taste of the Wild Rocky Mountain Feline Recipe.webp",
     "galleryImages": [
-      "/productos/Taste of the Wild Rocky Mountain Feline Recipe.jpeg"
+      "/productos/Taste of the Wild Rocky Mountain Feline Recipe.webp"
     ],
     "inStock": true,
     "stockCount": 15,
@@ -3209,9 +3209,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Receta equilibrada con proteínas de pollo y salmón, reforzada con taurina para corazón y vista.",
     "longDescription": "Top One Gatos combina dos fuentes de proteína de alta digestibilidad con minerales quelados para el bienestar diario de gatos adultos.",
-    "imageUrl": "/productos/Top One Gatos Adultos con Pollo y Salmon 9kg.jpeg",
+    "imageUrl": "/productos/Top One Gatos Adultos con Pollo y Salmon 9kg.webp",
     "galleryImages": [
-      "/productos/Top One Gatos Adultos con Pollo y Salmon 9kg.jpeg"
+      "/productos/Top One Gatos Adultos con Pollo y Salmon 9kg.webp"
     ],
     "inStock": true,
     "stockCount": 26,
@@ -3297,9 +3297,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Nutrición balanceada con aminoácidos esenciales y prebióticos naturales para energía diaria en perros adultos.",
     "longDescription": "Diseñado para perros de todas las razas con actividad normal a alta. Aporta calcio y fósforo para huesos sanos y digestión equilibrada.",
-    "imageUrl": "/productos/Top One Perros Adultos 10kg.jpeg",
+    "imageUrl": "/productos/Top One Perros Adultos 10kg.webp",
     "galleryImages": [
-      "/productos/Top One Perros Adultos 10kg.jpeg"
+      "/productos/Top One Perros Adultos 10kg.webp"
     ],
     "inStock": true,
     "stockCount": 30,
@@ -3385,9 +3385,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Croquetas de tamaño adaptado a perros medianos y grandes que fomentan la masticación y la salud dental.",
     "longDescription": "El tamaño de bocado estimula la masticación pausada y limpia los dientes mediante abrasión mecánica suave durante cada comida.",
-    "imageUrl": "/productos/Top One Perros Adultos Medianos y Grandes con Pollo 9kg.jpeg",
+    "imageUrl": "/productos/Top One Perros Adultos Medianos y Grandes con Pollo 9kg.webp",
     "galleryImages": [
-      "/productos/Top One Perros Adultos Medianos y Grandes con Pollo 9kg.jpeg"
+      "/productos/Top One Perros Adultos Medianos y Grandes con Pollo 9kg.webp"
     ],
     "inStock": true,
     "stockCount": 32,
@@ -3473,9 +3473,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Receta natural argentina con carne de vacuno seleccionada, pulpa de remolacha y extracto de romero.",
     "longDescription": "Vitalcan Balanced Natural Recipe destaca por sus ingredientes 100% nobles sin conservantes químicos artificiales. El romero y el tocoferol actúan como antioxidantes celulares naturales.",
-    "imageUrl": "/productos/Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg.jpeg",
+    "imageUrl": "/productos/Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg.webp",
     "galleryImages": [
-      "/productos/Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg.jpeg"
+      "/productos/Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg.webp"
     ],
     "inStock": true,
     "stockCount": 38,
@@ -3568,9 +3568,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Especialmente creado para perros con piel sensible o alergias alimentarias, formulado con salmón rosado y omegas.",
     "longDescription": "Alimento hipoalergénico formulado con salmón rosado como fuente proteica alternativa. Alivia el picor, la caspa y el enrojecimiento dérmico en pocas semanas.",
-    "imageUrl": "/productos/Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care.jpeg",
+    "imageUrl": "/productos/Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care.webp",
     "galleryImages": [
-      "/productos/Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care.jpeg"
+      "/productos/Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care.webp"
     ],
     "inStock": true,
     "stockCount": 24,
@@ -3662,9 +3662,9 @@ export const PRODUCTS_DATABASE: Product[] = [
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
     "description": "Fórmula premium con carne de cordero hipoalergénica para perros de todas las razas con estómagos delicados.",
     "longDescription": "El cordero es una proteína noble y sabrosa con bajísima incidencia de intolerancias. Aporta minerales quelados y prebióticos para deposiciones consistentes y sin olor.",
-    "imageUrl": "/productos/Vitalcan Premium Cordero Perros Adultos Todas las Razas.jpeg",
+    "imageUrl": "/productos/Vitalcan Premium Cordero Perros Adultos Todas las Razas.webp",
     "galleryImages": [
-      "/productos/Vitalcan Premium Cordero Perros Adultos Todas las Razas.jpeg"
+      "/productos/Vitalcan Premium Cordero Perros Adultos Todas las Razas.webp"
     ],
     "inStock": true,
     "stockCount": 37,

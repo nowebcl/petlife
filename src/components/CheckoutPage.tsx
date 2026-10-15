@@ -874,7 +874,14 @@ export const CheckoutPage: FC<CheckoutPageProps> = ({
                         <img
                           src={product.imageUrl}
                           alt=""
+                          loading="lazy"
+                          decoding="async"
                           className="w-10 h-10 object-contain rounded-xl bg-slate-50 p-1 border border-slate-100 shrink-0"
+                          onError={(e) => {
+                            if (e.currentTarget.dataset.failed) return;
+                            e.currentTarget.dataset.failed = 'true';
+                            e.currentTarget.src = '/product-dog-food.webp';
+                          }}
                         />
                         <div className="truncate">
                           <span className="font-bold text-[#061F3D] block truncate">{product.name}</span>

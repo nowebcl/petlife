@@ -153,12 +153,15 @@ export const Hero: FC<HeroProps> = ({
             title="Tócame con el dedo ❤️"
           >
             <img
-              src="/mobile-pets.png"
+              src="/mobile-pets.webp"
               onError={(e) => {
+                if (e.currentTarget.dataset.failed) return;
+                e.currentTarget.dataset.failed = 'true';
                 e.currentTarget.src = '/mobile-pets.png';
               }}
               alt="Perro y gato en cama tejida"
               fetchPriority="high"
+              decoding="sync"
               className="w-full h-auto object-contain select-none origin-bottom scale-100"
             />
 
@@ -244,12 +247,15 @@ export const Hero: FC<HeroProps> = ({
             title="Tócame para enviar amor ❤️"
           >
             <img
-              src="/Imagen de ChatGPT 24 sept 2026, 05_43_28 p.m.png"
+              src="/pets-cutout.webp"
               onError={(e) => {
+                if (e.currentTarget.dataset.failed) return;
+                e.currentTarget.dataset.failed = 'true';
                 e.currentTarget.src = '/pets-cutout.png';
               }}
               alt="Perro Golden Retriever y Gato atigrado sonriendo juntos"
               fetchPriority="high"
+              decoding="sync"
               className="w-full h-auto object-contain select-none"
             />
 

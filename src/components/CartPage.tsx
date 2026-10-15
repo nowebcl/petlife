@@ -152,9 +152,13 @@ export const CartPage: FC<CartPageProps> = ({
                           <img
                             src={product.imageUrl}
                             alt={product.name}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-contain group-hover:scale-105 transition-transform"
                             onError={(e) => {
-                              e.currentTarget.src = '/product-dog-food.jpg';
+                              if (e.currentTarget.dataset.failed) return;
+                              e.currentTarget.dataset.failed = 'true';
+                              e.currentTarget.src = '/product-dog-food.webp';
                             }}
                           />
                         </div>

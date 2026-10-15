@@ -202,7 +202,7 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-2.5 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-            {filteredProducts.map((product) => {
+            {filteredProducts.map((product, index) => {
               const isAdded = addedIds[product.id];
               const isFav = favoriteIds[product.id];
 
@@ -218,10 +218,14 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
                       <img
                         src={product.imageUrl}
                         alt={product.name}
-                        loading="lazy"
+                        loading={index < 4 ? 'eager' : 'lazy'}
+                        fetchPriority={index < 2 ? 'high' : 'auto'}
+                        decoding={index < 4 ? 'sync' : 'async'}
                         className="w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
-                          e.currentTarget.style.display = 'none';
+                          if (e.currentTarget.dataset.failed) return;
+                          e.currentTarget.dataset.failed = 'true';
+                          e.currentTarget.src = '/product-dog-food.webp';
                         }}
                       />
 
