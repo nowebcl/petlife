@@ -1,6 +1,15 @@
 export const formatPrice = (price: number): string => {
-  return '$' + Math.round(price).toLocaleString('es-CL');
+  if (!price || isNaN(price)) return '$0';
+  let safePrice = price;
+  // Si el precio viene guardado con decimales menores a 1000 por el bug de separador de miles (ej: 42.9 o 40.99)
+  if (safePrice > 0 && safePrice < 1000 && !Number.isInteger(safePrice)) {
+    safePrice = Math.round(safePrice * 1000);
+  } else {
+    safePrice = Math.round(safePrice);
+  }
+  return '$' + safePrice.toLocaleString('es-CL');
 };
+
 
 export interface ProductVariant {
   id: string;
@@ -53,6 +62,7 @@ export interface Product {
   nutritionalAnalysis?: Record<string, string>;
   feedingGuide?: Array<{ weight: string; dailyAmount: string }>;
   reviews?: ProductReview[];
+  _needsPriceRepair?: boolean;
 }
 
 export const PRODUCTS_DATABASE: Product[] = [

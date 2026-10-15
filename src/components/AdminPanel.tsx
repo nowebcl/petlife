@@ -30,6 +30,7 @@ import {
   adminLogin,
   adminLogout,
   isUserAdmin,
+  getAdminToken,
   getAdminEmail,
   verifyAdminSession,
   adminCreateProduct,
@@ -76,7 +77,28 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   const [formPetType, setFormPetType] = useState<'perro' | 'gato' | 'ambos'>('perro');
   const [formLifeStage, setFormLifeStage] = useState<'cachorro' | 'adulto' | 'senior' | 'todas'>('adulto');
   const [formPrice, setFormPrice] = useState<number>(19900);
+  const [formPriceDisplay, setFormPriceDisplay] = useState<string>('19.900');
   const [formWeightOrSize, setFormWeightOrSize] = useState<string>('');
+
+  // Manejo de cambio de precio en Pesos Chilenos (CLP) sin decimales
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    if (!raw.trim()) {
+      setFormPrice(0);
+      setFormPriceDisplay('');
+      return;
+    }
+    // Extraer solo dígitos numéricos (permite pegar ej: "$40.990", "40,990", "40990")
+    const cleanDigits = raw.replace(/\D/g, '').slice(0, 9);
+    if (!cleanDigits) {
+      setFormPrice(0);
+      setFormPriceDisplay('');
+      return;
+    }
+    const numeric = parseInt(cleanDigits, 10);
+    setFormPrice(numeric);
+    setFormPriceDisplay(numeric.toLocaleString('es-CL'));
+  };
   const [formStock, setFormStock] = useState<number>(25);
   const [formInStock, setFormInStock] = useState<boolean>(true);
   const [formFeatured, setFormFeatured] = useState<boolean>(false);
@@ -112,6 +134,17 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     try {
       const data = await fetchAllProducts();
       setProducts(data);
+
+      // Reparación automática en segundo plano de precios dañados previamente con decimales en PocketBase
+      const token = getAdminToken();
+      if (token) {
+        data.forEach(async (p) => {
+          if (p._needsPriceRepair && p.price > 0) {
+            console.info(`[PetLife Admin] Reparando precio en PocketBase para "${p.name}" a $${p.price} CLP`);
+            await adminUpdateProduct(p.id, { price: p.price }, p.sku, p.name).catch(() => {});
+          }
+        });
+      }
     } catch {
       showToast('Error al cargar productos desde PocketBase', 'error');
     } finally {
@@ -201,6 +234,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     setFormPetType('perro');
     setFormLifeStage('adulto');
     setFormPrice(19900);
+    setFormPriceDisplay('19.900');
     setFormWeightOrSize('15 kg');
     setFormStock(25);
     setFormInStock(true);
@@ -228,7 +262,16 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     );
     setFormPetType(p.petType || (p.category === 'gatos' ? 'gato' : 'perro'));
     setFormLifeStage(p.lifeStage || 'adulto');
-    setFormPrice(p.price || 0);
+
+    let initialPrice = p.price || 0;
+    if (initialPrice > 0 && initialPrice < 1000 && !Number.isInteger(initialPrice)) {
+      initialPrice = Math.round(initialPrice * 1000);
+    } else {
+      initialPrice = Math.round(initialPrice);
+    }
+    setFormPrice(initialPrice);
+    setFormPriceDisplay(initialPrice > 0 ? initialPrice.toLocaleString('es-CL') : '');
+
     setFormWeightOrSize(p.weightOrSize || '');
     setFormStock(p.stockCount !== undefined ? p.stockCount : 15);
     setFormInStock(p.inStock);
@@ -304,7 +347,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
         formData.append('categoryLabel', categoryLabel);
         formData.append('petType', formPetType);
         formData.append('lifeStage', formLifeStage);
-        formData.append('price', String(formPrice));
+        formData.append('price', String(Math.round(formPrice)));
         formData.append('weightOrSize', formWeightOrSize.trim());
         formData.append('stockCount', String(formStock));
         formData.append('inStock', String(formInStock));
@@ -329,7 +372,7 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
           categoryLabel,
           petType: formPetType,
           lifeStage: formLifeStage,
-          price: Number(formPrice),
+          price: Math.round(Number(formPrice)),
           weightOrSize: formWeightOrSize.trim(),
           stockCount: Number(formStock),
           inStock: Boolean(formInStock),
@@ -760,14 +803,24 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
                     <div className="relative flex items-center">
                       <span className="absolute left-3.5 sm:left-4 text-slate-400 font-black text-sm">$</span>
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         required
-                        min={1}
-                        value={formPrice}
-                        onChange={(e) => setFormPrice(Number(e.target.value))}
-                        placeholder="Ej: 47900"
-                        className="w-full pl-7 sm:pl-8 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-black text-sm sm:text-base text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all"
+                        value={formPriceDisplay}
+                        onChange={handlePriceChange}
+                        placeholder="Ej: 40.990"
+                        className="w-full pl-7 sm:pl-8 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-black text-sm sm:text-base text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all placeholder:font-normal placeholder:text-slate-300"
                       />
+                    </div>
+                    <div className="mt-1.5 flex items-center justify-between text-[11px]">
+                      <span className="text-slate-500 font-medium">
+                        Precio ingresado: <strong className="text-[#FF5200] font-black">{formatPrice(formPrice)} CLP</strong>
+                      </span>
+                      {formPrice > 0 && formPrice < 1000 && (
+                        <span className="text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                          ⚠️ Menor a $1.000 CLP (Ej: {(formPrice * 1000).toLocaleString('es-CL')}?)
+                        </span>
+                      )}
                     </div>
                   </div>
 

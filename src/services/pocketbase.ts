@@ -101,6 +101,17 @@ export function mapRecordToProduct(r: PocketBaseProductRecord): Product {
 
   const resolvedImage = getProductImageUrl(r);
 
+  const rawPrice = Number(r.price) || 0;
+  let price = rawPrice;
+  let needsPriceRepair = false;
+  // Auto-reparar precios guardados con decimales por interpretación errónea de coma/punto de miles (ej: 42.9 -> 42900, 39.9 -> 39900)
+  if (rawPrice > 0 && rawPrice < 1000 && !Number.isInteger(rawPrice)) {
+    price = Math.round(rawPrice * 1000);
+    needsPriceRepair = true;
+  } else {
+    price = Math.round(rawPrice);
+  }
+
   return {
     id: r.id,
     name: r.name,
@@ -119,7 +130,8 @@ export function mapRecordToProduct(r: PocketBaseProductRecord): Product {
         : 'Alimentos Perros'),
     petType: r.petType || (r.category === 'gatos' ? 'gato' : 'perro'),
     lifeStage: r.lifeStage || 'adulto',
-    price: Number(r.price) || 0,
+    price,
+    _needsPriceRepair: needsPriceRepair,
     rating: Number(r.rating) || 4.8,
     reviewsCount: Number(r.reviewsCount) || 10,
     weightOrSize: r.weightOrSize || '',
@@ -350,6 +362,33 @@ export async function adminLogin(
  */
 
 /**
+ * Sanitiza el precio para garantizar que sea un número entero en pesos chilenos (CLP)
+ * y repara automáticamente si viene con decimales por la confusión de coma/punto de miles.
+ */
+export function sanitizePrice(val: any): number {
+  if (val === undefined || val === null || val === '') return 0;
+  let num: number;
+  if (typeof val === 'number') {
+    num = val;
+  } else if (typeof val === 'string') {
+    const cleanDigits = val.replace(/\D/g, '');
+    const asFloat = parseFloat(val.replace(',', '.'));
+    if (!isNaN(asFloat) && asFloat > 0 && asFloat < 1000 && !Number.isInteger(asFloat)) {
+      num = Math.round(asFloat * 1000);
+    } else {
+      num = cleanDigits ? parseInt(cleanDigits, 10) : 0;
+    }
+  } else {
+    num = Number(val);
+  }
+  if (isNaN(num)) return 0;
+  if (num > 0 && num < 1000 && !Number.isInteger(num)) {
+    return Math.round(num * 1000);
+  }
+  return Math.round(num);
+}
+
+/**
  * Crear un nuevo producto en PocketBase con subida de imagen o JSON
  */
 export async function adminCreateProduct(
@@ -360,6 +399,14 @@ export async function adminCreateProduct(
 
   try {
     const isFormData = payload instanceof FormData;
+    if (isFormData) {
+      if (payload.has('price')) {
+        payload.set('price', String(sanitizePrice(payload.get('price'))));
+      }
+    } else if (payload.price !== undefined) {
+      payload.price = sanitizePrice(payload.price);
+    }
+
     const headers: Record<string, string> = { Authorization: token };
     if (!isFormData) headers['Content-Type'] = 'application/json';
 
@@ -396,8 +443,16 @@ export async function adminUpdateProduct(
   if (!token) return { success: false, error: 'No autorizado. Por favor inicia sesión.' };
 
   try {
-    const targetId = await findRealPocketBaseId(id, token, sku, name);
     const isFormData = payload instanceof FormData;
+    if (isFormData) {
+      if (payload.has('price')) {
+        payload.set('price', String(sanitizePrice(payload.get('price'))));
+      }
+    } else if (payload.price !== undefined) {
+      payload.price = sanitizePrice(payload.price);
+    }
+
+    const targetId = await findRealPocketBaseId(id, token, sku, name);
     const headers: Record<string, string> = { Authorization: token };
     if (!isFormData) headers['Content-Type'] = 'application/json';
 
