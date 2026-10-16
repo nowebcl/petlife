@@ -78,8 +78,29 @@ export function getProductImageUrl(p: {
   collectionId?: string;
   id?: string;
   imageUrl?: string;
+  updated?: string;
 }): string {
-  // 1. Si existe URL local en /productos/, servir el WebP ultra-ligero
+  const versionParam = p.updated ? `?v=${encodeURIComponent(p.updated)}` : '';
+
+  // 1. Si el producto tiene archivo en PocketBase y fue subido/actualizado:
+  if (p.image && p.collectionId && p.id) {
+    if (
+      !p.imageUrl ||
+      !p.imageUrl.trim() ||
+      p.imageUrl.includes('/api/files/') ||
+      p.image.toLowerCase().endsWith('.webp') ||
+      (p.updated && p.updated.trim() !== '')
+    ) {
+      return `${POCKETBASE_URL}/api/files/${p.collectionId}/${p.id}/${p.image}${versionParam}`;
+    }
+  }
+
+  // 2. Si tiene URL externa absoluta (https:// o http://)
+  if (p.imageUrl && (p.imageUrl.startsWith('http://') || p.imageUrl.startsWith('https://'))) {
+    return p.imageUrl;
+  }
+
+  // 3. Si existe URL local en /productos/, servir el WebP ultra-ligero (solo si no fue reemplazada en PocketBase)
   if (p.imageUrl && p.imageUrl.trim()) {
     const clean = p.imageUrl.trim();
     if (clean.startsWith('/productos/')) {
@@ -87,10 +108,12 @@ export function getProductImageUrl(p: {
     }
     return clean;
   }
-  // 2. Si fue subida directamente en PocketBase (productos creados por admin)
+
+  // 4. Si fue subida directamente en PocketBase
   if (p.image && p.collectionId && p.id) {
-    return `${POCKETBASE_URL}/api/files/${p.collectionId}/${p.id}/${p.image}`;
+    return `${POCKETBASE_URL}/api/files/${p.collectionId}/${p.id}/${p.image}${versionParam}`;
   }
+
   return '/product-dog-food.webp';
 }
 

@@ -352,6 +352,7 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
       };
       reader.readAsDataURL(optimized);
     }
+    e.target.value = '';
   };
 
   // Save Product (Create or Update)
@@ -409,6 +410,7 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
         formData.append('longDescription', formLongDescription.trim());
         formData.append('featured', String(formFeatured));
         formData.append('benefits', JSON.stringify(parsedBenefits));
+        formData.append('imageUrl', '');
         formData.append('image', selectedImageFile);
 
         if (editingProduct) {
@@ -1044,6 +1046,20 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
                   <Upload className="w-4 h-4 text-[#FF5200]" />
                   <span>{imagePreview ? 'Cambiar Imagen (Archivo)' : 'Subir Imagen (Archivo)'}</span>
                 </button>
+
+                {selectedImageFile && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedImageFile(null);
+                      setImagePreview(editingProduct?.imageUrl || formImageUrl || null);
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                    }}
+                    className="w-full py-1.5 px-3 rounded-lg text-rose-500 hover:text-rose-600 hover:bg-rose-50 text-[11px] font-bold transition-colors cursor-pointer text-center"
+                  >
+                    ✕ Cancelar nueva imagen seleccionada
+                  </button>
+                )}
 
                 {/* Direct Image URL input */}
                 <div>

@@ -67,7 +67,1676 @@ export interface Product {
 
 export const PRODUCTS_DATABASE: Product[] = [
   {
-    "id": "prod-1",
+    "id": "utx1wobntepe5pf",
+    "name": "Vitalcan Premium Cordero Perros Adultos Todas las Razas",
+    "brand": "Vitalcan",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 39990,
+    "rating": 4.9,
+    "reviewsCount": 110,
+    "featured": false,
+    "weightOrSize": "20kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Fórmula premium con carne de cordero hipoalergénica para perros de todas las razas con estómagos delicados.",
+    "longDescription": "El cordero es una proteína noble y sabrosa con bajísima incidencia de intolerancias. Aporta minerales quelados y prebióticos para deposiciones consistentes y sin olor.",
+    "imageUrl": "/productos/Vitalcan Premium Cordero Perros Adultos Todas las Razas.webp",
+    "galleryImages": [
+      "/productos/Vitalcan Premium Cordero Perros Adultos Todas las Razas.webp"
+    ],
+    "inStock": true,
+    "stockCount": 1,
+    "sku": "PL-040",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 3 kg",
+        "weightOrSize": "3 kg",
+        "price": 14900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 20kg",
+        "weightOrSize": "20kg",
+        "price": 39990,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Carne de cordero como proteína hipoalergénica de alto valor",
+      "Digestión suave y sin pesadez estomacal",
+      "Pelaje brillante y denso con ácidos grasos naturales",
+      "Fórmula completa para razas pequeñas, medianas y grandes"
+    ],
+    "ingredients": [
+      "Carne de cordero deshidratada",
+      "Arroz",
+      "Maíz",
+      "Grasa de pollo",
+      "Prebióticos FOS"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-40",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-40",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "urx9ibh4jb7c20j",
+    "name": "Fit Formula Perro Adulto 20kg",
+    "brand": "Fit Formula",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 42900,
+    "rating": 4.8,
+    "reviewsCount": 180,
+    "featured": false,
+    "weightOrSize": "20 kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Alimento completo desarrollado para cubrir todas las necesidades nutricionales de perros adultos con gran palatabilidad.",
+    "longDescription": "Desarrollado en Chile por médicos veterinarios, Fit Formula Adulto aporta proteínas de alta calidad, vitaminas del complejo B y minerales quelados para una condición física atlética y activa.",
+    "imageUrl": "/productos/Fit Formula Perro Adulto 20kg.webp",
+    "galleryImages": [
+      "/productos/Fit Formula Perro Adulto 20kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 3,
+    "sku": "PL-014",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Saco 20 kg",
+        "weightOrSize": "20 kg",
+        "price": 42900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Proteína animal de excelente asimilación para músculos firmes",
+      "Ácidos grasos esenciales para salud de la piel y pelaje",
+      "Extracto de Yucca Schidigera que minimiza el olor de las heces",
+      "Excelente rendimiento y economía por kilogramo"
+    ],
+    "ingredients": [
+      "Harina de subproductos de ave",
+      "Maíz grano molido",
+      "Arroz",
+      "Harina de carne",
+      "Extracto de yucca"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-14",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-14",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "umi18ala183t7y2",
+    "name": "Purina One Perros Adultos Minis y Pequenos Pollo y Cordero",
+    "brand": "Purina One",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 23900,
+    "rating": 4.9,
+    "reviewsCount": 115,
+    "featured": false,
+    "weightOrSize": "6 kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Para perros de razas pequeñas Bocados de tamaño adaptado a mandíbulas pequeñas con pollo y cordero para un metabolismo acelerado y activo.",
+    "longDescription": "Los perros minis queman energía más rápidamente. Esta receta concentra nutrientes y calorías precisas en croquetas pequeñas que cuidan sus dientes y satisfacen su apetito exigente.",
+    "imageUrl": "/productos/Purina One Perros Adultos Minis y Pequenos Pollo y Cordero.webp",
+    "galleryImages": [
+      "/productos/Purina One Perros Adultos Minis y Pequenos Pollo y Cordero.webp"
+    ],
+    "inStock": true,
+    "stockCount": 1,
+    "sku": "PL-027",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 1.5 kg",
+        "weightOrSize": "1.5 kg",
+        "price": 9900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 6 kg",
+        "weightOrSize": "6 kg",
+        "price": 23900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Croqueta mini fácil de masticar que combate el sarro",
+      "Alto contenido calórico adaptado al metabolismo de razas minis",
+      "Pollo y cordero reales para máxima palatabilidad",
+      "Piel radiante con ácidos grasos Omega 6"
+    ],
+    "ingredients": [
+      "Pollo",
+      "Cordero",
+      "Harina de subproductos de ave",
+      "Arroz",
+      "Grasa animal"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-27",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-27",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "u675cc0r14cz4u8",
+    "name": "Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care",
+    "brand": "Balanced",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 50900,
+    "rating": 5,
+    "reviewsCount": 92,
+    "featured": false,
+    "weightOrSize": "15 kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Especialmente creado para perros con piel sensible o alergias alimentarias, formulado con salmón rosado y omegas.",
+    "longDescription": "Alimento hipoalergénico formulado con salmón rosado como fuente proteica alternativa. Alivia el picor, la caspa y el enrojecimiento dérmico en pocas semanas.",
+    "imageUrl": "/productos/Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care.webp",
+    "galleryImages": [
+      "/productos/Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care.webp"
+    ],
+    "inStock": false,
+    "stockCount": 0,
+    "sku": "PL-039",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 3 kg",
+        "weightOrSize": "3 kg",
+        "price": 18900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 15 kg",
+        "weightOrSize": "15 kg",
+        "price": 50900,
+        "inStock": false
+      }
+    ],
+    "benefits": [
+      "Salmón rosado como fuente de proteína hipoalergénica",
+      "Alivia la irritación dérmica y el rascado continuo",
+      "Rico en ácidos grasos Omega-3 y Omega-6 puros",
+      "Sin carne de vacuno ni pollo para evitar alergias cruzadas"
+    ],
+    "ingredients": [
+      "Salmón rosado deshidratado",
+      "Arroz integral",
+      "Aceite de pescado",
+      "Semillas de lino"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-39",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-39",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "ty3u6b5d8pkkrzf",
+    "name": "Leonardo Adult Duck Cat Food",
+    "brand": "Leonardo",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 26900,
+    "rating": 5,
+    "reviewsCount": 68,
+    "featured": false,
+    "weightOrSize": "1.8 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Nutrición alemana super premium elaborada con carne fresca de pato y chía para gatos sibaritas.",
+    "longDescription": "Leonardo Adult Duck combina carne fresca de pato con malta natural para expulsar bolas de pelo con facilidad. Fortalece el sistema inmunitario mediante ProVital a base de beta-glucanos naturales.",
+    "imageUrl": "/productos/Leonardo Adult Duck Cat Food.webp",
+    "galleryImages": [
+      "/productos/Leonardo Adult Duck Cat Food.webp"
+    ],
+    "inStock": true,
+    "stockCount": 2,
+    "sku": "PL-017",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 1.8 kg",
+        "weightOrSize": "1.8 kg",
+        "price": 18900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 1.8 kg",
+        "weightOrSize": "1.8 kg",
+        "price": 26900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Carne fresca de pato (30%) de digestibilidad insuperable",
+      "STAY-Clean: reduce la placa bacteriana dental",
+      "Malta aromática que previene la formación de bolas de pelo",
+      "Ph-control para la salud de las vías urinarias"
+    ],
+    "ingredients": [
+      "Carne fresca de pato",
+      "Proteína de ave deshidratada",
+      "Arroz",
+      "Semillas de chía",
+      "Malta de centeno"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-17",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-17",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "t6sauw1cea7fnaz",
+    "name": "Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg",
+    "brand": "Balanced",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 50900,
+    "rating": 4.9,
+    "reviewsCount": 138,
+    "featured": false,
+    "weightOrSize": "15 kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Receta natural argentina con carne de vacuno seleccionada, pulpa de remolacha y extracto de romero.",
+    "longDescription": "Vitalcan Balanced Natural Recipe destaca por sus ingredientes 100% nobles sin conservantes químicos artificiales. El romero y el tocoferol actúan como antioxidantes celulares naturales.",
+    "imageUrl": "/productos/Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg.webp",
+    "galleryImages": [
+      "/productos/Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 1,
+    "sku": "PL-038",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 3 kg",
+        "weightOrSize": "3 kg",
+        "price": 15900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 15 kg",
+        "weightOrSize": "15 kg",
+        "price": 50900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Carne argentina de vacuno seleccionada como primer ingrediente",
+      "Conservación 100% natural con extracto de romero y vitamina E",
+      "Fibras prebióticas para una asimilación gastrointestinal óptima",
+      "Salud articular con condroitina y glucosamina"
+    ],
+    "ingredients": [
+      "Carne vacuna deshidratada",
+      "Arroz",
+      "Gluten de maíz",
+      "Pulpa de remolacha",
+      "Extracto de romero"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-38",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-38",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "qsf5wo6coqeqavv",
+    "name": "Top One Perros Adultos Medianos y Grandes con Pollo 9kg",
+    "brand": "Top One",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 36900,
+    "rating": 4.8,
+    "reviewsCount": 60,
+    "featured": false,
+    "weightOrSize": "18 kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Croquetas de tamaño adaptado a perros medianos y grandes que fomentan la masticación y la salud dental.",
+    "longDescription": "El tamaño de bocado estimula la masticación pausada y limpia los dientes mediante abrasión mecánica suave durante cada comida.",
+    "imageUrl": "/productos/Top One Perros Adultos Medianos y Grandes con Pollo 9kg.webp",
+    "galleryImages": [
+      "/productos/Top One Perros Adultos Medianos y Grandes con Pollo 9kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 6,
+    "sku": "PL-037",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Saco 18 kg",
+        "weightOrSize": "18 kg",
+        "price": 36900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Tamaño de croqueta adecuado para perros de más de 10 kg",
+      "Proteína de pollo digestible para vitalidad muscular",
+      "Salud dental con efecto limpiador al masticar",
+      "Grasas controladas para evitar el sobrepeso"
+    ],
+    "ingredients": [
+      "Harina de pollo",
+      "Maíz grano",
+      "Harina de carne",
+      "Aceite de pollo",
+      "Prebióticos"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-37",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-37",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "p6m397lib4m48ur",
+    "name": "Purina One Adultos Pollo y Salmon 2kg",
+    "brand": "Purina One",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 17900,
+    "rating": 4.9,
+    "reviewsCount": 104,
+    "featured": false,
+    "weightOrSize": "2 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Nutrición superior con carne real de pollo y salmón como ingredientes #1 para energía y digestión en 28 días.",
+    "longDescription": "Purina ONE combina ingredientes naturales con croquetas crujientes y tiernas que producen cambios visibles en la salud de tu gato en solo 28 días: mayor energía, ojos brillantes y pelaje sedoso.",
+    "imageUrl": "/productos/Purina One Adultos Pollo y Salmon 2kg.webp",
+    "galleryImages": [
+      "/productos/Purina One Adultos Pollo y Salmon 2kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 1,
+    "sku": "PL-025",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 2 kg",
+        "weightOrSize": "2 kg",
+        "price": 17900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Carne real de pollo y salmón como ingredientes número 1",
+      "Cambio visible en la vitalidad y brillo del pelaje en 28 días",
+      "Prebiótico natural que fortalece la microbiota intestinal",
+      "Taurina natural para corazón y retina saludables"
+    ],
+    "ingredients": [
+      "Pollo",
+      "Salmón",
+      "Harina de pollo",
+      "Arroz",
+      "Grasa vacuna",
+      "Inulina"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-25",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-25",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "obvp6hzgabnxn20",
+    "name": "Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg",
+    "brand": "Champion Cat",
+    "category": "higiene",
+    "categoryLabel": "Arenas & Higiene",
+    "petType": "gato",
+    "lifeStage": "todas",
+    "price": 12900,
+    "rating": 4.8,
+    "reviewsCount": 110,
+    "featured": true,
+    "weightOrSize": "10 kg",
+    "icon": "✨",
+    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
+    "description": "Arena sanitaria aglomerante de bentonita natural con carbón activo para una máxima absorción y bloqueo de olores.",
+    "longDescription": "El poder del carbón activado atrapa las moléculas de amoníaco antes de que se evaporen al ambiente. Su granulometría seleccionada evita el arrastre de piedrecitas fuera del arenero.",
+    "imageUrl": "/productos/Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg.webp",
+    "galleryImages": [
+      "/productos/Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 29,
+    "sku": "PL-009",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 10 kg",
+        "weightOrSize": "10 kg",
+        "price": 12900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Carbón activado microporoso que elimina olores de raíz",
+      "Terrones firmes fáciles de palear sin romperse",
+      "Bajo nivel de polvo que no mancha las patitas",
+      "Rendimiento superior para todo el mes"
+    ],
+    "ingredients": [
+      "Bentonita natural seleccionada",
+      "Carbón activado"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-9",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-9",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "musumkbrlkvibv9",
+    "name": "Purina One Perros Adultos Medianos y Grandes Pollo y Cordero",
+    "brand": "Purina One",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 23900,
+    "rating": 4.9,
+    "reviewsCount": 128,
+    "featured": false,
+    "weightOrSize": "6 kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Combinación crujiente de croquetas y bocados tiernos de pollo y cordero para músculos fuertes y articulaciones.",
+    "longDescription": "Fórmula de nutrición avanzada con carne real como primer ingrediente. Diseñada para mantener el peso ideal y la masa muscular en perros de razas medianas y grandes.",
+    "imageUrl": "/productos/Purina One Perros Adultos Medianos y Grandes Pollo y Cordero.webp",
+    "galleryImages": [
+      "/productos/Purina One Perros Adultos Medianos y Grandes Pollo y Cordero.webp"
+    ],
+    "inStock": true,
+    "stockCount": 2,
+    "sku": "PL-026",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 3.5 kg",
+        "weightOrSize": "3.5 kg",
+        "price": 17900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 6 kg",
+        "weightOrSize": "6 kg",
+        "price": 23900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Carne real de pollo y cordero como primer ingrediente",
+      "Bocados tiernos y croquetas crujientes de doble textura",
+      "Glucosamina natural para soporte de cadera y rodillas",
+      "Digestión óptima y absorción de nutrientes comprobada"
+    ],
+    "ingredients": [
+      "Pollo",
+      "Cordero",
+      "Arroz cervecero",
+      "Harina de ave",
+      "Aceite de pescado"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-26",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-26",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "kk1xc5rdjb0d26n",
+    "name": "Diamond Naturals Indoor Cat Chicken and Rice",
+    "brand": "Diamond Naturals",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 44900,
+    "rating": 4.8,
+    "reviewsCount": 76,
+    "featured": false,
+    "weightOrSize": "7.5 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Formato práctico de 2.7 kg con pollo, arroz y superalimentos para gatos de departamento.",
+    "longDescription": "La presentación ideal para mantener el alimento fresco y crujiente en cada ración. Contiene taurina esencial, ácidos grasos Omega y cero subproductos de maíz o trigo.",
+    "imageUrl": "/productos/Diamond Naturals Indoor Cat Chicken and Rice.webp",
+    "galleryImages": [
+      "/productos/Diamond Naturals Indoor Cat Chicken and Rice.webp"
+    ],
+    "inStock": true,
+    "stockCount": 1,
+    "sku": "PL-011",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 7.5 kg",
+        "weightOrSize": "7.5 kg",
+        "price": 44900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Fresco y crujiente: tamaño ideal para 1 mes de nutrición",
+      "Digestión suave con arroz blanco e integral",
+      "Omegas 3 y 6 para pelaje suave y sedoso",
+      "Sin colorantes ni saborizantes artificiales"
+    ],
+    "ingredients": [
+      "Pollo",
+      "Arroz blanco molido",
+      "Arroz integral",
+      "Pulpa de remolacha",
+      "Linaza"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-11",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-11",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "kgf258k5xohn5n0",
+    "name": "Belcando Finest Croc Mini Adult XS-M",
+    "brand": "Belcando",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 11900,
+    "rating": 4.9,
+    "reviewsCount": 78,
+    "featured": true,
+    "weightOrSize": "1  kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Croquetas de tamaño pequeño con salsa especial instantánea al añadir agua tibia para perros exigentes.",
+    "longDescription": "Elaborado en Alemania con ingredientes holísticos de la más alta calidad, Belcando Finest Croc Mini combina carne fresca de ave y pato con semillas de chía y harina de semilla de uva prensada en frío para una vitalidad inigualable.",
+    "imageUrl": "/productos/Belcando Finest Croc Mini Adult XS-M.webp",
+    "galleryImages": [
+      "/productos/Belcando Finest Croc Mini Adult XS-M.webp"
+    ],
+    "inStock": true,
+    "stockCount": 2,
+    "sku": "PL-003",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 1 kg",
+        "weightOrSize": "1 kg",
+        "price": 11900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Bolsa 4 kg",
+        "weightOrSize": "4 kg",
+        "price": 29900,
+        "inStock": true
+      },
+      {
+        "id": "v3",
+        "label": "Saco 1  kg",
+        "weightOrSize": "1  kg",
+        "price": 11900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Efecto salsa gourmet: mezcla con agua tibia para una delicia irresistible",
+      "Carne fresca de ave de consumo humano como primer ingrediente",
+      "Semillas de chía ricas en ácidos grasos Omega-3 y mucílagos digestivos",
+      "Sin trigo, soya, maíz ni productos lácteos"
+    ],
+    "ingredients": [
+      "Carne fresca de ave (30%)",
+      "Arroz",
+      "Harina de avena forrajera",
+      "Grasa de ave",
+      "Semillas de chía (1.5%)"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-3",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-3",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "hn6kf3bvjn38gy4",
+    "name": "Bravery Salmon Adult Cat 7kg",
+    "brand": "Bravery",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 54900,
+    "rating": 5,
+    "reviewsCount": 132,
+    "featured": true,
+    "weightOrSize": "7 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Receta sin cereales a base de salmón del Atlántico rica en ácidos grasos Omega-3 para piel saludable y pelaje radiante.",
+    "longDescription": "El alimento favorito de los felinos con paladares exigentes. Rico en salmón deshidratado, previene la formación de cálculos de estruvita mediante un pH urinario controlado entre 6.0 y 6.5.",
+    "imageUrl": "/productos/Bravery Salmon Adult Cat 7kg.webp",
+    "galleryImages": [
+      "/productos/Bravery Salmon Adult Cat 7kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 2,
+    "sku": "PL-008",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 2 kg",
+        "weightOrSize": "2 kg",
+        "price": 18900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 7 kg",
+        "weightOrSize": "7 kg",
+        "price": 54900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Salmón deshidratado como ingrediente estrella mono-proteico",
+      "Pelaje ultra denso y brillante en pocas semanas",
+      "Control del pH urinario para salud de la vejiga",
+      "100% natural, sin transgénicos ni harinas de relleno"
+    ],
+    "ingredients": [
+      "Salmón deshidratado",
+      "Tapioca",
+      "Grasa de ave",
+      "Levadura de cerveza",
+      "Aceite de salmón"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-8",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-8",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "gp9109uyoz9yn17",
+    "name": "Purina Pro Plan Sterilized Gatos Optirenal",
+    "brand": "Purina Pro Plan",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 28900,
+    "rating": 5,
+    "reviewsCount": 165,
+    "featured": false,
+    "weightOrSize": "3 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Especialmente formulado para gatos esterilizados con calorías controladas y tecnología Optirenal para riñones sanos.",
+    "longDescription": "Tras la castración, el metabolismo felino disminuye un 20%. Pro Plan Sterilized evita el aumento de peso y previene la formación de urolitos gracias a minerales equilibrados y un pH urinario controlado.",
+    "imageUrl": "/productos/Purina Pro Plan Sterilized Gatos Optirenal.webp",
+    "galleryImages": [
+      "/productos/Purina Pro Plan Sterilized Gatos Optirenal.webp"
+    ],
+    "inStock": false,
+    "stockCount": 0,
+    "sku": "PL-031",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 3 kg",
+        "weightOrSize": "3 kg",
+        "price": 28900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 3 kg",
+        "weightOrSize": "3 kg",
+        "price": 28900,
+        "inStock": false
+      }
+    ],
+    "benefits": [
+      "Tecnología Optirenal clínicamente probada para salud renal",
+      "Niveles reducidos de grasas y calorías para evitar el sobrepeso",
+      "Fibras naturales que aumentan la saciedad del gato",
+      "Control riguroso de pH urinario para evitar cálculos"
+    ],
+    "ingredients": [
+      "Pollo",
+      "Salmón",
+      "Gluten de trigo",
+      "Fibra de soja",
+      "Aceite de pescado"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-31",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-31",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "fvqlv21tzi4kgbb",
+    "name": "Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g",
+    "brand": "Happypets",
+    "category": "snacks",
+    "categoryLabel": "Pequeñas Mascotas",
+    "petType": "ambos",
+    "lifeStage": "todas",
+    "price": 3000,
+    "rating": 4.9,
+    "reviewsCount": 38,
+    "featured": false,
+    "weightOrSize": "500 g",
+    "icon": "🐹",
+    "bgGradient": "from-emerald-500/10 to-teal-500/10 text-emerald-600",
+    "description": "Mezcla seleccionada de semillas, frutos secos y pellets de alfalfa para hámsters, ardillas y cuyes activos.",
+    "longDescription": "Variedad de texturas y semillas crujientes que estimulan el forrajeo natural y previenen el estrés en roedores pequeños. 100% natural, sin conservantes químicos.",
+    "imageUrl": "/productos/Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g.webp",
+    "galleryImages": [
+      "/productos/Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g.webp"
+    ],
+    "inStock": true,
+    "stockCount": 28,
+    "sku": "PL-016",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 500 g",
+        "weightOrSize": "500 g",
+        "price": 3000,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Estimula el comportamiento de forrajeo natural de los roedores",
+      "Grasas saludables y proteína de semillas de girasol y maíz",
+      "Ayuda a mantener la vitalidad y brillo del pelaje",
+      "Mix variado de apetencia garantizada"
+    ],
+    "ingredients": [
+      "Semillas de girasol rayadas",
+      "Maíz partido",
+      "Trigo inflado",
+      "Cacahuetes sin sal",
+      "Pellets de heno"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-16",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-16",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "fs344vehb1auwt2",
+    "name": "Nomade Adulto Razas Medianas y Grandes 20kg",
+    "brand": "Nomade",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 38900,
+    "rating": 4.9,
+    "reviewsCount": 215,
+    "featured": false,
+    "weightOrSize": "20 kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Alimento con extracto de quillay, omegas y proteínas de alto valor biológico para perros medianos y grandes.",
+    "longDescription": "Nomade es reconocido en todo Chile por su óptima asimilación digestiva y su aporte de saponinas naturales de Quillay que reducen drásticamente el olor de las deposiciones.",
+    "imageUrl": "/productos/Nomade Adulto Razas Medianas y Grandes 20kg.webp",
+    "galleryImages": [
+      "/productos/Nomade Adulto Razas Medianas y Grandes 20kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 7,
+    "sku": "PL-019",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Saco 20 kg",
+        "weightOrSize": "20 kg",
+        "price": 38900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Extracto de Quillay que reduce notablemente el olor de las heces",
+      "Omegas 3 y 6 para pelaje brillante y piel hidratada",
+      "Hexametafosfato de sodio que previene el sarro dental",
+      "Excelente rendimiento calórico para perros activos"
+    ],
+    "ingredients": [
+      "Harinas de carnes seleccionadas",
+      "Maíz",
+      "Arroz",
+      "Extracto de quillay",
+      "Aceite de salmón"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-19",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-19",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "fp7qtqxgkdx1poh",
+    "name": "Pampa Premium Total Protection Gatos Adultos 2",
+    "brand": "Pampa",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 26900,
+    "rating": 4.7,
+    "reviewsCount": 58,
+    "featured": false,
+    "weightOrSize": "8 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Nutrición con probióticos activos, pulpa de remolacha y control de pH urinario para gatos hogareños.",
+    "longDescription": "Alimento premium formulado con ingredientes seleccionados para apoyar las defensas naturales y brindar un pelaje brillante a gatos adultos de interior y exterior.",
+    "imageUrl": "/productos/Pampa Premium Total Protection Gatos Adultos 2.webp",
+    "galleryImages": [
+      "/productos/Pampa Premium Total Protection Gatos Adultos 2.webp"
+    ],
+    "inStock": true,
+    "stockCount": 28,
+    "sku": "PL-022",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 8 kg",
+        "weightOrSize": "8 kg",
+        "price": 26900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Probióticos y prebióticos para digestión saludable",
+      "Taurina y metionina para protección urinaria",
+      "Omegas esenciales para pelaje suave",
+      "Gran apetencia y textura crujiente"
+    ],
+    "ingredients": [
+      "Harina de carne",
+      "Harina de pollo",
+      "Maíz",
+      "Pulpa de remolacha",
+      "Grasa bovina"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-22",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-22",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "f0zkwxw8e29jqnd",
+    "name": "Happypets Healthy Rodents Conejos y Cuyes 500g",
+    "brand": "Happypets",
+    "category": "snacks",
+    "categoryLabel": "Pequeñas Mascotas",
+    "petType": "ambos",
+    "lifeStage": "todas",
+    "price": 3000,
+    "rating": 4.9,
+    "reviewsCount": 42,
+    "featured": false,
+    "weightOrSize": "500 g",
+    "icon": "🐹",
+    "bgGradient": "from-emerald-500/10 to-teal-500/10 text-emerald-600",
+    "description": "Mix balanceado de heno, cereales y vegetales deshidratados con vitamina C estabilizada para conejos y cobayos.",
+    "longDescription": "Nutrición rica en fibras largas que favorece el desgaste dental fisiológico y la motilidad digestiva. Aporta vitamina C esencial no sintetizable por los cobayos para prevenir el escorbuto.",
+    "imageUrl": "/productos/Happypets Healthy Rodents Conejos y Cuyes 500g.webp",
+    "galleryImages": [
+      "/productos/Happypets Healthy Rodents Conejos y Cuyes 500g.webp"
+    ],
+    "inStock": true,
+    "stockCount": 17,
+    "sku": "PL-015",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 500 g",
+        "weightOrSize": "500 g",
+        "price": 3000,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Alto contenido en fibra cruda para el correcto desgaste dental",
+      "Vitamina C estabilizada indispensable para cuyes y cobayos",
+      "Previene el sobrepeso con bajo nivel de azúcares simples",
+      "Enriquecido con manzana y zanahoria deshidratada"
+    ],
+    "ingredients": [
+      "Heno de timothy",
+      "Alfalfa peletizada",
+      "Zanahoria deshidratada",
+      "Copos de avena",
+      "Vitamina C"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-15",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-15",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "em7mjl46b2rsw8c",
     "name": "Alaska Adulto Todas las Razas Carne de Vacuno",
     "brand": "Alaska",
     "category": "perros",
@@ -77,6 +1746,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "price": 47900,
     "rating": 4.8,
     "reviewsCount": 86,
+    "featured": true,
     "weightOrSize": "15 kg",
     "icon": "🐕",
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
@@ -87,7 +1757,7 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Alaska Adulto Todas las Razas Carne de Vacuno.webp"
     ],
     "inStock": true,
-    "stockCount": 29,
+    "stockCount": 24,
     "sku": "PL-001",
     "variants": [
       {
@@ -162,182 +1832,78 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-2",
-    "name": "Americalitter Quick Clumping Cat Litter Unscented",
-    "brand": "Americalitter",
-    "category": "higiene",
-    "categoryLabel": "Arenas & Higiene",
+    "id": "elayq9jjdexvp22",
+    "name": "Pampa Premium Total Protection Gatos Adultos",
+    "brand": "Pampa",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
-    "lifeStage": "todas",
-    "price": 16900,
-    "rating": 4.9,
-    "reviewsCount": 112,
+    "lifeStage": "adulto",
+    "price": 42900,
+    "rating": 4.7,
+    "reviewsCount": 72,
+    "featured": false,
     "weightOrSize": "15 kg",
-    "icon": "✨",
-    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
-    "description": "Arena sanitaria aglutinante instantánea sin fragancia, 99.9% libre de polvo y con control superior de olores.",
-    "longDescription": "Americalitter Quick Clumping forma terrones firmes en segundos al contacto con líquidos, permitiendo retirar los residuos fácilmente sin desmoronarse. Ideal para hogares con múltiples gatos y dueños sensibles a perfumes.",
-    "imageUrl": "/productos/Americalitter Quick Clumping Cat Litter Unscented.webp",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Formato económico de 15 kg para hogares con múltiples gatos, con protección inmunológica y renal.",
+    "longDescription": "La opción más conveniente para alimentar a varios felinos manteniendo una nutrición balanceada y de calidad garantizada durante meses.",
+    "imageUrl": "/productos/Pampa Premium Total Protection Gatos Adultos.webp",
     "galleryImages": [
-      "/productos/Americalitter Quick Clumping Cat Litter Unscented.webp"
+      "/productos/Pampa Premium Total Protection Gatos Adultos.webp"
     ],
     "inStock": true,
-    "stockCount": 38,
-    "sku": "PL-002",
+    "stockCount": 32,
+    "sku": "PL-023",
     "variants": [
       {
         "id": "v1",
-        "label": "Bolsa 15 kg",
+        "label": "Saco 15 kg",
         "weightOrSize": "15 kg",
-        "price": 16900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Bolsa 20 kg",
-        "weightOrSize": "20 kg",
-        "price": 20900,
+        "price": 42900,
         "inStock": true
       }
     ],
     "benefits": [
-      "Aglutinación ultra rápida y compacta en menos de 5 segundos",
-      "99.9% libre de polvo para proteger las vías respiratorias",
-      "Sin aromatizantes artificiales: ideal para gatos sensibles",
-      "Mayor rendimiento y duración por cada bolsa"
+      "Excelente rendimiento por kilogramo para varios gatos",
+      "Proteínas animales balanceadas para masa muscular",
+      "Fibra digestiva que previene el estreñimiento",
+      "Enriquecido con vitaminas A, D3 y E"
     ],
     "ingredients": [
-      "Bentonita sódica natural purificada"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-2",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-2",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-3",
-    "name": "Belcando Finest Croc Mini Adult XS-M",
-    "brand": "Belcando",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 29900,
-    "rating": 4.9,
-    "reviewsCount": 78,
-    "weightOrSize": "4 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Croquetas de tamaño pequeño con salsa especial instantánea al añadir agua tibia para perros exigentes.",
-    "longDescription": "Elaborado en Alemania con ingredientes holísticos de la más alta calidad, Belcando Finest Croc Mini combina carne fresca de ave y pato con semillas de chía y harina de semilla de uva prensada en frío para una vitalidad inigualable.",
-    "imageUrl": "/productos/Belcando Finest Croc Mini Adult XS-M.webp",
-    "galleryImages": [
-      "/productos/Belcando Finest Croc Mini Adult XS-M.webp"
-    ],
-    "inStock": true,
-    "stockCount": 25,
-    "sku": "PL-003",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 1 kg",
-        "weightOrSize": "1 kg",
-        "price": 11900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Bolsa 4 kg",
-        "weightOrSize": "4 kg",
-        "price": 29900,
-        "inStock": true
-      },
-      {
-        "id": "v3",
-        "label": "Saco 12.5 kg",
-        "weightOrSize": "12.5 kg",
-        "price": 74900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Efecto salsa gourmet: mezcla con agua tibia para una delicia irresistible",
-      "Carne fresca de ave de consumo humano como primer ingrediente",
-      "Semillas de chía ricas en ácidos grasos Omega-3 y mucílagos digestivos",
-      "Sin trigo, soya, maíz ni productos lácteos"
-    ],
-    "ingredients": [
-      "Carne fresca de ave (30%)",
+      "Harina de carne y hueso",
+      "Harina de ave",
       "Arroz",
-      "Harina de avena forrajera",
-      "Grasa de ave",
-      "Semillas de chía (1.5%)"
+      "Aceite vegetal",
+      "Minerales"
     ],
     "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
       "Fibra cruda": "3.5% máx",
       "Humedad": "10.0% máx"
     },
     "feedingGuide": [
       {
         "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
+        "dailyAmount": "40 - 60 g"
       },
       {
         "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
+        "dailyAmount": "60 - 90 g"
       },
       {
         "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
+        "dailyAmount": "Libre demanda"
       },
       {
         "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
+        "dailyAmount": "Consultar veterinario"
       }
     ],
     "reviews": [
       {
-        "id": "rev-1-prod-3",
+        "id": "rev-1-prod-23",
         "author": "Carolina M.",
         "rating": 5,
         "date": "Hace 4 días",
@@ -345,7 +1911,7 @@ export const PRODUCTS_DATABASE: Product[] = [
         "verified": true
       },
       {
-        "id": "rev-2-prod-3",
+        "id": "rev-2-prod-23",
         "author": "Rodrigo S.",
         "rating": 5,
         "date": "Hace 2 semanas",
@@ -355,151 +1921,58 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-4",
-    "name": "Bravery Chicken Adult Cat 7kg",
-    "brand": "Bravery",
+    "id": "edwu1nilon77172",
+    "name": "Diamond Naturals Indoor Cat Chicken and Rice Formula",
+    "brand": "Diamond Naturals",
     "category": "gatos",
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 52900,
-    "rating": 5,
-    "reviewsCount": 145,
-    "weightOrSize": "7 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Nutrición mono-proteica 100% libre de granos elaborada con pollo deshidratado para gatos con digestión delicada.",
-    "longDescription": "Bravery Chicken Adult Cat es un alimento super premium español formulado con pollo como única fuente de proteína animal. Libre de cereales (Grain Free) y 100% hipoalergénico con tapioca y levadura de cerveza para un sistema inmune invencible.",
-    "imageUrl": "/productos/Bravery Chicken Adult Cat 7kg.webp",
-    "galleryImages": [
-      "/productos/Bravery Chicken Adult Cat 7kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 37,
-    "sku": "PL-004",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 2 kg",
-        "weightOrSize": "2 kg",
-        "price": 17900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7 kg",
-        "weightOrSize": "7 kg",
-        "price": 52900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "100% libre de granos (Grain-Free) e hipoalergénico",
-      "Monoproteico: solo carne deshidratada de pollo",
-      "Taurina añadida para salud visual y muscular del corazón",
-      "Control de bolas de pelo con celulosa purificada"
-    ],
-    "ingredients": [
-      "Carne de pollo deshidratada",
-      "Tapioca",
-      "Grasa de ave",
-      "Guisantes",
-      "Aceite de salmón"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-4",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-4",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-5",
-    "name": "Bravery Chicken Kitten 2kg",
-    "brand": "Bravery",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "cachorro",
-    "price": 21900,
+    "price": 38900,
     "rating": 4.9,
-    "reviewsCount": 94,
-    "weightOrSize": "2 kg",
+    "reviewsCount": 124,
+    "featured": true,
+    "weightOrSize": "7.5 kg",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Fórmula ultra digestible libre de granos para gatitos en crecimiento con alto contenido de DHA y calcio.",
-    "longDescription": "Especialmente balanceado para el crecimiento acelerado de gatitos desde el destete hasta los 12 meses de edad. Proporciona energía concentrada, refuerzo óseo y desarrollo cerebral con ácidos grasos esenciales EPA y DHA.",
-    "imageUrl": "/productos/Bravery Chicken Kitten 2kg.webp",
+    "description": "Nutrición holística con pollo de libre pastoreo y arroz integral, diseñada para gatos que viven en el hogar.",
+    "longDescription": "Proporciona niveles óptimos de calorías y fibra dietética para gatos sedentarios de interior. Contiene superalimentos como col rizada, arándanos y chía combinados con probióticos K9 Strain activos garantizados.",
+    "imageUrl": "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.webp",
     "galleryImages": [
-      "/productos/Bravery Chicken Kitten 2kg.webp"
+      "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.webp"
     ],
     "inStock": true,
-    "stockCount": 24,
-    "sku": "PL-005",
+    "stockCount": 19,
+    "sku": "PL-010",
     "variants": [
       {
         "id": "v1",
-        "label": "Bolsa 2 kg",
-        "weightOrSize": "2 kg",
-        "price": 21900,
+        "label": "Bolsa 2.7 kg",
+        "weightOrSize": "2.7 kg",
+        "price": 19900,
         "inStock": true
       },
       {
         "id": "v2",
-        "label": "Saco 7 kg",
-        "weightOrSize": "7 kg",
-        "price": 52900,
+        "label": "Saco 7.5 kg",
+        "weightOrSize": "7.5 kg",
+        "price": 38900,
         "inStock": true
       }
     ],
     "benefits": [
-      "Crecimiento muscular armónico con proteína pura de pollo",
-      "Desarrollo visual y cognitivo impulsado por DHA natural",
-      "Prebióticos MOS y FOS para una flora intestinal sana",
-      "Croqueta pequeña diseñada para dientes de leche"
+      "Pollo real de jaula libre como ingrediente número uno",
+      "Control de bolas de pelo con celulosa insoluble natural",
+      "Superalimentos ricos en antioxidantes celulares",
+      "Probióticos viables patentados para salud intestinal"
     ],
     "ingredients": [
-      "Carne de pollo deshidratada",
-      "Tapioca",
-      "Grasa de ave",
-      "Proteína de guisante",
-      "Aceite de pescado rico en DHA"
+      "Pollo",
+      "Harina de pollo",
+      "Arroz integral",
+      "Espinacas",
+      "Chía",
+      "Arándanos"
     ],
     "nutritionalAnalysis": {
       "Proteína bruta": "32.0% mín",
@@ -527,7 +2000,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     ],
     "reviews": [
       {
-        "id": "rev-1-prod-5",
+        "id": "rev-1-prod-10",
         "author": "Carolina M.",
         "rating": 5,
         "date": "Hace 4 días",
@@ -535,7 +2008,7 @@ export const PRODUCTS_DATABASE: Product[] = [
         "verified": true
       },
       {
-        "id": "rev-2-prod-5",
+        "id": "rev-2-prod-10",
         "author": "Rodrigo S.",
         "rating": 5,
         "date": "Hace 2 semanas",
@@ -545,7 +2018,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-6",
+    "id": "e1conwnaju9p0jz",
     "name": "Bravery Herring Adult Large Medium Breeds 12kg",
     "brand": "Bravery",
     "category": "perros",
@@ -555,6 +2028,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "price": 69900,
     "rating": 5,
     "reviewsCount": 160,
+    "featured": true,
     "weightOrSize": "12 kg",
     "icon": "🐕",
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
@@ -642,7 +2116,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-7",
+    "id": "e0cr1j3e1a8yert",
     "name": "Bravery Herring Senior Large Medium Breeds +7 Years 12kg",
     "brand": "Bravery",
     "category": "perros",
@@ -652,6 +2126,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "price": 72900,
     "rating": 4.9,
     "reviewsCount": 88,
+    "featured": true,
     "weightOrSize": "12 kg",
     "icon": "🐕",
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
@@ -738,2183 +2213,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-8",
-    "name": "Bravery Salmon Adult Cat 7kg",
-    "brand": "Bravery",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 48900,
-    "rating": 5,
-    "reviewsCount": 132,
-    "weightOrSize": "7 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Receta sin cereales a base de salmón del Atlántico rica en ácidos grasos Omega-3 para piel saludable y pelaje radiante.",
-    "longDescription": "El alimento favorito de los felinos con paladares exigentes. Rico en salmón deshidratado, previene la formación de cálculos de estruvita mediante un pH urinario controlado entre 6.0 y 6.5.",
-    "imageUrl": "/productos/Bravery Salmon Adult Cat 7kg.webp",
-    "galleryImages": [
-      "/productos/Bravery Salmon Adult Cat 7kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 36,
-    "sku": "PL-008",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 2 kg",
-        "weightOrSize": "2 kg",
-        "price": 18900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7 kg",
-        "weightOrSize": "7 kg",
-        "price": 52900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Salmón deshidratado como ingrediente estrella mono-proteico",
-      "Pelaje ultra denso y brillante en pocas semanas",
-      "Control del pH urinario para salud de la vejiga",
-      "100% natural, sin transgénicos ni harinas de relleno"
-    ],
-    "ingredients": [
-      "Salmón deshidratado",
-      "Tapioca",
-      "Grasa de ave",
-      "Levadura de cerveza",
-      "Aceite de salmón"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-8",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-8",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-9",
-    "name": "Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg",
-    "brand": "Champion Cat",
-    "category": "higiene",
-    "categoryLabel": "Arenas & Higiene",
-    "petType": "gato",
-    "lifeStage": "todas",
-    "price": 12900,
-    "rating": 4.8,
-    "reviewsCount": 110,
-    "weightOrSize": "10 kg",
-    "icon": "✨",
-    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
-    "description": "Arena sanitaria aglomerante de bentonita natural con carbón activo para una máxima absorción y bloqueo de olores.",
-    "longDescription": "El poder del carbón activado atrapa las moléculas de amoníaco antes de que se evaporen al ambiente. Su granulometría seleccionada evita el arrastre de piedrecitas fuera del arenero.",
-    "imageUrl": "/productos/Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg.webp",
-    "galleryImages": [
-      "/productos/Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 29,
-    "sku": "PL-009",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 10 kg",
-        "weightOrSize": "10 kg",
-        "price": 12900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Carbón activado microporoso que elimina olores de raíz",
-      "Terrones firmes fáciles de palear sin romperse",
-      "Bajo nivel de polvo que no mancha las patitas",
-      "Rendimiento superior para todo el mes"
-    ],
-    "ingredients": [
-      "Bentonita natural seleccionada",
-      "Carbón activado"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-9",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-9",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-10",
-    "name": "Diamond Naturals Indoor Cat Chicken and Rice Formula",
-    "brand": "Diamond Naturals",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 38900,
-    "rating": 4.9,
-    "reviewsCount": 124,
-    "weightOrSize": "7.5 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Nutrición holística con pollo de libre pastoreo y arroz integral, diseñada para gatos que viven en el hogar.",
-    "longDescription": "Proporciona niveles óptimos de calorías y fibra dietética para gatos sedentarios de interior. Contiene superalimentos como col rizada, arándanos y chía combinados con probióticos K9 Strain activos garantizados.",
-    "imageUrl": "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.webp",
-    "galleryImages": [
-      "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.webp"
-    ],
-    "inStock": true,
-    "stockCount": 19,
-    "sku": "PL-010",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 2.7 kg",
-        "weightOrSize": "2.7 kg",
-        "price": 19900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 38900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Pollo real de jaula libre como ingrediente número uno",
-      "Control de bolas de pelo con celulosa insoluble natural",
-      "Superalimentos ricos en antioxidantes celulares",
-      "Probióticos viables patentados para salud intestinal"
-    ],
-    "ingredients": [
-      "Pollo",
-      "Harina de pollo",
-      "Arroz integral",
-      "Espinacas",
-      "Chía",
-      "Arándanos"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-10",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-10",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-11",
-    "name": "Diamond Naturals Indoor Cat Chicken and Rice",
-    "brand": "Diamond Naturals",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 19900,
-    "rating": 4.8,
-    "reviewsCount": 76,
-    "weightOrSize": "2.7 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Formato práctico de 2.7 kg con pollo, arroz y superalimentos para gatos de departamento.",
-    "longDescription": "La presentación ideal para mantener el alimento fresco y crujiente en cada ración. Contiene taurina esencial, ácidos grasos Omega y cero subproductos de maíz o trigo.",
-    "imageUrl": "/productos/Diamond Naturals Indoor Cat Chicken and Rice.webp",
-    "galleryImages": [
-      "/productos/Diamond Naturals Indoor Cat Chicken and Rice.webp"
-    ],
-    "inStock": true,
-    "stockCount": 38,
-    "sku": "PL-011",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 2.7 kg",
-        "weightOrSize": "2.7 kg",
-        "price": 19900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Fresco y crujiente: tamaño ideal para 1 mes de nutrición",
-      "Digestión suave con arroz blanco e integral",
-      "Omegas 3 y 6 para pelaje suave y sedoso",
-      "Sin colorantes ni saborizantes artificiales"
-    ],
-    "ingredients": [
-      "Pollo",
-      "Arroz blanco molido",
-      "Arroz integral",
-      "Pulpa de remolacha",
-      "Linaza"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-11",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-11",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-12",
-    "name": "DuoMai Super Absorbent Puppy Pads 60x60cm 24 pcs",
-    "brand": "DuoMai",
-    "category": "higiene",
-    "categoryLabel": "Arenas & Higiene",
-    "petType": "perro",
-    "lifeStage": "todas",
-    "price": 14900,
-    "rating": 4.9,
-    "reviewsCount": 95,
-    "weightOrSize": "24 pcs (60x60cm)",
-    "icon": "✨",
-    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
-    "description": "Sabanillas higiénicas ultra absorbentes de 60x60 cm con polímero bloqueador de líquidos para adiestramiento.",
-    "longDescription": "Tecnología de 5 capas de protección con núcleo de polímero que convierte la orina en gel en segundos. Base de polietileno impermeable con bordes anti-desborde para mantener pisos impecables.",
-    "imageUrl": "/productos/DuoMai Super Absorbent Puppy Pads 60x60cm 24 pcs.webp",
-    "galleryImages": [
-      "/productos/DuoMai Super Absorbent Puppy Pads 60x60cm 24 pcs.webp"
-    ],
-    "inStock": true,
-    "stockCount": 23,
-    "sku": "PL-012",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Paquete 24 pcs",
-        "weightOrSize": "24 pcs",
-        "price": 14900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Pack Ahorro 48 pcs",
-        "weightOrSize": "48 pcs",
-        "price": 26900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Gelifica líquidos en segundos evitando que el perro se moje las patas",
-      "Bordes sellados que evitan filtraciones laterales en el suelo",
-      "Atrayente aromático sutil para guiar al cachorro",
-      "Ideal para departamentos, posoperatorios y cachorros"
-    ],
-    "ingredients": [
-      "Polímero superabsorbente (SAP)",
-      "Pulpa de celulosa virgen",
-      "Lámina inferior de polietileno"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-12",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-12",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-13",
-    "name": "DuoMai Super Absorbent Puppy Pads Bamboo Charcoal 33x45cm 12 pcs",
-    "brand": "DuoMai",
-    "category": "higiene",
-    "categoryLabel": "Arenas & Higiene",
-    "petType": "perro",
-    "lifeStage": "todas",
-    "price": 9900,
-    "rating": 4.8,
-    "reviewsCount": 64,
-    "weightOrSize": "12 pcs (33x45cm)",
-    "icon": "✨",
-    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
-    "description": "Tapetes absorbentes con carbón vegetal de bambú que oculta manchas amarillas y neutraliza olores de pipí.",
-    "longDescription": "El carbón de bambú activado proporciona una apariencia limpia de color negro que disimula las manchas visuales y neutraliza el fuerte olor a amoníaco. Tamaño ideal para razas pequeñas y transportadoras.",
-    "imageUrl": "/productos/DuoMai Super Absorbent Puppy Pads Bamboo Charcoal 33x45cm 12 pcs.webp",
-    "galleryImages": [
-      "/productos/DuoMai Super Absorbent Puppy Pads Bamboo Charcoal 33x45cm 12 pcs.webp"
-    ],
-    "inStock": true,
-    "stockCount": 37,
-    "sku": "PL-013",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Paquete 12 pcs",
-        "weightOrSize": "12 pcs",
-        "price": 9900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Color carbón elegante que no deja ver manchas amarillas",
-      "Desodorización profunda gracias al carbón de bambú",
-      "Tamaño compacto ideal para cachorros minis y caniles",
-      "Base antideslizante impermeable"
-    ],
-    "ingredients": [
-      "Carbón activado de bambú",
-      "Polímero SAP",
-      "Polietileno impermeable"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-13",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-13",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-14",
-    "name": "Fit Formula Perro Adulto 20kg",
-    "brand": "Fit Formula",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 39900,
-    "rating": 4.8,
-    "reviewsCount": 180,
-    "weightOrSize": "20 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Alimento completo desarrollado para cubrir todas las necesidades nutricionales de perros adultos con gran palatabilidad.",
-    "longDescription": "Desarrollado en Chile por médicos veterinarios, Fit Formula Adulto aporta proteínas de alta calidad, vitaminas del complejo B y minerales quelados para una condición física atlética y activa.",
-    "imageUrl": "/productos/Fit Formula Perro Adulto 20kg.webp",
-    "galleryImages": [
-      "/productos/Fit Formula Perro Adulto 20kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 23,
-    "sku": "PL-014",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Saco 20 kg",
-        "weightOrSize": "20 kg",
-        "price": 39900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Proteína animal de excelente asimilación para músculos firmes",
-      "Ácidos grasos esenciales para salud de la piel y pelaje",
-      "Extracto de Yucca Schidigera que minimiza el olor de las heces",
-      "Excelente rendimiento y economía por kilogramo"
-    ],
-    "ingredients": [
-      "Harina de subproductos de ave",
-      "Maíz grano molido",
-      "Arroz",
-      "Harina de carne",
-      "Extracto de yucca"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-14",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-14",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-15",
-    "name": "Happypets Healthy Rodents Conejos y Cuyes 500g",
-    "brand": "Happypets",
-    "category": "snacks",
-    "categoryLabel": "Pequeñas Mascotas",
-    "petType": "ambos",
-    "lifeStage": "todas",
-    "price": 3000,
-    "rating": 4.9,
-    "reviewsCount": 42,
-    "weightOrSize": "500 g",
-    "icon": "🐹",
-    "bgGradient": "from-emerald-500/10 to-teal-500/10 text-emerald-600",
-    "description": "Mix balanceado de heno, cereales y vegetales deshidratados con vitamina C estabilizada para conejos y cobayos.",
-    "longDescription": "Nutrición rica en fibras largas que favorece el desgaste dental fisiológico y la motilidad digestiva. Aporta vitamina C esencial no sintetizable por los cobayos para prevenir el escorbuto.",
-    "imageUrl": "/productos/Happypets Healthy Rodents Conejos y Cuyes 500g.webp",
-    "galleryImages": [
-      "/productos/Happypets Healthy Rodents Conejos y Cuyes 500g.webp"
-    ],
-    "inStock": true,
-    "stockCount": 17,
-    "sku": "PL-015",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 500 g",
-        "weightOrSize": "500 g",
-        "price": 3000,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Alto contenido en fibra cruda para el correcto desgaste dental",
-      "Vitamina C estabilizada indispensable para cuyes y cobayos",
-      "Previene el sobrepeso con bajo nivel de azúcares simples",
-      "Enriquecido con manzana y zanahoria deshidratada"
-    ],
-    "ingredients": [
-      "Heno de timothy",
-      "Alfalfa peletizada",
-      "Zanahoria deshidratada",
-      "Copos de avena",
-      "Vitamina C"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-15",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-15",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-16",
-    "name": "Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g",
-    "brand": "Happypets",
-    "category": "snacks",
-    "categoryLabel": "Pequeñas Mascotas",
-    "petType": "ambos",
-    "lifeStage": "todas",
-    "price": 3000,
-    "rating": 4.9,
-    "reviewsCount": 38,
-    "weightOrSize": "500 g",
-    "icon": "🐹",
-    "bgGradient": "from-emerald-500/10 to-teal-500/10 text-emerald-600",
-    "description": "Mezcla seleccionada de semillas, frutos secos y pellets de alfalfa para hámsters, ardillas y cuyes activos.",
-    "longDescription": "Variedad de texturas y semillas crujientes que estimulan el forrajeo natural y previenen el estrés en roedores pequeños. 100% natural, sin conservantes químicos.",
-    "imageUrl": "/productos/Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g.webp",
-    "galleryImages": [
-      "/productos/Happypets Healthy Rodents Mezcla para Cuyes Hamster y Ardillas 500g.webp"
-    ],
-    "inStock": true,
-    "stockCount": 28,
-    "sku": "PL-016",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 500 g",
-        "weightOrSize": "500 g",
-        "price": 3000,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Estimula el comportamiento de forrajeo natural de los roedores",
-      "Grasas saludables y proteína de semillas de girasol y maíz",
-      "Ayuda a mantener la vitalidad y brillo del pelaje",
-      "Mix variado de apetencia garantizada"
-    ],
-    "ingredients": [
-      "Semillas de girasol rayadas",
-      "Maíz partido",
-      "Trigo inflado",
-      "Cacahuetes sin sal",
-      "Pellets de heno"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-16",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-16",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-17",
-    "name": "Leonardo Adult Duck Cat Food",
-    "brand": "Leonardo",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 49900,
-    "rating": 5,
-    "reviewsCount": 68,
-    "weightOrSize": "7.5 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Nutrición alemana super premium elaborada con carne fresca de pato y chía para gatos sibaritas.",
-    "longDescription": "Leonardo Adult Duck combina carne fresca de pato con malta natural para expulsar bolas de pelo con facilidad. Fortalece el sistema inmunitario mediante ProVital a base de beta-glucanos naturales.",
-    "imageUrl": "/productos/Leonardo Adult Duck Cat Food.webp",
-    "galleryImages": [
-      "/productos/Leonardo Adult Duck Cat Food.webp"
-    ],
-    "inStock": true,
-    "stockCount": 33,
-    "sku": "PL-017",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 1.8 kg",
-        "weightOrSize": "1.8 kg",
-        "price": 18900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 49900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Carne fresca de pato (30%) de digestibilidad insuperable",
-      "STAY-Clean: reduce la placa bacteriana dental",
-      "Malta aromática que previene la formación de bolas de pelo",
-      "Ph-control para la salud de las vías urinarias"
-    ],
-    "ingredients": [
-      "Carne fresca de pato",
-      "Proteína de ave deshidratada",
-      "Arroz",
-      "Semillas de chía",
-      "Malta de centeno"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-17",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-17",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-18",
-    "name": "Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg",
-    "brand": "Loops",
-    "category": "higiene",
-    "categoryLabel": "Arenas & Higiene",
-    "petType": "gato",
-    "lifeStage": "todas",
-    "price": 12900,
-    "rating": 4.8,
-    "reviewsCount": 82,
-    "weightOrSize": "9 kg",
-    "icon": "✨",
-    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
-    "description": "Arena sanitaria aglutinante con micro-cápsulas de lavanda que liberan frescura al contacto con las patitas.",
-    "longDescription": "Bentonita sódica aglomerante que neutraliza de inmediato los fuertes olores de orina. Forma esferas duras que se retiran sin ensuciar la bandeja sanitaria.",
-    "imageUrl": "/productos/Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg.webp",
-    "galleryImages": [
-      "/productos/Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 24,
-    "sku": "PL-018",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 9 kg",
-        "weightOrSize": "9 kg",
-        "price": 12900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Fragancia calmante de lavanda que dura semanas",
-      "Aglutinación de gran firmeza: no se desmorona",
-      "Control bacteriano eficaz que mantiene el arenero fresco",
-      "Grano fino suave con las almohadillas del gato"
-    ],
-    "ingredients": [
-      "Bentonita 100% natural",
-      "Esencia de lavanda microencapsulada"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-18",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-18",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-19",
-    "name": "Nomade Adulto Razas Medianas y Grandes 20kg",
-    "brand": "Nomade",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 42900,
-    "rating": 4.9,
-    "reviewsCount": 215,
-    "weightOrSize": "20 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Alimento con extracto de quillay, omegas y proteínas de alto valor biológico para perros medianos y grandes.",
-    "longDescription": "Nomade es reconocido en todo Chile por su óptima asimilación digestiva y su aporte de saponinas naturales de Quillay que reducen drásticamente el olor de las deposiciones.",
-    "imageUrl": "/productos/Nomade Adulto Razas Medianas y Grandes 20kg.webp",
-    "galleryImages": [
-      "/productos/Nomade Adulto Razas Medianas y Grandes 20kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 37,
-    "sku": "PL-019",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Saco 20 kg",
-        "weightOrSize": "20 kg",
-        "price": 42900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Extracto de Quillay que reduce notablemente el olor de las heces",
-      "Omegas 3 y 6 para pelaje brillante y piel hidratada",
-      "Hexametafosfato de sodio que previene el sarro dental",
-      "Excelente rendimiento calórico para perros activos"
-    ],
-    "ingredients": [
-      "Harinas de carnes seleccionadas",
-      "Maíz",
-      "Arroz",
-      "Extracto de quillay",
-      "Aceite de salmón"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-19",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-19",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-20",
-    "name": "Nomade Arena Sanitaria Extra Poder Aglutinante 10kg",
-    "brand": "Nomade",
-    "category": "higiene",
-    "categoryLabel": "Arenas & Higiene",
-    "petType": "gato",
-    "lifeStage": "todas",
-    "price": 14500,
-    "rating": 4.8,
-    "reviewsCount": 90,
-    "weightOrSize": "10 kg",
-    "icon": "✨",
-    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
-    "description": "Bentonita sódica de máxima calidad con esferas de aglutinación rápida y duradera que facilitan la limpieza.",
-    "longDescription": "Su tecnología aglomerante avanzada encapsula los líquidos al instante, impidiendo que el fondo de la bandeja se moje y prolongando la vida útil del arenero.",
-    "imageUrl": "/productos/Nomade Arena Sanitaria Extra Poder Aglutinante 10kg.webp",
-    "galleryImages": [
-      "/productos/Nomade Arena Sanitaria Extra Poder Aglutinante 10kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 24,
-    "sku": "PL-020",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 10 kg",
-        "weightOrSize": "10 kg",
-        "price": 14500,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Absorción extra potente que neutraliza olores de inmediato",
-      "Bajo polvo para proteger los pulmones de tu mascota",
-      "Remoción fácil y limpia con cualquier pala sanitaria",
-      "Calidad garantizada por la marca Nomade"
-    ],
-    "ingredients": [
-      "Bentonita sódica aglomerante"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-20",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-20",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-21",
-    "name": "Nomade Gato Adulto Mix Proteico 10kg",
-    "brand": "Nomade",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 31900,
-    "rating": 4.8,
-    "reviewsCount": 135,
-    "weightOrSize": "10 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Combinación balanceada de carnes, pescado y taurina esencial para la salud cardíaca y visual de gatos adultos.",
-    "longDescription": "Un alimento completo con sabor irresistible para felinos. Diseñado para mantener el tracto urinario despejado y sano con un control adecuado de minerales y cenizas.",
-    "imageUrl": "/productos/Nomade Gato Adulto Mix Proteico 10kg.webp",
-    "galleryImages": [
-      "/productos/Nomade Gato Adulto Mix Proteico 10kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 16,
-    "sku": "PL-021",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Saco 10 kg",
-        "weightOrSize": "10 kg",
-        "price": 31900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Taurina esencial para visión aguda y corazón vigoroso",
-      "Control de pH urinario para prevenir urolitiasis",
-      "Extracto de quillay para heces más compactas y sin mal olor",
-      "Mix de sabores que fascina a los gatos"
-    ],
-    "ingredients": [
-      "Harina de pescado",
-      "Harina de carne y ave",
-      "Maíz",
-      "Taurina",
-      "Extracto de quillay"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-21",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-21",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-22",
-    "name": "Pampa Premium Total Protection Gatos Adultos 2",
-    "brand": "Pampa",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 26900,
-    "rating": 4.7,
-    "reviewsCount": 58,
-    "weightOrSize": "8 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Nutrición con probióticos activos, pulpa de remolacha y control de pH urinario para gatos hogareños.",
-    "longDescription": "Alimento premium formulado con ingredientes seleccionados para apoyar las defensas naturales y brindar un pelaje brillante a gatos adultos de interior y exterior.",
-    "imageUrl": "/productos/Pampa Premium Total Protection Gatos Adultos 2.webp",
-    "galleryImages": [
-      "/productos/Pampa Premium Total Protection Gatos Adultos 2.webp"
-    ],
-    "inStock": true,
-    "stockCount": 28,
-    "sku": "PL-022",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 8 kg",
-        "weightOrSize": "8 kg",
-        "price": 26900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Probióticos y prebióticos para digestión saludable",
-      "Taurina y metionina para protección urinaria",
-      "Omegas esenciales para pelaje suave",
-      "Gran apetencia y textura crujiente"
-    ],
-    "ingredients": [
-      "Harina de carne",
-      "Harina de pollo",
-      "Maíz",
-      "Pulpa de remolacha",
-      "Grasa bovina"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-22",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-22",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-23",
-    "name": "Pampa Premium Total Protection Gatos Adultos",
-    "brand": "Pampa",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 42900,
-    "rating": 4.7,
-    "reviewsCount": 72,
-    "weightOrSize": "15 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Formato económico de 15 kg para hogares con múltiples gatos, con protección inmunológica y renal.",
-    "longDescription": "La opción más conveniente para alimentar a varios felinos manteniendo una nutrición balanceada y de calidad garantizada durante meses.",
-    "imageUrl": "/productos/Pampa Premium Total Protection Gatos Adultos.webp",
-    "galleryImages": [
-      "/productos/Pampa Premium Total Protection Gatos Adultos.webp"
-    ],
-    "inStock": true,
-    "stockCount": 32,
-    "sku": "PL-023",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Saco 15 kg",
-        "weightOrSize": "15 kg",
-        "price": 47900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Excelente rendimiento por kilogramo para varios gatos",
-      "Proteínas animales balanceadas para masa muscular",
-      "Fibra digestiva que previene el estreñimiento",
-      "Enriquecido con vitaminas A, D3 y E"
-    ],
-    "ingredients": [
-      "Harina de carne y hueso",
-      "Harina de ave",
-      "Arroz",
-      "Aceite vegetal",
-      "Minerales"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-23",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-23",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-24",
-    "name": "Purina Cat Chow Adultos Pescado",
-    "brand": "Purina Cat Chow",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 28900,
-    "rating": 4.8,
-    "reviewsCount": 190,
-    "weightOrSize": "8 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Con tecnología Defense Plus, antioxidantes y rico sabor a pescado para proteger la vitalidad de tu gato.",
-    "longDescription": "Cat Chow Pescado está formulado con fuentes naturales de fibra, antioxidantes y vitaminas que fortalecen el sistema inmunológico y protegen el tracto urinario de los felinos.",
-    "imageUrl": "/productos/Purina Cat Chow Adultos Pescado.webp",
-    "galleryImages": [
-      "/productos/Purina Cat Chow Adultos Pescado.webp"
-    ],
-    "inStock": true,
-    "stockCount": 27,
-    "sku": "PL-024",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 3 kg",
-        "weightOrSize": "3 kg",
-        "price": 12900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Bolsa 8 kg",
-        "weightOrSize": "8 kg",
-        "price": 28900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Tecnología Defense Plus con vitaminas y minerales esenciales",
-      "Proteínas de pescado de alta digestibilidad",
-      "Control de pH urinario para salud de riñones y vejiga",
-      "Sin colorantes artificiales añadidos"
-    ],
-    "ingredients": [
-      "Harina de pescado",
-      "Harina de subproductos de pollo",
-      "Maíz amarillo",
-      "Trigo",
-      "Taurina"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-24",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-24",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-25",
-    "name": "Purina One Adultos Pollo y Salmon 2kg",
-    "brand": "Purina One",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 18900,
-    "rating": 4.9,
-    "reviewsCount": 104,
-    "weightOrSize": "2 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Nutrición superior con carne real de pollo y salmón como ingredientes #1 para energía y digestión en 28 días.",
-    "longDescription": "Purina ONE combina ingredientes naturales con croquetas crujientes y tiernas que producen cambios visibles en la salud de tu gato en solo 28 días: mayor energía, ojos brillantes y pelaje sedoso.",
-    "imageUrl": "/productos/Purina One Adultos Pollo y Salmon 2kg.webp",
-    "galleryImages": [
-      "/productos/Purina One Adultos Pollo y Salmon 2kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 22,
-    "sku": "PL-025",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 2 kg",
-        "weightOrSize": "2 kg",
-        "price": 18900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Carne real de pollo y salmón como ingredientes número 1",
-      "Cambio visible en la vitalidad y brillo del pelaje en 28 días",
-      "Prebiótico natural que fortalece la microbiota intestinal",
-      "Taurina natural para corazón y retina saludables"
-    ],
-    "ingredients": [
-      "Pollo",
-      "Salmón",
-      "Harina de pollo",
-      "Arroz",
-      "Grasa vacuna",
-      "Inulina"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-25",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-25",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-26",
-    "name": "Purina One Perros Adultos Medianos y Grandes Pollo y Cordero",
-    "brand": "Purina One",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 52900,
-    "rating": 4.9,
-    "reviewsCount": 128,
-    "weightOrSize": "15 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Combinación crujiente de croquetas y bocados tiernos de pollo y cordero para músculos fuertes y articulaciones.",
-    "longDescription": "Fórmula de nutrición avanzada con carne real como primer ingrediente. Diseñada para mantener el peso ideal y la masa muscular en perros de razas medianas y grandes.",
-    "imageUrl": "/productos/Purina One Perros Adultos Medianos y Grandes Pollo y Cordero.webp",
-    "galleryImages": [
-      "/productos/Purina One Perros Adultos Medianos y Grandes Pollo y Cordero.webp"
-    ],
-    "inStock": true,
-    "stockCount": 25,
-    "sku": "PL-026",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 3.5 kg",
-        "weightOrSize": "3.5 kg",
-        "price": 17900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 15 kg",
-        "weightOrSize": "15 kg",
-        "price": 47900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Carne real de pollo y cordero como primer ingrediente",
-      "Bocados tiernos y croquetas crujientes de doble textura",
-      "Glucosamina natural para soporte de cadera y rodillas",
-      "Digestión óptima y absorción de nutrientes comprobada"
-    ],
-    "ingredients": [
-      "Pollo",
-      "Cordero",
-      "Arroz cervecero",
-      "Harina de ave",
-      "Aceite de pescado"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-26",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-26",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-27",
-    "name": "Purina One Perros Adultos Minis y Pequenos Pollo y Cordero",
-    "brand": "Purina One",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 34900,
-    "rating": 4.9,
-    "reviewsCount": 115,
-    "weightOrSize": "7.5 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Bocados de tamaño adaptado a mandíbulas pequeñas con pollo y cordero para un metabolismo acelerado y activo.",
-    "longDescription": "Los perros minis queman energía más rápidamente. Esta receta concentra nutrientes y calorías precisas en croquetas pequeñas que cuidan sus dientes y satisfacen su apetito exigente.",
-    "imageUrl": "/productos/Purina One Perros Adultos Minis y Pequenos Pollo y Cordero.webp",
-    "galleryImages": [
-      "/productos/Purina One Perros Adultos Minis y Pequenos Pollo y Cordero.webp"
-    ],
-    "inStock": true,
-    "stockCount": 25,
-    "sku": "PL-027",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 1.5 kg",
-        "weightOrSize": "1.5 kg",
-        "price": 9900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 34900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Croqueta mini fácil de masticar que combate el sarro",
-      "Alto contenido calórico adaptado al metabolismo de razas minis",
-      "Pollo y cordero reales para máxima palatabilidad",
-      "Piel radiante con ácidos grasos Omega 6"
-    ],
-    "ingredients": [
-      "Pollo",
-      "Cordero",
-      "Harina de subproductos de ave",
-      "Arroz",
-      "Grasa animal"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-27",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-27",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-28",
-    "name": "Purina Pro Plan Adult Gatos Optiprebio",
-    "brand": "Purina Pro Plan",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 54900,
-    "rating": 5,
-    "reviewsCount": 175,
-    "weightOrSize": "7.5 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Nutrición médica veterinaria con prebióticos naturales que optimizan la digestión y refuerzan las defensas.",
-    "longDescription": "Purina Pro Plan con Optiprebio incluye una mezcla exclusiva de prebióticos naturales que estabilizan la microflora intestinal, optimizan la absorción de nutrientes y protegen el tracto urinario felino.",
-    "imageUrl": "/productos/Purina Pro Plan Adult Gatos Optiprebio.webp",
-    "galleryImages": [
-      "/productos/Purina Pro Plan Adult Gatos Optiprebio.webp"
-    ],
-    "inStock": true,
-    "stockCount": 33,
-    "sku": "PL-028",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 3 kg",
-        "weightOrSize": "3 kg",
-        "price": 27900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 54900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Tecnología Optiprebio con inulina de achicoria prebiótica",
-      "Carne fresca de salmón y pollo de calidad superior",
-      "Protección renal comprobada científicamente",
-      "Reducción comprobada del olor de las deposiciones"
-    ],
-    "ingredients": [
-      "Carne de pollo",
-      "Salmón",
-      "Arroz cervecero",
-      "Inulina prebiótica",
-      "Vitaminas C y E"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-28",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-28",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-29",
-    "name": "Purina Pro Plan Kitten Optistart",
-    "brand": "Purina Pro Plan",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "cachorro",
-    "price": 29900,
-    "rating": 5,
-    "reviewsCount": 130,
-    "weightOrSize": "3 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Formulado con calostro materno, anticuerpos naturales y DHA para un crecimiento y cerebro óptimos en gatitos.",
-    "longDescription": "Optistart con calostro vacuno extiende la ventana de inmunidad materna tras el destete, estimulando las defensas naturales y promoviendo huesos y músculos fuertes.",
-    "imageUrl": "/productos/Purina Pro Plan Kitten Optistart.webp",
-    "galleryImages": [
-      "/productos/Purina Pro Plan Kitten Optistart.webp"
-    ],
-    "inStock": true,
-    "stockCount": 31,
-    "sku": "PL-029",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 1 kg",
-        "weightOrSize": "1 kg",
-        "price": 11900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Bolsa 3 kg",
-        "weightOrSize": "3 kg",
-        "price": 29900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Calostro materno que refuerza el sistema inmunitario inmaduro",
-      "Ácido graso DHA para desarrollo cerebral y agudeza visual",
-      "Proteínas de pollo de alto valor biológico para crecimiento muscular",
-      "Calcio y fósforo en balance exacto para huesos fuertes"
-    ],
-    "ingredients": [
-      "Pollo",
-      "Calostro bovino en polvo",
-      "Aceite de pescado (fuente de DHA)",
-      "Gluten de maíz"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-29",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-29",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-30",
-    "name": "Purina Pro Plan Puppy Razas Pequenas Optistart",
-    "brand": "Purina Pro Plan",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "cachorro",
-    "price": 49900,
-    "rating": 5,
-    "reviewsCount": 154,
-    "weightOrSize": "7.5 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Nutrición científica para cachorros de razas pequeñas con calostro vacuno que extiende la protección materna.",
-    "longDescription": "Desarrollado para cachorros que alcanzan hasta 10 kg de peso adulto. Su croqueta pequeña favorece la prensión y masticación, mientras el calostro protege su delicado sistema digestivo.",
-    "imageUrl": "/productos/Purina Pro Plan Puppy Razas Pequenas Optistart.webp",
-    "galleryImages": [
-      "/productos/Purina Pro Plan Puppy Razas Pequenas Optistart.webp"
-    ],
-    "inStock": true,
-    "stockCount": 39,
-    "sku": "PL-030",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 3 kg",
-        "weightOrSize": "3 kg",
-        "price": 24900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 49900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Calostro vacuno con anticuerpos naturales activos",
-      "Estimula la respuesta ante las primeras vacunas del cachorro",
-      "Croqueta de tamaño microscópico para mandíbulas minis",
-      "Carne fresca de pollo como fuente proteica primordial"
-    ],
-    "ingredients": [
-      "Carne de pollo",
-      "Calostro bovino en polvo",
-      "Arroz",
-      "Grasa vacuna",
-      "Aceite de pescado rico en DHA"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-30",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-30",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-31",
-    "name": "Purina Pro Plan Sterilized Gatos Optirenal",
-    "brand": "Purina Pro Plan",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 56900,
-    "rating": 5,
-    "reviewsCount": 165,
-    "weightOrSize": "7.5 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Especialmente formulado para gatos esterilizados con calorías controladas y tecnología Optirenal para riñones sanos.",
-    "longDescription": "Tras la castración, el metabolismo felino disminuye un 20%. Pro Plan Sterilized evita el aumento de peso y previene la formación de urolitos gracias a minerales equilibrados y un pH urinario controlado.",
-    "imageUrl": "/productos/Purina Pro Plan Sterilized Gatos Optirenal.webp",
-    "galleryImages": [
-      "/productos/Purina Pro Plan Sterilized Gatos Optirenal.webp"
-    ],
-    "inStock": true,
-    "stockCount": 27,
-    "sku": "PL-031",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 3 kg",
-        "weightOrSize": "3 kg",
-        "price": 28900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 56900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Tecnología Optirenal clínicamente probada para salud renal",
-      "Niveles reducidos de grasas y calorías para evitar el sobrepeso",
-      "Fibras naturales que aumentan la saciedad del gato",
-      "Control riguroso de pH urinario para evitar cálculos"
-    ],
-    "ingredients": [
-      "Pollo",
-      "Salmón",
-      "Gluten de trigo",
-      "Fibra de soja",
-      "Aceite de pescado"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-31",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-31",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-32",
+    "id": "dm6kwysv1foqgz1",
     "name": "Purina Pro Plan Urinary Gatos",
     "brand": "Purina Pro Plan",
     "category": "gatos",
@@ -2924,6 +2223,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "price": 58900,
     "rating": 5,
     "reviewsCount": 140,
+    "featured": false,
     "weightOrSize": "7.5 kg",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
@@ -3009,7 +2309,471 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-33",
+    "id": "cz0zk4v80m9emgz",
+    "name": "Americalitter Quick Clumping Cat Litter Unscented",
+    "brand": "Americalitter",
+    "category": "higiene",
+    "categoryLabel": "Arenas & Higiene",
+    "petType": "gato",
+    "lifeStage": "todas",
+    "price": 16900,
+    "rating": 4.9,
+    "reviewsCount": 112,
+    "featured": true,
+    "weightOrSize": "15 kg",
+    "icon": "✨",
+    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
+    "description": "Arena sanitaria aglutinante instantánea sin fragancia, 99.9% libre de polvo y con control superior de olores.",
+    "longDescription": "Americalitter Quick Clumping forma terrones firmes en segundos al contacto con líquidos, permitiendo retirar los residuos fácilmente sin desmoronarse. Ideal para hogares con múltiples gatos y dueños sensibles a perfumes.",
+    "imageUrl": "/productos/Americalitter Quick Clumping Cat Litter Unscented.webp",
+    "galleryImages": [
+      "/productos/Americalitter Quick Clumping Cat Litter Unscented.webp"
+    ],
+    "inStock": false,
+    "stockCount": 38,
+    "sku": "PL-002",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 15 kg",
+        "weightOrSize": "15 kg",
+        "price": 16900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Bolsa 15 kg",
+        "weightOrSize": "15 kg",
+        "price": 16900,
+        "inStock": false
+      }
+    ],
+    "benefits": [
+      "Aglutinación ultra rápida y compacta en menos de 5 segundos",
+      "99.9% libre de polvo para proteger las vías respiratorias",
+      "Sin aromatizantes artificiales: ideal para gatos sensibles",
+      "Mayor rendimiento y duración por cada bolsa"
+    ],
+    "ingredients": [
+      "Bentonita sódica natural purificada"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-2",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-2",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "c6kwh7gj4uz942j",
+    "name": "Bravery Chicken Kitten 2kg",
+    "brand": "Bravery",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 21900,
+    "rating": 4.9,
+    "reviewsCount": 94,
+    "featured": true,
+    "weightOrSize": "2 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Fórmula ultra digestible libre de granos para gatitos en crecimiento con alto contenido de DHA y calcio.",
+    "longDescription": "Especialmente balanceado para el crecimiento acelerado de gatitos desde el destete hasta los 12 meses de edad. Proporciona energía concentrada, refuerzo óseo y desarrollo cerebral con ácidos grasos esenciales EPA y DHA.",
+    "imageUrl": "/productos/Bravery Chicken Kitten 2kg.webp",
+    "galleryImages": [
+      "/productos/Bravery Chicken Kitten 2kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 3,
+    "sku": "PL-005",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 2 kg",
+        "weightOrSize": "2 kg",
+        "price": 21900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 2 kg",
+        "weightOrSize": "2 kg",
+        "price": 21900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Crecimiento muscular armónico con proteína pura de pollo",
+      "Desarrollo visual y cognitivo impulsado por DHA natural",
+      "Prebióticos MOS y FOS para una flora intestinal sana",
+      "Croqueta pequeña diseñada para dientes de leche"
+    ],
+    "ingredients": [
+      "Carne de pollo deshidratada",
+      "Tapioca",
+      "Grasa de ave",
+      "Proteína de guisante",
+      "Aceite de pescado rico en DHA"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-5",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-5",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "brfmgjjcdd37sxs",
+    "name": "Nomade Arena Sanitaria Extra Poder Aglutinante 10kg",
+    "brand": "Nomade",
+    "category": "higiene",
+    "categoryLabel": "Arenas & Higiene",
+    "petType": "gato",
+    "lifeStage": "todas",
+    "price": 14500,
+    "rating": 4.8,
+    "reviewsCount": 90,
+    "featured": false,
+    "weightOrSize": "10 kg",
+    "icon": "✨",
+    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
+    "description": "Bentonita sódica de máxima calidad con esferas de aglutinación rápida y duradera que facilitan la limpieza.",
+    "longDescription": "Su tecnología aglomerante avanzada encapsula los líquidos al instante, impidiendo que el fondo de la bandeja se moje y prolongando la vida útil del arenero.",
+    "imageUrl": "/productos/Nomade Arena Sanitaria Extra Poder Aglutinante 10kg.webp",
+    "galleryImages": [
+      "/productos/Nomade Arena Sanitaria Extra Poder Aglutinante 10kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 24,
+    "sku": "PL-020",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 10 kg",
+        "weightOrSize": "10 kg",
+        "price": 14500,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Absorción extra potente que neutraliza olores de inmediato",
+      "Bajo polvo para proteger los pulmones de tu mascota",
+      "Remoción fácil y limpia con cualquier pala sanitaria",
+      "Calidad garantizada por la marca Nomade"
+    ],
+    "ingredients": [
+      "Bentonita sódica aglomerante"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "26.0% mín",
+      "Grasa bruta": "12.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "70 - 100 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "100 - 160 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "160 - 320 g"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "320 - 520 g"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-20",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-20",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "8xupsjjvcav7xq7",
+    "name": "Purina Pro Plan Kitten Optistart",
+    "brand": "Purina Pro Plan",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "cachorro",
+    "price": 29900,
+    "rating": 5,
+    "reviewsCount": 130,
+    "featured": false,
+    "weightOrSize": "3 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Formulado con calostro materno, anticuerpos naturales y DHA para un crecimiento y cerebro óptimos en gatitos.",
+    "longDescription": "Optistart con calostro vacuno extiende la ventana de inmunidad materna tras el destete, estimulando las defensas naturales y promoviendo huesos y músculos fuertes.",
+    "imageUrl": "/productos/Purina Pro Plan Kitten Optistart.webp",
+    "galleryImages": [
+      "/productos/Purina Pro Plan Kitten Optistart.webp"
+    ],
+    "inStock": true,
+    "stockCount": 31,
+    "sku": "PL-029",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 1 kg",
+        "weightOrSize": "1 kg",
+        "price": 11900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Bolsa 3 kg",
+        "weightOrSize": "3 kg",
+        "price": 29900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Calostro materno que refuerza el sistema inmunitario inmaduro",
+      "Ácido graso DHA para desarrollo cerebral y agudeza visual",
+      "Proteínas de pollo de alto valor biológico para crecimiento muscular",
+      "Calcio y fósforo en balance exacto para huesos fuertes"
+    ],
+    "ingredients": [
+      "Pollo",
+      "Calostro bovino en polvo",
+      "Aceite de pescado (fuente de DHA)",
+      "Gluten de maíz"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-29",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-29",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "8vi1eu6i8qid6mb",
+    "name": "Purina Cat Chow Adultos Pescado",
+    "brand": "Purina Cat Chow",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 28900,
+    "rating": 4.8,
+    "reviewsCount": 190,
+    "featured": false,
+    "weightOrSize": "8 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Con tecnología Defense Plus, antioxidantes y rico sabor a pescado para proteger la vitalidad de tu gato.",
+    "longDescription": "Cat Chow Pescado está formulado con fuentes naturales de fibra, antioxidantes y vitaminas que fortalecen el sistema inmunológico y protegen el tracto urinario de los felinos.",
+    "imageUrl": "/productos/Purina Cat Chow Adultos Pescado.webp",
+    "galleryImages": [
+      "/productos/Purina Cat Chow Adultos Pescado.webp"
+    ],
+    "inStock": true,
+    "stockCount": 27,
+    "sku": "PL-024",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 3 kg",
+        "weightOrSize": "3 kg",
+        "price": 12900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Bolsa 8 kg",
+        "weightOrSize": "8 kg",
+        "price": 28900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Tecnología Defense Plus con vitaminas y minerales esenciales",
+      "Proteínas de pescado de alta digestibilidad",
+      "Control de pH urinario para salud de riñones y vejiga",
+      "Sin colorantes artificiales añadidos"
+    ],
+    "ingredients": [
+      "Harina de pescado",
+      "Harina de subproductos de pollo",
+      "Maíz amarillo",
+      "Trigo",
+      "Taurina"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-24",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-24",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "8o6srokeus1mhtw",
     "name": "Raza Gatos Pollo y Leche 10kg",
     "brand": "Raza",
     "category": "gatos",
@@ -3019,6 +2783,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "price": 24900,
     "rating": 4.7,
     "reviewsCount": 75,
+    "featured": false,
     "weightOrSize": "10 kg",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
@@ -3097,7 +2862,192 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-34",
+    "id": "7o4kodx65b4s35f",
+    "name": "Top One Gatos Adultos con Pollo y Salmon 9kg",
+    "brand": "Top One",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 27900,
+    "rating": 4.8,
+    "reviewsCount": 65,
+    "featured": false,
+    "weightOrSize": "9 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Receta equilibrada con proteínas de pollo y salmón, reforzada con taurina para corazón y vista.",
+    "longDescription": "Top One Gatos combina dos fuentes de proteína de alta digestibilidad con minerales quelados para el bienestar diario de gatos adultos.",
+    "imageUrl": "/productos/Top One Gatos Adultos con Pollo y Salmon 9kg.webp",
+    "galleryImages": [
+      "/productos/Top One Gatos Adultos con Pollo y Salmon 9kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 26,
+    "sku": "PL-035",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Saco 9 kg",
+        "weightOrSize": "9 kg",
+        "price": 27900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Sabor irresistible a pollo y salmón fresco",
+      "Taurina y metionina para protección urinaria",
+      "Pelaje brillante con ácidos grasos esenciales",
+      "Gran formato económico para todo el mes"
+    ],
+    "ingredients": [
+      "Harina de pollo",
+      "Harina de salmón",
+      "Maíz",
+      "Arroz",
+      "Aceite vegetal"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-35",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-35",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "7i07sdgubvnyphy",
+    "name": "Purina Pro Plan Adult Gatos Optiprebio",
+    "brand": "Purina Pro Plan",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 54900,
+    "rating": 5,
+    "reviewsCount": 175,
+    "featured": false,
+    "weightOrSize": "7.5 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Nutrición médica veterinaria con prebióticos naturales que optimizan la digestión y refuerzan las defensas.",
+    "longDescription": "Purina Pro Plan con Optiprebio incluye una mezcla exclusiva de prebióticos naturales que estabilizan la microflora intestinal, optimizan la absorción de nutrientes y protegen el tracto urinario felino.",
+    "imageUrl": "/productos/Purina Pro Plan Adult Gatos Optiprebio.webp",
+    "galleryImages": [
+      "/productos/Purina Pro Plan Adult Gatos Optiprebio.webp"
+    ],
+    "inStock": true,
+    "stockCount": 33,
+    "sku": "PL-028",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 3 kg",
+        "weightOrSize": "3 kg",
+        "price": 27900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 7.5 kg",
+        "weightOrSize": "7.5 kg",
+        "price": 54900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "Tecnología Optiprebio con inulina de achicoria prebiótica",
+      "Carne fresca de salmón y pollo de calidad superior",
+      "Protección renal comprobada científicamente",
+      "Reducción comprobada del olor de las deposiciones"
+    ],
+    "ingredients": [
+      "Carne de pollo",
+      "Salmón",
+      "Arroz cervecero",
+      "Inulina prebiótica",
+      "Vitaminas C y E"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-28",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-28",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "5dhqhuk65pg7b1r",
     "name": "Taste of the Wild Rocky Mountain Feline Recipe",
     "brand": "Taste of the Wild",
     "category": "gatos",
@@ -3107,6 +3057,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "price": 59900,
     "rating": 5,
     "reviewsCount": 185,
+    "featured": false,
     "weightOrSize": "6.6 kg",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
@@ -3194,49 +3145,50 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-35",
-    "name": "Top One Gatos Adultos con Pollo y Salmon 9kg",
-    "brand": "Top One",
+    "id": "4wzr3gw6szclzb9",
+    "name": "Nomade Gato Adulto Mix Proteico 10kg",
+    "brand": "Nomade",
     "category": "gatos",
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 27900,
+    "price": 31900,
     "rating": 4.8,
-    "reviewsCount": 65,
-    "weightOrSize": "9 kg",
+    "reviewsCount": 135,
+    "featured": false,
+    "weightOrSize": "10 kg",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Receta equilibrada con proteínas de pollo y salmón, reforzada con taurina para corazón y vista.",
-    "longDescription": "Top One Gatos combina dos fuentes de proteína de alta digestibilidad con minerales quelados para el bienestar diario de gatos adultos.",
-    "imageUrl": "/productos/Top One Gatos Adultos con Pollo y Salmon 9kg.webp",
+    "description": "Combinación balanceada de carnes, pescado y taurina esencial para la salud cardíaca y visual de gatos adultos.",
+    "longDescription": "Un alimento completo con sabor irresistible para felinos. Diseñado para mantener el tracto urinario despejado y sano con un control adecuado de minerales y cenizas.",
+    "imageUrl": "/productos/Nomade Gato Adulto Mix Proteico 10kg.webp",
     "galleryImages": [
-      "/productos/Top One Gatos Adultos con Pollo y Salmon 9kg.webp"
+      "/productos/Nomade Gato Adulto Mix Proteico 10kg.webp"
     ],
     "inStock": true,
-    "stockCount": 26,
-    "sku": "PL-035",
+    "stockCount": 16,
+    "sku": "PL-021",
     "variants": [
       {
         "id": "v1",
-        "label": "Saco 9 kg",
-        "weightOrSize": "9 kg",
-        "price": 27900,
+        "label": "Saco 10 kg",
+        "weightOrSize": "10 kg",
+        "price": 31900,
         "inStock": true
       }
     ],
     "benefits": [
-      "Sabor irresistible a pollo y salmón fresco",
-      "Taurina y metionina para protección urinaria",
-      "Pelaje brillante con ácidos grasos esenciales",
-      "Gran formato económico para todo el mes"
+      "Taurina esencial para visión aguda y corazón vigoroso",
+      "Control de pH urinario para prevenir urolitiasis",
+      "Extracto de quillay para heces más compactas y sin mal olor",
+      "Mix de sabores que fascina a los gatos"
     ],
     "ingredients": [
-      "Harina de pollo",
-      "Harina de salmón",
+      "Harina de pescado",
+      "Harina de carne y ave",
       "Maíz",
-      "Arroz",
-      "Aceite vegetal"
+      "Taurina",
+      "Extracto de quillay"
     ],
     "nutritionalAnalysis": {
       "Proteína bruta": "32.0% mín",
@@ -3264,7 +3216,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     ],
     "reviews": [
       {
-        "id": "rev-1-prod-35",
+        "id": "rev-1-prod-21",
         "author": "Carolina M.",
         "rating": 5,
         "date": "Hace 4 días",
@@ -3272,7 +3224,7 @@ export const PRODUCTS_DATABASE: Product[] = [
         "verified": true
       },
       {
-        "id": "rev-2-prod-35",
+        "id": "rev-2-prod-21",
         "author": "Rodrigo S.",
         "rating": 5,
         "date": "Hace 2 semanas",
@@ -3282,7 +3234,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-36",
+    "id": "4dkg5n1466d6upy",
     "name": "Top One Perros Adultos 10kg",
     "brand": "Top One",
     "category": "perros",
@@ -3292,6 +3244,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "price": 22900,
     "rating": 4.7,
     "reviewsCount": 54,
+    "featured": false,
     "weightOrSize": "10 kg",
     "icon": "🐕",
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
@@ -3370,238 +3323,47 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-37",
-    "name": "Top One Perros Adultos Medianos y Grandes con Pollo 9kg",
-    "brand": "Top One",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 21900,
+    "id": "3hmeg3d80nd9cdg",
+    "name": "Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg",
+    "brand": "Loops",
+    "category": "higiene",
+    "categoryLabel": "Arenas & Higiene",
+    "petType": "gato",
+    "lifeStage": "todas",
+    "price": 12900,
     "rating": 4.8,
-    "reviewsCount": 60,
+    "reviewsCount": 82,
+    "featured": false,
     "weightOrSize": "9 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Croquetas de tamaño adaptado a perros medianos y grandes que fomentan la masticación y la salud dental.",
-    "longDescription": "El tamaño de bocado estimula la masticación pausada y limpia los dientes mediante abrasión mecánica suave durante cada comida.",
-    "imageUrl": "/productos/Top One Perros Adultos Medianos y Grandes con Pollo 9kg.webp",
+    "icon": "✨",
+    "bgGradient": "from-cyan-500/10 to-blue-500/10 text-cyan-600",
+    "description": "Arena sanitaria aglutinante con micro-cápsulas de lavanda que liberan frescura al contacto con las patitas.",
+    "longDescription": "Bentonita sódica aglomerante que neutraliza de inmediato los fuertes olores de orina. Forma esferas duras que se retiran sin ensuciar la bandeja sanitaria.",
+    "imageUrl": "/productos/Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg.webp",
     "galleryImages": [
-      "/productos/Top One Perros Adultos Medianos y Grandes con Pollo 9kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 32,
-    "sku": "PL-037",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Saco 9 kg",
-        "weightOrSize": "9 kg",
-        "price": 21900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Tamaño de croqueta adecuado para perros de más de 10 kg",
-      "Proteína de pollo digestible para vitalidad muscular",
-      "Salud dental con efecto limpiador al masticar",
-      "Grasas controladas para evitar el sobrepeso"
-    ],
-    "ingredients": [
-      "Harina de pollo",
-      "Maíz grano",
-      "Harina de carne",
-      "Aceite de pollo",
-      "Prebióticos"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-37",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-37",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-38",
-    "name": "Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg",
-    "brand": "Vitalcan",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 57900,
-    "rating": 4.9,
-    "reviewsCount": 138,
-    "weightOrSize": "17 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Receta natural argentina con carne de vacuno seleccionada, pulpa de remolacha y extracto de romero.",
-    "longDescription": "Vitalcan Balanced Natural Recipe destaca por sus ingredientes 100% nobles sin conservantes químicos artificiales. El romero y el tocoferol actúan como antioxidantes celulares naturales.",
-    "imageUrl": "/productos/Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg.webp",
-    "galleryImages": [
-      "/productos/Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 38,
-    "sku": "PL-038",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 3 kg",
-        "weightOrSize": "3 kg",
-        "price": 15900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 17 kg",
-        "weightOrSize": "17 kg",
-        "price": 57900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Carne argentina de vacuno seleccionada como primer ingrediente",
-      "Conservación 100% natural con extracto de romero y vitamina E",
-      "Fibras prebióticas para una asimilación gastrointestinal óptima",
-      "Salud articular con condroitina y glucosamina"
-    ],
-    "ingredients": [
-      "Carne vacuna deshidratada",
-      "Arroz",
-      "Gluten de maíz",
-      "Pulpa de remolacha",
-      "Extracto de romero"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-38",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-38",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "prod-39",
-    "name": "Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care",
-    "brand": "Vitalcan",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 36900,
-    "rating": 5,
-    "reviewsCount": 92,
-    "weightOrSize": "7.5 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Especialmente creado para perros con piel sensible o alergias alimentarias, formulado con salmón rosado y omegas.",
-    "longDescription": "Alimento hipoalergénico formulado con salmón rosado como fuente proteica alternativa. Alivia el picor, la caspa y el enrojecimiento dérmico en pocas semanas.",
-    "imageUrl": "/productos/Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care.webp",
-    "galleryImages": [
-      "/productos/Vitalcan Balanced Natural Recipe Salmon Rosado Skin Care.webp"
+      "/productos/Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg.webp"
     ],
     "inStock": true,
     "stockCount": 24,
-    "sku": "PL-039",
+    "sku": "PL-018",
     "variants": [
       {
         "id": "v1",
-        "label": "Bolsa 3 kg",
-        "weightOrSize": "3 kg",
-        "price": 18900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 36900,
+        "label": "Bolsa 9 kg",
+        "weightOrSize": "9 kg",
+        "price": 12900,
         "inStock": true
       }
     ],
     "benefits": [
-      "Salmón rosado como fuente de proteína hipoalergénica",
-      "Alivia la irritación dérmica y el rascado continuo",
-      "Rico en ácidos grasos Omega-3 y Omega-6 puros",
-      "Sin carne de vacuno ni pollo para evitar alergias cruzadas"
+      "Fragancia calmante de lavanda que dura semanas",
+      "Aglutinación de gran firmeza: no se desmorona",
+      "Control bacteriano eficaz que mantiene el arenero fresco",
+      "Grano fino suave con las almohadillas del gato"
     ],
     "ingredients": [
-      "Salmón rosado deshidratado",
-      "Arroz integral",
-      "Aceite de pescado",
-      "Semillas de lino"
+      "Bentonita 100% natural",
+      "Esencia de lavanda microencapsulada"
     ],
     "nutritionalAnalysis": {
       "Proteína bruta": "26.0% mín",
@@ -3629,7 +3391,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     ],
     "reviews": [
       {
-        "id": "rev-1-prod-39",
+        "id": "rev-1-prod-18",
         "author": "Carolina M.",
         "rating": 5,
         "date": "Hace 4 días",
@@ -3637,7 +3399,7 @@ export const PRODUCTS_DATABASE: Product[] = [
         "verified": true
       },
       {
-        "id": "rev-2-prod-39",
+        "id": "rev-2-prod-18",
         "author": "Rodrigo S.",
         "rating": 5,
         "date": "Hace 2 semanas",
@@ -3647,56 +3409,153 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "prod-40",
-    "name": "Vitalcan Premium Cordero Perros Adultos Todas las Razas",
-    "brand": "Vitalcan",
+    "id": "0kvel8xfeif9jel",
+    "name": "Bravery Chicken Adult Cat 7kg",
+    "brand": "Bravery",
+    "category": "gatos",
+    "categoryLabel": "Alimentos Gatos",
+    "petType": "gato",
+    "lifeStage": "adulto",
+    "price": 52900,
+    "rating": 5,
+    "reviewsCount": 145,
+    "featured": true,
+    "weightOrSize": "7 kg",
+    "icon": "🐱",
+    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
+    "description": "Nutrición mono-proteica 100% libre de granos elaborada con pollo deshidratado para gatos con digestión delicada.",
+    "longDescription": "Bravery Chicken Adult Cat es un alimento super premium español formulado con pollo como única fuente de proteína animal. Libre de cereales (Grain Free) y 100% hipoalergénico con tapioca y levadura de cerveza para un sistema inmune invencible.",
+    "imageUrl": "/productos/Bravery Chicken Adult Cat 7kg.webp",
+    "galleryImages": [
+      "/productos/Bravery Chicken Adult Cat 7kg.webp"
+    ],
+    "inStock": true,
+    "stockCount": 3,
+    "sku": "PL-004",
+    "variants": [
+      {
+        "id": "v1",
+        "label": "Bolsa 2 kg",
+        "weightOrSize": "2 kg",
+        "price": 17900,
+        "inStock": true
+      },
+      {
+        "id": "v2",
+        "label": "Saco 7 kg",
+        "weightOrSize": "7 kg",
+        "price": 52900,
+        "inStock": true
+      }
+    ],
+    "benefits": [
+      "100% libre de granos (Grain-Free) e hipoalergénico",
+      "Monoproteico: solo carne deshidratada de pollo",
+      "Taurina añadida para salud visual y muscular del corazón",
+      "Control de bolas de pelo con celulosa purificada"
+    ],
+    "ingredients": [
+      "Carne de pollo deshidratada",
+      "Tapioca",
+      "Grasa de ave",
+      "Guisantes",
+      "Aceite de salmón"
+    ],
+    "nutritionalAnalysis": {
+      "Proteína bruta": "32.0% mín",
+      "Grasa bruta": "14.0% mín",
+      "Fibra cruda": "3.5% máx",
+      "Humedad": "10.0% máx"
+    },
+    "feedingGuide": [
+      {
+        "weight": "Hasta 5 kg",
+        "dailyAmount": "40 - 60 g"
+      },
+      {
+        "weight": "5 - 10 kg",
+        "dailyAmount": "60 - 90 g"
+      },
+      {
+        "weight": "10 - 25 kg",
+        "dailyAmount": "Libre demanda"
+      },
+      {
+        "weight": "Más de 25 kg",
+        "dailyAmount": "Consultar veterinario"
+      }
+    ],
+    "reviews": [
+      {
+        "id": "rev-1-prod-4",
+        "author": "Carolina M.",
+        "rating": 5,
+        "date": "Hace 4 días",
+        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
+        "verified": true
+      },
+      {
+        "id": "rev-2-prod-4",
+        "author": "Rodrigo S.",
+        "rating": 5,
+        "date": "Hace 2 semanas",
+        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
+        "verified": true
+      }
+    ]
+  },
+  {
+    "id": "0bycr675p7hm6dg",
+    "name": "Purina Pro Plan Puppy Razas Pequenas Optistart",
+    "brand": "Purina Pro Plan",
     "category": "perros",
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 49900,
-    "rating": 4.9,
-    "reviewsCount": 110,
-    "weightOrSize": "15 kg",
+    "lifeStage": "cachorro",
+    "price": 24900,
+    "rating": 5,
+    "reviewsCount": 154,
+    "featured": false,
+    "weightOrSize": "3 kg",
     "icon": "🐕",
     "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Fórmula premium con carne de cordero hipoalergénica para perros de todas las razas con estómagos delicados.",
-    "longDescription": "El cordero es una proteína noble y sabrosa con bajísima incidencia de intolerancias. Aporta minerales quelados y prebióticos para deposiciones consistentes y sin olor.",
-    "imageUrl": "/productos/Vitalcan Premium Cordero Perros Adultos Todas las Razas.webp",
+    "description": "Nutrición científica para cachorros de razas pequeñas con calostro vacuno que extiende la protección materna.",
+    "longDescription": "Desarrollado para cachorros que alcanzan hasta 10 kg de peso adulto. Su croqueta pequeña favorece la prensión y masticación, mientras el calostro protege su delicado sistema digestivo.",
+    "imageUrl": "/productos/Purina Pro Plan Puppy Razas Pequenas Optistart.webp",
     "galleryImages": [
-      "/productos/Vitalcan Premium Cordero Perros Adultos Todas las Razas.webp"
+      "/productos/Purina Pro Plan Puppy Razas Pequenas Optistart.webp"
     ],
     "inStock": true,
-    "stockCount": 37,
-    "sku": "PL-040",
+    "stockCount": 4,
+    "sku": "PL-030",
     "variants": [
       {
         "id": "v1",
         "label": "Bolsa 3 kg",
         "weightOrSize": "3 kg",
-        "price": 14900,
+        "price": 24900,
         "inStock": true
       },
       {
         "id": "v2",
-        "label": "Saco 15 kg",
-        "weightOrSize": "15 kg",
-        "price": 47900,
+        "label": "Saco 3 kg",
+        "weightOrSize": "3 kg",
+        "price": 24900,
         "inStock": true
       }
     ],
     "benefits": [
-      "Carne de cordero como proteína hipoalergénica de alto valor",
-      "Digestión suave y sin pesadez estomacal",
-      "Pelaje brillante y denso con ácidos grasos naturales",
-      "Fórmula completa para razas pequeñas, medianas y grandes"
+      "Calostro vacuno con anticuerpos naturales activos",
+      "Estimula la respuesta ante las primeras vacunas del cachorro",
+      "Croqueta de tamaño microscópico para mandíbulas minis",
+      "Carne fresca de pollo como fuente proteica primordial"
     ],
     "ingredients": [
-      "Carne de cordero deshidratada",
+      "Carne de pollo",
+      "Calostro bovino en polvo",
       "Arroz",
-      "Maíz",
-      "Grasa de pollo",
-      "Prebióticos FOS"
+      "Grasa vacuna",
+      "Aceite de pescado rico en DHA"
     ],
     "nutritionalAnalysis": {
       "Proteína bruta": "26.0% mín",
@@ -3724,7 +3583,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     ],
     "reviews": [
       {
-        "id": "rev-1-prod-40",
+        "id": "rev-1-prod-30",
         "author": "Carolina M.",
         "rating": 5,
         "date": "Hace 4 días",
@@ -3732,7 +3591,7 @@ export const PRODUCTS_DATABASE: Product[] = [
         "verified": true
       },
       {
-        "id": "rev-2-prod-40",
+        "id": "rev-2-prod-30",
         "author": "Rodrigo S.",
         "rating": 5,
         "date": "Hace 2 semanas",
@@ -3752,19 +3611,18 @@ export const ALL_CATEGORIES = [
 ];
 
 export const FEATURED_PRODUCT_IDS: string[] = [
-  'prod-30', // Purina Pro Plan Puppy Razas Pequeñas Optistart
-  'prod-6',  // Bravery Herring Adult Large Medium Breeds 12kg
-  'prod-14', // Fit Formula Perro Adulto 20kg
-  'prod-38', // Vitalcan Balanced Natural Recipe Carne Argentina Seleccionada 17kg
-  'prod-28', // Purina Pro Plan Adult Gatos Optiprebio
-  'prod-8',  // Bravery Salmon Adult Cat 7kg
-  'prod-34', // Taste of the Wild Rocky Mountain Feline Recipe
-  'prod-10', // Diamond Naturals Indoor Cat Chicken and Rice Formula
-  'prod-18', // Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg
-  'prod-15', // Happypets Healthy Rodents Conejos y Cuyes 500g
+  "obvp6hzgabnxn20",
+  "kgf258k5xohn5n0",
+  "hn6kf3bvjn38gy4",
+  "em7mjl46b2rsw8c",
+  "edwu1nilon77172",
+  "e1conwnaju9p0jz",
+  "e0cr1j3e1a8yert",
+  "cz0zk4v80m9emgz",
+  "c6kwh7gj4uz942j",
+  "0kvel8xfeif9jel"
 ];
 
 export const FEATURED_PRODUCTS: Product[] = FEATURED_PRODUCT_IDS
   .map(id => PRODUCTS_DATABASE.find(p => p.id === id))
   .filter((p): p is Product => Boolean(p));
-

@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useState, useEffect, type FC } from 'react';
 import { formatPrice, type Product } from '../data/products.ts';
 import {
   Star,
@@ -37,6 +37,12 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
   const [activeTab, setActiveTab] = useState<'descripcion' | 'nutricion' | 'guia' | 'opiniones'>('descripcion');
   const [isAddedAnimation, setIsAddedAnimation] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  useEffect(() => {
+    setSelectedImage(product.imageUrl);
+    setSelectedVariant(product.variants && product.variants.length > 0 ? product.variants[0] : null);
+    setQuantity(1);
+  }, [product.id, product.imageUrl]);
 
   // Price calculations based on selected variant
   const currentPrice = selectedVariant ? selectedVariant.price : product.price;

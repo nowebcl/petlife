@@ -21,7 +21,7 @@
 /* Responsive Hero Canvas Background */
 .hero-canvas-bg {
   background-color: #EBF9FD;
-  background-image: url('/mobile-bg.png');
+  background-image: url('/mobile-bg.webp');
   background-size: 100% auto;
   background-position: center top;
   background-repeat: no-repeat;
@@ -29,7 +29,7 @@
 
 @media (min-width: 768px) {
   .hero-canvas-bg {
-    background-image: url('/hero-bg.png');
+    background-image: url('/hero-bg.webp');
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;

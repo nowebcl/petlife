@@ -29,7 +29,6 @@ async function optimizeAll() {
         .toBuffer();
       fs.writeFileSync(webpPath, webpBuf);
 
-      // 1b. Re-compress the existing JPEG in-place as fallback (450x450 max, quality 78)
       const jpegBuf = await sharp(originalBuf)
         .resize({ width: 450, height: 450, fit: 'inside', withoutEnlargement: true })
         .jpeg({ quality: 78, mozjpeg: true })
@@ -38,6 +37,22 @@ async function optimizeAll() {
 
       totalOptimized += webpBuf.length;
       console.log(`  ✓ ${baseName}: ${(origSize / 1024).toFixed(1)} KB -> WebP ${(webpBuf.length / 1024).toFixed(1)} KB (JPEG fallback: ${(jpegBuf.length / 1024).toFixed(1)} KB)`);
+    }
+
+    // Also check any existing .webp files that might be oversized
+    const webpFiles = fs.readdirSync(productosDir).filter(f => f.endsWith('.webp'));
+    for (const file of webpFiles) {
+      const filePath = path.join(productosDir, file);
+      const stat = fs.statSync(filePath);
+      if (stat.size > 45 * 1024) {
+        const buf = fs.readFileSync(filePath);
+        const opt = await sharp(buf)
+          .resize({ width: 450, height: 450, fit: 'inside', withoutEnlargement: true })
+          .webp({ quality: 80, effort: 5 })
+          .toBuffer();
+        fs.writeFileSync(filePath, opt);
+        console.log(`  ✓ Re-comprimido ${file}: ${(stat.size / 1024).toFixed(1)} KB -> ${(opt.length / 1024).toFixed(1)} KB`);
+      }
     }
   }
 
