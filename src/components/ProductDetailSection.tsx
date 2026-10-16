@@ -47,18 +47,26 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
   // Price calculations based on selected variant
   const currentPrice = selectedVariant ? selectedVariant.price : product.price;
 
+  // Stock status and discount calculations
+  const isOutOfStock = !product.inStock || (product.stockCount !== undefined && product.stockCount <= 0);
+  const isLowStock = !isOutOfStock && product.stockCount > 0 && product.stockCount <= 5;
+  const effectiveOriginalPrice = product.originalPrice && product.originalPrice > currentPrice ? product.originalPrice : undefined;
+  const discountPercent = effectiveOriginalPrice ? Math.round(((effectiveOriginalPrice - currentPrice) / effectiveOriginalPrice) * 100) : 0;
+
   // Related products from the same category or petType
   const relatedProducts = allProducts
     .filter((p) => p.id !== product.id && (p.category === product.category || p.petType === product.petType))
     .slice(0, 4);
 
   const handleAddToCartClick = () => {
+    if (isOutOfStock) return;
     onAddToCart(product, quantity, selectedVariant?.id);
     setIsAddedAnimation(true);
     setTimeout(() => setIsAddedAnimation(false), 1400);
   };
 
   const handleBuyNow = () => {
+    if (isOutOfStock) return;
     onAddToCart(product, quantity, selectedVariant?.id);
     if (onOpenCart) {
       onOpenCart();
@@ -110,12 +118,36 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
             <div className="lg:col-span-6 flex flex-col items-center">
               {/* Main Image Box */}
               <div className="relative w-full aspect-square max-w-[500px] rounded-2xl sm:rounded-3xl bg-slate-50/80 p-6 flex items-center justify-center border border-slate-100/90 overflow-hidden group">
+                {/* Product Badges */}
+                <div className="absolute top-4 left-4 z-10 flex flex-col gap-1.5 items-start pointer-events-none">
+                  {isOutOfStock ? (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider bg-slate-900/90 text-white backdrop-blur-md px-3 py-1.5 rounded-full shadow-md border border-white/20">
+                      Agotado
+                    </span>
+                  ) : (
+                    <>
+                      {discountPercent > 0 && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider bg-rose-600 text-white px-3 py-1.5 rounded-full shadow-md animate-pulse">
+                          -{discountPercent}% OFF
+                        </span>
+                      )}
+                      {isLowStock && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-wider bg-amber-500 text-white px-3 py-1.5 rounded-full shadow-md">
+                          Pocas unidades
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
+
                 <img
                   src={selectedImage}
                   alt={product.name}
                   fetchPriority="high"
                   decoding="sync"
-                  className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                  className={`w-full h-full object-contain transition-transform duration-300 group-hover:scale-105 ${
+                    isOutOfStock ? 'opacity-55 grayscale' : ''
+                  }`}
                   onError={(e) => {
                     if (e.currentTarget.dataset.failed) return;
                     e.currentTarget.dataset.failed = 'true';
@@ -176,12 +208,28 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                   {product.brand}
                 </span>
 
-                <div className="flex items-center space-x-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-bold text-emerald-600">
-                    En Stock ({product.stockCount} disponibles)
-                  </span>
-                </div>
+                {isOutOfStock ? (
+                  <div className="flex items-center space-x-1.5 bg-rose-50 border border-rose-200/80 px-2.5 py-1 rounded-full">
+                    <span className="w-2 h-2 rounded-full bg-rose-500" />
+                    <span className="text-xs font-bold text-rose-600">
+                      Agotado
+                    </span>
+                  </div>
+                ) : isLowStock ? (
+                  <div className="flex items-center space-x-1.5 bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-full">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                    <span className="text-xs font-bold text-amber-700">
+                      ¡Pocas unidades! (Solo {product.stockCount} disponibles)
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-1.5 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-full">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-xs font-bold text-emerald-600">
+                      En Stock ({product.stockCount} disponibles)
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Title */}
@@ -205,10 +253,20 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
 
               {/* Price Banner */}
               <div className="bg-slate-50/90 rounded-2xl p-4 sm:p-5 border border-slate-100 mb-6">
-                <div className="flex items-baseline space-x-2.5">
+                <div className="flex flex-wrap items-baseline gap-2.5">
                   <span className="text-3xl sm:text-4xl font-black text-[#061F3D]">
                     {formatPrice(currentPrice)}
                   </span>
+                  {effectiveOriginalPrice && (
+                    <span className="text-lg sm:text-xl font-bold text-slate-400 line-through">
+                      {formatPrice(effectiveOriginalPrice)}
+                    </span>
+                  )}
+                  {discountPercent > 0 && (
+                    <span className="text-xs font-black bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full border border-rose-200">
+                      Ahorras {discountPercent}% ({formatPrice(effectiveOriginalPrice! - currentPrice)})
+                    </span>
+                  )}
                 </div>
                 <span className="text-xs text-[#637792] font-medium block mt-1">
                   Impuestos incluidos. Envío calculado en el checkout.
@@ -254,20 +312,24 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
               <div className="space-y-3 mb-6">
                 <div className="flex items-center space-x-3">
                   {/* Quantity Counter */}
-                  <div className="inline-flex items-center border-2 border-slate-200 rounded-full bg-slate-50 p-1">
+                  <div
+                    className={`inline-flex items-center border-2 border-slate-200 rounded-full bg-slate-50 p-1 ${
+                      isOutOfStock ? 'opacity-40 pointer-events-none' : ''
+                    }`}
+                  >
                     <button
                       onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      disabled={quantity <= 1}
+                      disabled={isOutOfStock || quantity <= 1}
                       className="w-8 h-8 rounded-full bg-white text-[#061F3D] font-bold text-base flex items-center justify-center hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed shadow-2xs"
                     >
                       -
                     </button>
                     <span className="w-10 text-center font-black text-sm text-[#061F3D]">
-                      {quantity}
+                      {isOutOfStock ? 0 : quantity}
                     </span>
                     <button
                       onClick={() => setQuantity((q) => Math.min(product.stockCount, q + 1))}
-                      disabled={quantity >= product.stockCount}
+                      disabled={isOutOfStock || quantity >= product.stockCount}
                       className="w-8 h-8 rounded-full bg-white text-[#061F3D] font-bold text-base flex items-center justify-center hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed shadow-2xs"
                     >
                       +
@@ -277,13 +339,18 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                   {/* Add to Cart Button */}
                   <button
                     onClick={handleAddToCartClick}
-                    className={`flex-1 py-3.5 px-6 rounded-full font-black text-sm sm:text-base flex items-center justify-center space-x-2 transition-all duration-300 cursor-pointer shadow-orange-glow active:scale-95 ${
-                      isAddedAnimation
-                        ? 'bg-emerald-500 text-white shadow-emerald-500/30'
-                        : 'bg-[#FF5200] hover:bg-[#FF6508] text-white'
+                    disabled={isOutOfStock}
+                    className={`flex-1 py-3.5 px-6 rounded-full font-black text-sm sm:text-base flex items-center justify-center space-x-2 transition-all duration-300 ${
+                      isOutOfStock
+                        ? 'bg-slate-200 text-slate-500 cursor-not-allowed shadow-none'
+                        : isAddedAnimation
+                        ? 'bg-emerald-500 text-white shadow-emerald-500/30 cursor-pointer active:scale-95'
+                        : 'bg-[#FF5200] hover:bg-[#FF6508] text-white shadow-orange-glow cursor-pointer active:scale-95'
                     }`}
                   >
-                    {isAddedAnimation ? (
+                    {isOutOfStock ? (
+                      <span>Producto Agotado</span>
+                    ) : isAddedAnimation ? (
                       <>
                         <Check className="w-5 h-5 stroke-[3]" />
                         <span>¡Añadido al carrito!</span>
@@ -298,13 +365,15 @@ export const ProductDetailSection: FC<ProductDetailSectionProps> = ({
                 </div>
 
                 {/* Secondary Direct Buy Button */}
-                <button
-                  onClick={handleBuyNow}
-                  className="w-full py-3 px-6 rounded-full bg-[#061F3D] hover:bg-[#0B2A52] text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cursor-pointer shadow-sm active:scale-95"
-                >
-                  <span>Comprar ahora (Pago Rápido)</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                {!isOutOfStock && (
+                  <button
+                    onClick={handleBuyNow}
+                    className="w-full py-3 px-6 rounded-full bg-[#061F3D] hover:bg-[#0B2A52] text-white font-bold text-sm transition-all duration-200 flex items-center justify-center space-x-2 cursor-pointer shadow-sm active:scale-95"
+                  >
+                    <span>Comprar ahora (Pago Rápido)</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                )}
               </div>
 
               {/* Store Guarantees Banner */}

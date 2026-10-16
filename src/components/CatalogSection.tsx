@@ -555,6 +555,12 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                 {currentProducts.map((product, index) => {
                   const isAdded = addedIds[product.id];
                   const isFav = favoriteIds[product.id];
+                  const isOutOfStock = !product.inStock || (product.stockCount !== undefined && product.stockCount <= 0);
+                  const isLowStock = !isOutOfStock && product.stockCount > 0 && product.stockCount <= 5;
+                  const hasDiscount = Boolean(product.originalPrice && product.originalPrice > product.price);
+                  const discountPercent = hasDiscount
+                    ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
+                    : 0;
 
                   return (
                     <article
@@ -565,13 +571,37 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                       <div>
                         {/* Realistic Product Image Box */}
                         <div className="relative w-full aspect-square rounded-xl sm:rounded-2xl bg-slate-50/80 p-2 sm:p-3 overflow-hidden mb-2.5 flex items-center justify-center">
+                          {/* Top Badges (Agotado, Descuento, Pocas Unidades) */}
+                          <div className="absolute top-2 left-2 z-10 flex flex-wrap gap-1 max-w-[calc(100%-36px)]">
+                            {isOutOfStock ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-900/90 text-white border border-slate-700/60 shadow-xs backdrop-blur-xs">
+                                Agotado
+                              </span>
+                            ) : (
+                              <>
+                                {hasDiscount && (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white shadow-xs shadow-rose-500/20">
+                                    -{discountPercent}%
+                                  </span>
+                                )}
+                                {isLowStock && (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white shadow-xs shadow-amber-500/20 animate-pulse">
+                                    Pocas unidades
+                                  </span>
+                                )}
+                              </>
+                            )}
+                          </div>
+
                           <img
                             src={product.imageUrl}
                             alt={product.name}
                             loading={index < 4 ? 'eager' : 'lazy'}
                             fetchPriority={index < 2 ? 'high' : 'auto'}
                             decoding={index < 4 ? 'sync' : 'async'}
-                            className="w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300"
+                            className={`w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300 ${
+                              isOutOfStock ? 'opacity-55 grayscale-[35%]' : ''
+                            }`}
                             onError={(e) => {
                               if (e.currentTarget.dataset.failed) return;
                               e.currentTarget.dataset.failed = 'true';
@@ -619,36 +649,55 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
 
                       {/* Price & Action Button */}
                       <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-1.5">
-                        <div>
-                          <span className="text-sm sm:text-lg font-black text-[#061F3D]">
-                            {formatPrice(product.price)}
-                          </span>
+                        <div className="flex flex-col">
+                          <div className="flex items-baseline space-x-1.5 flex-wrap">
+                            <span className="text-sm sm:text-lg font-black text-[#061F3D]">
+                              {formatPrice(product.price)}
+                            </span>
+                            {hasDiscount && (
+                              <span className="text-[10px] sm:text-xs text-slate-400 line-through font-semibold">
+                                {formatPrice(product.originalPrice!)}
+                              </span>
+                            )}
+                          </div>
                         </div>
 
-                        {/* Add to Cart Button */}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAdd(product);
-                          }}
-                          className={`py-1.5 px-3 rounded-full font-bold text-xs flex items-center space-x-1 transition-all duration-200 active:scale-90 cursor-pointer shadow-xs ${
-                            isAdded
-                              ? 'bg-emerald-500 text-white shadow-emerald-500/20'
-                              : 'bg-[#FF5200] hover:bg-[#FF6508] text-white shadow-orange-glow'
-                          }`}
-                        >
-                          {isAdded ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 stroke-[3]" />
-                              <span className="text-[11px]">Listo</span>
-                            </>
-                          ) : (
-                            <>
-                              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-                              <span className="text-[11px]">Añadir</span>
-                            </>
-                          )}
-                        </button>
+                        {/* Action Button: Disabled when Out of Stock */}
+                        {isOutOfStock ? (
+                          <button
+                            type="button"
+                            disabled
+                            onClick={(e) => e.stopPropagation()}
+                            className="py-1.5 px-3 rounded-full font-bold text-xs bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed select-none"
+                            aria-label={`${product.name} agotado`}
+                          >
+                            <span className="text-[11px]">Agotado</span>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAdd(product);
+                            }}
+                            className={`py-1.5 px-3 rounded-full font-bold text-xs flex items-center space-x-1 transition-all duration-200 active:scale-90 cursor-pointer shadow-xs ${
+                              isAdded
+                                ? 'bg-emerald-500 text-white shadow-emerald-500/20'
+                                : 'bg-[#FF5200] hover:bg-[#FF6508] text-white shadow-orange-glow'
+                            }`}
+                          >
+                            {isAdded ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 stroke-[3]" />
+                                <span className="text-[11px]">Listo</span>
+                              </>
+                            ) : (
+                              <>
+                                <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                                <span className="text-[11px]">Añadir</span>
+                              </>
+                            )}
+                          </button>
+                        )}
                       </div>
                     </article>
                   );
@@ -660,6 +709,12 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                 {currentProducts.map((product, index) => {
                   const isAdded = addedIds[product.id];
                   const isFav = favoriteIds[product.id];
+                  const isOutOfStock = !product.inStock || (product.stockCount !== undefined && product.stockCount <= 0);
+                  const isLowStock = !isOutOfStock && product.stockCount > 0 && product.stockCount <= 5;
+                  const hasDiscount = Boolean(product.originalPrice && product.originalPrice > product.price);
+                  const discountPercent = hasDiscount
+                    ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
+                    : 0;
 
                   return (
                     <article
@@ -668,13 +723,37 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                       className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-100 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row items-center gap-4 group cursor-pointer"
                     >
                       <div className="relative w-full sm:w-40 sm:h-40 aspect-square rounded-2xl bg-slate-50 p-3 shrink-0 flex items-center justify-center">
+                        {/* Top Badges (Agotado, Descuento, Pocas Unidades) */}
+                        <div className="absolute top-2 left-2 z-10 flex flex-wrap gap-1 max-w-[calc(100%-36px)]">
+                          {isOutOfStock ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-900/90 text-white border border-slate-700/60 shadow-xs backdrop-blur-xs">
+                              Agotado
+                            </span>
+                          ) : (
+                            <>
+                              {hasDiscount && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white shadow-xs shadow-rose-500/20">
+                                  -{discountPercent}%
+                                </span>
+                              )}
+                              {isLowStock && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white shadow-xs shadow-amber-500/20 animate-pulse">
+                                  Pocas unidades
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </div>
+
                         <img
                           src={product.imageUrl}
                           alt={product.name}
                           loading={index < 4 ? 'eager' : 'lazy'}
                           fetchPriority={index < 2 ? 'high' : 'auto'}
                           decoding={index < 4 ? 'sync' : 'async'}
-                          className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                          className={`w-full h-full object-contain group-hover:scale-105 transition-transform ${
+                            isOutOfStock ? 'opacity-55 grayscale-[35%]' : ''
+                          }`}
                           onError={(e) => {
                             if (e.currentTarget.dataset.failed) return;
                             e.currentTarget.dataset.failed = 'true';
@@ -724,35 +803,55 @@ export const CatalogSection: FC<CatalogSectionProps> = ({
                       </div>
 
                       <div className="w-full sm:w-auto flex sm:flex-col items-center sm:items-end justify-between gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
-                        <div>
-                          <span className="text-xl sm:text-2xl font-black text-[#061F3D] block">
-                            {formatPrice(product.price)}
-                          </span>
+                        <div className="flex flex-col items-start sm:items-end">
+                          <div className="flex items-baseline space-x-2 flex-wrap">
+                            <span className="text-xl sm:text-2xl font-black text-[#061F3D]">
+                              {formatPrice(product.price)}
+                            </span>
+                            {hasDiscount && (
+                              <span className="text-xs sm:text-sm text-slate-400 line-through font-semibold">
+                                {formatPrice(product.originalPrice!)}
+                              </span>
+                            )}
+                          </div>
                         </div>
 
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAdd(product);
-                          }}
-                          className={`py-2 px-5 rounded-full font-bold text-xs flex items-center space-x-1.5 cursor-pointer transition-all active:scale-95 ${
-                            isAdded
-                              ? 'bg-emerald-500 text-white'
-                              : 'bg-[#FF5200] hover:bg-[#FF6508] text-white shadow-orange-glow'
-                          }`}
-                        >
-                          {isAdded ? (
-                            <>
-                              <Check className="w-4 h-4 stroke-[3]" />
-                              <span>¡Añadido!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Plus className="w-4 h-4 stroke-[2.5]" />
-                              <span>Añadir al carrito</span>
-                            </>
-                          )}
-                        </button>
+                        {/* Action Button: Disabled when Out of Stock */}
+                        {isOutOfStock ? (
+                          <button
+                            type="button"
+                            disabled
+                            onClick={(e) => e.stopPropagation()}
+                            className="py-2 px-5 rounded-full font-bold text-xs bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed select-none"
+                            aria-label={`${product.name} agotado`}
+                          >
+                            <span>Agotado</span>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAdd(product);
+                            }}
+                            className={`py-2 px-5 rounded-full font-bold text-xs flex items-center space-x-1.5 cursor-pointer transition-all active:scale-95 ${
+                              isAdded
+                                ? 'bg-emerald-500 text-white'
+                                : 'bg-[#FF5200] hover:bg-[#FF6508] text-white shadow-orange-glow'
+                            }`}
+                          >
+                            {isAdded ? (
+                              <>
+                                <Check className="w-4 h-4 stroke-[3]" />
+                                <span>¡Añadido!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Plus className="w-4 h-4 stroke-[2.5]" />
+                                <span>Añadir al carrito</span>
+                              </>
+                            )}
+                          </button>
+                        )}
                       </div>
                     </article>
                   );

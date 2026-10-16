@@ -78,6 +78,8 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
   const [formLifeStage, setFormLifeStage] = useState<'cachorro' | 'adulto' | 'senior' | 'todas'>('adulto');
   const [formPrice, setFormPrice] = useState<number>(19900);
   const [formPriceDisplay, setFormPriceDisplay] = useState<string>('19.900');
+  const [formOriginalPrice, setFormOriginalPrice] = useState<number | undefined>(undefined);
+  const [formOriginalPriceDisplay, setFormOriginalPriceDisplay] = useState<string>('');
   const [formWeightOrSize, setFormWeightOrSize] = useState<string>('');
 
   // Manejo de cambio de precio en Pesos Chilenos (CLP) sin decimales
@@ -98,6 +100,25 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     const numeric = parseInt(cleanDigits, 10);
     setFormPrice(numeric);
     setFormPriceDisplay(numeric.toLocaleString('es-CL'));
+  };
+
+  // Manejo de precio original (para ofertas / descuentos tachados)
+  const handleOriginalPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    if (!raw.trim()) {
+      setFormOriginalPrice(undefined);
+      setFormOriginalPriceDisplay('');
+      return;
+    }
+    const cleanDigits = raw.replace(/\D/g, '').slice(0, 9);
+    if (!cleanDigits) {
+      setFormOriginalPrice(undefined);
+      setFormOriginalPriceDisplay('');
+      return;
+    }
+    const numeric = parseInt(cleanDigits, 10);
+    setFormOriginalPrice(numeric);
+    setFormOriginalPriceDisplay(numeric.toLocaleString('es-CL'));
   };
   const [formStock, setFormStock] = useState<number>(25);
   const [formInStock, setFormInStock] = useState<boolean>(true);
@@ -235,6 +256,8 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     setFormLifeStage('adulto');
     setFormPrice(19900);
     setFormPriceDisplay('19.900');
+    setFormOriginalPrice(undefined);
+    setFormOriginalPriceDisplay('');
     setFormWeightOrSize('15 kg');
     setFormStock(25);
     setFormInStock(true);
@@ -271,6 +294,20 @@ export const AdminPanel: FC<AdminPanelProps> = ({ onClose, onRefreshProducts }) 
     }
     setFormPrice(initialPrice);
     setFormPriceDisplay(initialPrice > 0 ? initialPrice.toLocaleString('es-CL') : '');
+
+    let initOrigPrice = p.originalPrice;
+    if (initOrigPrice && initOrigPrice > 0) {
+      if (initOrigPrice < 1000 && !Number.isInteger(initOrigPrice)) {
+        initOrigPrice = Math.round(initOrigPrice * 1000);
+      } else {
+        initOrigPrice = Math.round(initOrigPrice);
+      }
+      setFormOriginalPrice(initOrigPrice);
+      setFormOriginalPriceDisplay(initOrigPrice.toLocaleString('es-CL'));
+    } else {
+      setFormOriginalPrice(undefined);
+      setFormOriginalPriceDisplay('');
+    }
 
     setFormWeightOrSize(p.weightOrSize || '');
     setFormStock(p.stockCount !== undefined ? p.stockCount : 15);
@@ -402,6 +439,11 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
         formData.append('petType', formPetType);
         formData.append('lifeStage', formLifeStage);
         formData.append('price', String(Math.round(formPrice)));
+        if (formOriginalPrice !== undefined && formOriginalPrice > 0) {
+          formData.append('originalPrice', String(Math.round(formOriginalPrice)));
+        } else {
+          formData.append('originalPrice', '0');
+        }
         formData.append('weightOrSize', formWeightOrSize.trim());
         formData.append('stockCount', String(formStock));
         formData.append('inStock', String(formInStock));
@@ -428,6 +470,7 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
           petType: formPetType,
           lifeStage: formLifeStage,
           price: Math.round(Number(formPrice)),
+          originalPrice: formOriginalPrice !== undefined && formOriginalPrice > 0 ? Math.round(Number(formOriginalPrice)) : 0,
           weightOrSize: formWeightOrSize.trim(),
           stockCount: Number(formStock),
           inStock: Boolean(formInStock),
@@ -849,8 +892,8 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
                   />
                 </div>
 
-                {/* Price & Weight/Size Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {/* Price, Original Price (Discount) & Weight/Size Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1.5">
                       Precio de Venta ($ CLP) *
@@ -867,21 +910,48 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
                         className="w-full pl-7 sm:pl-8 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-black text-sm sm:text-base text-[#061F3D] focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all placeholder:font-normal placeholder:text-slate-300"
                       />
                     </div>
-                    <div className="mt-1.5 flex items-center justify-between text-[11px]">
+                    <div className="mt-1.5 flex flex-col gap-0.5 text-[11px]">
                       <span className="text-slate-500 font-medium">
-                        Precio ingresado: <strong className="text-[#FF5200] font-black">{formatPrice(formPrice)} CLP</strong>
+                        Precio: <strong className="text-[#FF5200] font-black">{formatPrice(formPrice)}</strong>
                       </span>
                       {formPrice > 0 && formPrice < 1000 && (
                         <span className="text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                          ⚠️ Menor a $1.000 CLP (Ej: {(formPrice * 1000).toLocaleString('es-CL')}?)
+                          ⚠️ Menor a $1.000 CLP
                         </span>
                       )}
                     </div>
                   </div>
 
                   <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                      <span>Precio Original ($)</span>
+                      <span className="text-[10px] text-slate-400 font-normal">Tachado</span>
+                    </label>
+                    <div className="relative flex items-center">
+                      <span className="absolute left-3.5 sm:left-4 text-slate-400 font-black text-sm">$</span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={formOriginalPriceDisplay}
+                        onChange={handleOriginalPriceChange}
+                        placeholder="Ej: 49.990"
+                        className="w-full pl-7 sm:pl-8 pr-3.5 sm:pr-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl border border-slate-200 font-black text-sm sm:text-base text-slate-500 focus:outline-none focus:border-[#FF5200] focus:ring-2 focus:ring-[#FF5200]/10 transition-all placeholder:font-normal placeholder:text-slate-300"
+                      />
+                    </div>
+                    <div className="mt-1.5 text-[11px]">
+                      {formOriginalPrice && formOriginalPrice > formPrice ? (
+                        <span className="text-rose-600 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200 inline-block">
+                          🔥 -{Math.round(((formOriginalPrice - formPrice) / formOriginalPrice) * 100)}% ({formatPrice(formOriginalPrice - formPrice)} desc.)
+                        </span>
+                      ) : (
+                        <span className="text-slate-400">Opcional para ofertas</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                      Formato / Presentación (Kilos, Gramos)
+                      Formato / Presentación
                     </label>
                     <input
                       type="text"
@@ -1560,12 +1630,18 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
                           </span>
                           <span
                             className={`text-[9px] font-black px-2 py-0.5 rounded-full ${
-                              (p.stockCount || 0) < 5
+                              !p.inStock || (p.stockCount !== undefined && p.stockCount <= 0)
                                 ? 'bg-rose-50 text-rose-600'
+                                : p.stockCount <= 5
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
                                 : 'bg-slate-100 text-slate-700'
                             }`}
                           >
-                            Stock: {p.stockCount !== undefined ? p.stockCount : 15}
+                            {!p.inStock || (p.stockCount !== undefined && p.stockCount <= 0)
+                              ? 'Agotado'
+                              : p.stockCount <= 5
+                              ? `Pocas un. (${p.stockCount})`
+                              : `Stock: ${p.stockCount}`}
                           </span>
                         </div>
 
@@ -1574,9 +1650,16 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
                         </h4>
 
                         <div className="flex items-center justify-between mt-1">
-                          <span className="font-black text-xs text-[#FF5200]">
-                            {formatPrice(p.price)}
-                          </span>
+                          <div className="flex items-baseline space-x-1.5">
+                            <span className="font-black text-xs text-[#FF5200]">
+                              {formatPrice(p.price)}
+                            </span>
+                            {p.originalPrice && p.originalPrice > p.price && (
+                              <span className="text-[10px] text-slate-400 line-through">
+                                {formatPrice(p.originalPrice)}
+                              </span>
+                            )}
+                          </div>
                           {p.weightOrSize && (
                             <span className="text-[10px] font-semibold text-slate-400">
                               {p.weightOrSize}
@@ -1671,17 +1754,42 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
                         <td className="py-3 px-3 text-slate-600 font-medium">
                           {p.weightOrSize || '-'}
                         </td>
-                        <td className="py-3 px-3 font-black text-[#061F3D]">
-                          {formatPrice(p.price)}
+                        <td className="py-3 px-3">
+                          <div className="flex items-baseline space-x-1.5">
+                            <span className="font-black text-[#061F3D]">
+                              {formatPrice(p.price)}
+                            </span>
+                            {p.originalPrice && p.originalPrice > p.price && (
+                              <span className="text-[10px] text-slate-400 line-through">
+                                {formatPrice(p.originalPrice)}
+                              </span>
+                            )}
+                          </div>
+                          {p.originalPrice && p.originalPrice > p.price && (
+                            <span className="inline-block mt-0.5 text-[9px] font-extrabold text-rose-600 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-200">
+                              -{Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)}%
+                            </span>
+                          )}
                         </td>
                         <td className="py-3 px-3">
-                          <span
-                            className={`font-black text-xs ${
-                              (p.stockCount || 0) < 5 ? 'text-rose-600' : 'text-slate-700'
-                            }`}
-                          >
-                            {p.stockCount !== undefined ? p.stockCount : 15} un.
-                          </span>
+                          <div className="flex flex-col gap-0.5 items-start">
+                            <span
+                              className={`font-black text-xs ${
+                                !p.inStock || (p.stockCount !== undefined && p.stockCount <= 0)
+                                  ? 'text-rose-600'
+                                  : p.stockCount <= 5
+                                  ? 'text-amber-600'
+                                  : 'text-slate-700'
+                              }`}
+                            >
+                              {p.stockCount !== undefined ? p.stockCount : 15} un.
+                            </span>
+                            {p.inStock && p.stockCount !== undefined && p.stockCount > 0 && p.stockCount <= 5 && (
+                              <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-[9px] font-black uppercase">
+                                Pocas un.
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="py-3 px-3">
                           <button
@@ -1755,13 +1863,19 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
                       </p>
                     </div>
                     <span
-                      className={`text-sm font-black px-2.5 py-1 rounded-xl shrink-0 ${
-                        (p.stockCount || 0) < 5
+                      className={`text-xs font-black px-2.5 py-1 rounded-xl shrink-0 ${
+                        !p.inStock || (p.stockCount !== undefined && p.stockCount <= 0)
                           ? 'bg-rose-50 text-rose-600 border border-rose-200'
+                          : p.stockCount <= 5
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
                           : 'bg-slate-100 text-slate-800'
                       }`}
                     >
-                      {p.stockCount !== undefined ? p.stockCount : 15} un.
+                      {!p.inStock || (p.stockCount !== undefined && p.stockCount <= 0)
+                        ? 'Agotado (0 un.)'
+                        : p.stockCount <= 5
+                        ? `Pocas un. (${p.stockCount})`
+                        : `${p.stockCount} un.`}
                     </span>
                   </div>
 
@@ -1834,13 +1948,28 @@ async function compressImageToWebP(file: File, maxDimension = 900, quality = 0.8
                           {formatPrice(p.price)}
                         </td>
                         <td className="py-3 px-3">
-                          <span
-                            className={`font-black text-sm ${
-                              (p.stockCount || 0) < 5 ? 'text-rose-600' : 'text-slate-800'
-                            }`}
-                          >
-                            {p.stockCount !== undefined ? p.stockCount : 15}
-                          </span>
+                          <div className="flex flex-col gap-0.5 items-start">
+                            <span
+                              className={`font-black text-sm ${
+                                !p.inStock || (p.stockCount !== undefined && p.stockCount <= 0)
+                                  ? 'text-rose-600'
+                                  : p.stockCount <= 5
+                                  ? 'text-amber-600'
+                                  : 'text-slate-800'
+                              }`}
+                            >
+                              {p.stockCount !== undefined ? p.stockCount : 15}
+                            </span>
+                            {!p.inStock || (p.stockCount !== undefined && p.stockCount <= 0) ? (
+                              <span className="px-1.5 py-0.2 rounded bg-rose-50 text-rose-700 border border-rose-200 text-[9px] font-black uppercase">
+                                Agotado
+                              </span>
+                            ) : p.stockCount <= 5 ? (
+                              <span className="px-1.5 py-0.2 rounded bg-amber-50 text-amber-700 border border-amber-200 text-[9px] font-black uppercase">
+                                Pocas un.
+                              </span>
+                            ) : null}
+                          </div>
                         </td>
                         <td className="py-3 px-3">
                           <div className="flex items-center space-x-1.5">

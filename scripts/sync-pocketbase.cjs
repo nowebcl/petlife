@@ -97,6 +97,11 @@ async function main() {
       petType: pb.petType || existing.petType || 'perro',
       lifeStage: pb.lifeStage || existing.lifeStage || 'adulto',
       price: Number(pb.price) || 0,
+      ...(Number(pb.originalPrice) > Number(pb.price)
+        ? { originalPrice: Number(pb.originalPrice) }
+        : existing.originalPrice && existing.originalPrice > Number(pb.price)
+        ? { originalPrice: existing.originalPrice }
+        : {}),
       rating: Number(pb.rating) || existing.rating || 4.8,
       reviewsCount: Number(pb.reviewsCount) || existing.reviewsCount || 50,
       featured: Boolean(pb.featured),

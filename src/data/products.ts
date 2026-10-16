@@ -67,6 +67,66 @@ export interface Product {
 
 export const PRODUCTS_DATABASE: Product[] = [
   {
+    "id": "8nvnffokbprpoeu",
+    "name": "Complete",
+    "brand": "Vitalcan complete para perros de razas pequeñas de 12 meses hasta 7años",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 39900,
+    "rating": 4.8,
+    "reviewsCount": 50,
+    "featured": false,
+    "weightOrSize": "20kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "Alimento completo y balanceado para perros adultos de razas pequeñas, formulado para acompañar sus necesidades nutricionales diarias y contribuir a su bienestar.",
+    "longDescription": "Vitalcan Complete Adulto Razas Pequeñas está diseñado para perros adultos de tamaño pequeño. Su fórmula busca aportar los nutrientes necesarios para una alimentación diaria equilibrada, ayudando a mantener su energía y condición corporal.",
+    "imageUrl": "https://petlife.noweb.cl/api/files/pbc_4092854851/8nvnffokbprpoeu/image_uyizu6wddv.webp",
+    "galleryImages": [
+      "https://petlife.noweb.cl/api/files/pbc_4092854851/8nvnffokbprpoeu/image_uyizu6wddv.webp"
+    ],
+    "inStock": true,
+    "stockCount": 3,
+    "sku": "PL-993",
+    "benefits": [
+      "* Nutrición completa y balanceada para perros adultos de razas pequeñas.",
+      "* Aporte de nutrientes esenciales para el mantenimiento diario.",
+      "* Ayuda a mantener una buena condición corporal.",
+      "* Ideal para acompañar las necesidades nutricionales de perros adultos pequeños."
+    ]
+  },
+  {
+    "id": "xcn1a94ruvxd70c",
+    "name": "PRUEBA",
+    "brand": "",
+    "category": "perros",
+    "categoryLabel": "Alimentos Perros",
+    "petType": "perro",
+    "lifeStage": "adulto",
+    "price": 19900,
+    "rating": 4.8,
+    "reviewsCount": 50,
+    "featured": true,
+    "weightOrSize": "15 kg",
+    "icon": "🐕",
+    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
+    "description": "",
+    "longDescription": "",
+    "imageUrl": "https://petlife.noweb.cl/api/files/pbc_4092854851/xcn1a94ruvxd70c/9ad8b115_7b85_42a5_9c34_105c059de438_ytm96wd2fm.webp",
+    "galleryImages": [
+      "https://petlife.noweb.cl/api/files/pbc_4092854851/xcn1a94ruvxd70c/9ad8b115_7b85_42a5_9c34_105c059de438_ytm96wd2fm.webp"
+    ],
+    "inStock": true,
+    "stockCount": 2,
+    "sku": "PL-418",
+    "benefits": [
+      "Excelente calidad garantizada",
+      "Nutrición 100% balanceada"
+    ]
+  },
+  {
     "id": "utx1wobntepe5pf",
     "name": "Vitalcan Premium Cordero Perros Adultos Todas las Razas",
     "brand": "Vitalcan",
@@ -835,7 +895,7 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Champion Cat Arena Aglomerante Bentonita con Carbon Activo 10kg.webp"
     ],
     "inStock": true,
-    "stockCount": 29,
+    "stockCount": 3,
     "sku": "PL-009",
     "variants": [
       {
@@ -1093,6 +1153,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 11900,
+    "originalPrice": 14900,
     "rating": 4.9,
     "reviewsCount": 78,
     "featured": true,
@@ -1196,6 +1257,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "gato",
     "lifeStage": "adulto",
     "price": 54900,
+    "originalPrice": 62900,
     "rating": 5,
     "reviewsCount": 132,
     "featured": true,
@@ -1565,11 +1627,11 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 26900,
+    "price": 25900,
     "rating": 4.7,
     "reviewsCount": 58,
     "featured": false,
-    "weightOrSize": "8 kg",
+    "weightOrSize": "10 KG",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Nutrición con probióticos activos, pulpa de remolacha y control de pH urinario para gatos hogareños.",
@@ -1579,14 +1641,14 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Pampa Premium Total Protection Gatos Adultos 2.webp"
     ],
     "inStock": true,
-    "stockCount": 28,
+    "stockCount": 3,
     "sku": "PL-022",
     "variants": [
       {
         "id": "v1",
-        "label": "Bolsa 8 kg",
-        "weightOrSize": "8 kg",
-        "price": 26900,
+        "label": "Bolsa 10 KG",
+        "weightOrSize": "10 KG",
+        "price": 25900,
         "inStock": true
       }
     ],
@@ -1744,6 +1806,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "petType": "perro",
     "lifeStage": "adulto",
     "price": 47900,
+    "originalPrice": 52900,
     "rating": 4.8,
     "reviewsCount": 86,
     "featured": true,
@@ -1757,7 +1820,7 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Alaska Adulto Todas las Razas Carne de Vacuno.webp"
     ],
     "inStock": true,
-    "stockCount": 24,
+    "stockCount": 2,
     "sku": "PL-001",
     "variants": [
       {
@@ -1823,192 +1886,6 @@ export const PRODUCTS_DATABASE: Product[] = [
       },
       {
         "id": "rev-2-prod-1",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "elayq9jjdexvp22",
-    "name": "Pampa Premium Total Protection Gatos Adultos",
-    "brand": "Pampa",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 42900,
-    "rating": 4.7,
-    "reviewsCount": 72,
-    "featured": false,
-    "weightOrSize": "15 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Formato económico de 15 kg para hogares con múltiples gatos, con protección inmunológica y renal.",
-    "longDescription": "La opción más conveniente para alimentar a varios felinos manteniendo una nutrición balanceada y de calidad garantizada durante meses.",
-    "imageUrl": "/productos/Pampa Premium Total Protection Gatos Adultos.webp",
-    "galleryImages": [
-      "/productos/Pampa Premium Total Protection Gatos Adultos.webp"
-    ],
-    "inStock": true,
-    "stockCount": 32,
-    "sku": "PL-023",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Saco 15 kg",
-        "weightOrSize": "15 kg",
-        "price": 42900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Excelente rendimiento por kilogramo para varios gatos",
-      "Proteínas animales balanceadas para masa muscular",
-      "Fibra digestiva que previene el estreñimiento",
-      "Enriquecido con vitaminas A, D3 y E"
-    ],
-    "ingredients": [
-      "Harina de carne y hueso",
-      "Harina de ave",
-      "Arroz",
-      "Aceite vegetal",
-      "Minerales"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-23",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-23",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
-    "id": "edwu1nilon77172",
-    "name": "Diamond Naturals Indoor Cat Chicken and Rice Formula",
-    "brand": "Diamond Naturals",
-    "category": "gatos",
-    "categoryLabel": "Alimentos Gatos",
-    "petType": "gato",
-    "lifeStage": "adulto",
-    "price": 38900,
-    "rating": 4.9,
-    "reviewsCount": 124,
-    "featured": true,
-    "weightOrSize": "7.5 kg",
-    "icon": "🐱",
-    "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
-    "description": "Nutrición holística con pollo de libre pastoreo y arroz integral, diseñada para gatos que viven en el hogar.",
-    "longDescription": "Proporciona niveles óptimos de calorías y fibra dietética para gatos sedentarios de interior. Contiene superalimentos como col rizada, arándanos y chía combinados con probióticos K9 Strain activos garantizados.",
-    "imageUrl": "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.webp",
-    "galleryImages": [
-      "/productos/Diamond Naturals Indoor Cat Chicken and Rice Formula.webp"
-    ],
-    "inStock": true,
-    "stockCount": 19,
-    "sku": "PL-010",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Bolsa 2.7 kg",
-        "weightOrSize": "2.7 kg",
-        "price": 19900,
-        "inStock": true
-      },
-      {
-        "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 38900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Pollo real de jaula libre como ingrediente número uno",
-      "Control de bolas de pelo con celulosa insoluble natural",
-      "Superalimentos ricos en antioxidantes celulares",
-      "Probióticos viables patentados para salud intestinal"
-    ],
-    "ingredients": [
-      "Pollo",
-      "Harina de pollo",
-      "Arroz integral",
-      "Espinacas",
-      "Chía",
-      "Arándanos"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "32.0% mín",
-      "Grasa bruta": "14.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "40 - 60 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "60 - 90 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "Libre demanda"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "Consultar veterinario"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-10",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-10",
         "author": "Rodrigo S.",
         "rating": 5,
         "date": "Hace 2 semanas",
@@ -2123,7 +2000,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Perros",
     "petType": "perro",
     "lifeStage": "senior",
-    "price": 72900,
+    "price": 74900,
     "rating": 4.9,
     "reviewsCount": 88,
     "featured": true,
@@ -2137,7 +2014,7 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Bravery Herring Senior Large Medium Breeds +7 Years 12kg.webp"
     ],
     "inStock": true,
-    "stockCount": 34,
+    "stockCount": 2,
     "sku": "PL-007",
     "variants": [
       {
@@ -2151,7 +2028,7 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v2",
         "label": "Saco 12 kg",
         "weightOrSize": "12 kg",
-        "price": 72900,
+        "price": 74900,
         "inStock": true
       }
     ],
@@ -2220,11 +2097,11 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 58900,
+    "price": 28900,
     "rating": 5,
     "reviewsCount": 140,
     "featured": false,
-    "weightOrSize": "7.5 kg",
+    "weightOrSize": "3 KG",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Protección urinaria de grado veterinario que ayuda a mantener el pH urinario óptimo y disolver cálculos.",
@@ -2233,8 +2110,8 @@ export const PRODUCTS_DATABASE: Product[] = [
     "galleryImages": [
       "/productos/Purina Pro Plan Urinary Gatos.webp"
     ],
-    "inStock": true,
-    "stockCount": 36,
+    "inStock": false,
+    "stockCount": 0,
     "sku": "PL-032",
     "variants": [
       {
@@ -2246,10 +2123,10 @@ export const PRODUCTS_DATABASE: Product[] = [
       },
       {
         "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 58900,
-        "inStock": true
+        "label": "Saco 3 KG",
+        "weightOrSize": "3 KG",
+        "price": 28900,
+        "inStock": false
       }
     ],
     "benefits": [
@@ -2330,7 +2207,7 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Americalitter Quick Clumping Cat Litter Unscented.webp"
     ],
     "inStock": false,
-    "stockCount": 38,
+    "stockCount": 0,
     "sku": "PL-002",
     "variants": [
       {
@@ -2504,7 +2381,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Arenas & Higiene",
     "petType": "gato",
     "lifeStage": "todas",
-    "price": 14500,
+    "price": 13900,
     "rating": 4.8,
     "reviewsCount": 90,
     "featured": false,
@@ -2518,14 +2395,14 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Nomade Arena Sanitaria Extra Poder Aglutinante 10kg.webp"
     ],
     "inStock": true,
-    "stockCount": 24,
+    "stockCount": 2,
     "sku": "PL-020",
     "variants": [
       {
         "id": "v1",
         "label": "Bolsa 10 kg",
         "weightOrSize": "10 kg",
-        "price": 14500,
+        "price": 13900,
         "inStock": true
       }
     ],
@@ -2603,7 +2480,7 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Purina Pro Plan Kitten Optistart.webp"
     ],
     "inStock": true,
-    "stockCount": 31,
+    "stockCount": 2,
     "sku": "PL-029",
     "variants": [
       {
@@ -2684,7 +2561,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 28900,
+    "price": 29900,
     "rating": 4.8,
     "reviewsCount": 190,
     "featured": false,
@@ -2698,7 +2575,7 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Purina Cat Chow Adultos Pescado.webp"
     ],
     "inStock": true,
-    "stockCount": 27,
+    "stockCount": 2,
     "sku": "PL-024",
     "variants": [
       {
@@ -2712,7 +2589,7 @@ export const PRODUCTS_DATABASE: Product[] = [
         "id": "v2",
         "label": "Bolsa 8 kg",
         "weightOrSize": "8 kg",
-        "price": 28900,
+        "price": 29900,
         "inStock": true
       }
     ],
@@ -2780,7 +2657,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 24900,
+    "price": 25900,
     "rating": 4.7,
     "reviewsCount": 75,
     "featured": false,
@@ -2794,14 +2671,14 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Raza Gatos Pollo y Leche 10kg.webp"
     ],
     "inStock": true,
-    "stockCount": 18,
+    "stockCount": 1,
     "sku": "PL-033",
     "variants": [
       {
         "id": "v1",
         "label": "Saco 10 kg",
         "weightOrSize": "10 kg",
-        "price": 24900,
+        "price": 25900,
         "inStock": true
       }
     ],
@@ -2869,11 +2746,11 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 27900,
+    "price": 25900,
     "rating": 4.8,
     "reviewsCount": 65,
     "featured": false,
-    "weightOrSize": "9 kg",
+    "weightOrSize": "9 kg + 1kg de regalo",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Receta equilibrada con proteínas de pollo y salmón, reforzada con taurina para corazón y vista.",
@@ -2883,14 +2760,14 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Top One Gatos Adultos con Pollo y Salmon 9kg.webp"
     ],
     "inStock": true,
-    "stockCount": 26,
+    "stockCount": 17,
     "sku": "PL-035",
     "variants": [
       {
         "id": "v1",
-        "label": "Saco 9 kg",
-        "weightOrSize": "9 kg",
-        "price": 27900,
+        "label": "Saco 9 kg + 1kg de regalo",
+        "weightOrSize": "9 kg + 1kg de regalo",
+        "price": 25900,
         "inStock": true
       }
     ],
@@ -2958,11 +2835,11 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 54900,
+    "price": 26900,
     "rating": 5,
     "reviewsCount": 175,
     "featured": false,
-    "weightOrSize": "7.5 kg",
+    "weightOrSize": "3 KG",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Nutrición médica veterinaria con prebióticos naturales que optimizan la digestión y refuerzan las defensas.",
@@ -2972,7 +2849,7 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Purina Pro Plan Adult Gatos Optiprebio.webp"
     ],
     "inStock": true,
-    "stockCount": 33,
+    "stockCount": 1,
     "sku": "PL-028",
     "variants": [
       {
@@ -2984,9 +2861,9 @@ export const PRODUCTS_DATABASE: Product[] = [
       },
       {
         "id": "v2",
-        "label": "Saco 7.5 kg",
-        "weightOrSize": "7.5 kg",
-        "price": 54900,
+        "label": "Saco 3 KG",
+        "weightOrSize": "3 KG",
+        "price": 26900,
         "inStock": true
       }
     ],
@@ -3054,11 +2931,11 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "todas",
-    "price": 59900,
+    "price": 23900,
     "rating": 5,
     "reviewsCount": 185,
     "featured": false,
-    "weightOrSize": "6.6 kg",
+    "weightOrSize": "3 KG",
     "icon": "🐱",
     "bgGradient": "from-purple-500/10 to-pink-500/10 text-purple-600",
     "description": "Alimento libre de cereales con venado asado y salmón ahumado. Rica fuente de proteína salvaje para felinos.",
@@ -3068,7 +2945,7 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Taste of the Wild Rocky Mountain Feline Recipe.webp"
     ],
     "inStock": true,
-    "stockCount": 15,
+    "stockCount": 1,
     "sku": "PL-034",
     "variants": [
       {
@@ -3080,9 +2957,9 @@ export const PRODUCTS_DATABASE: Product[] = [
       },
       {
         "id": "v2",
-        "label": "Saco 6.6 kg",
-        "weightOrSize": "6.6 kg",
-        "price": 59900,
+        "label": "Saco 3 KG",
+        "weightOrSize": "3 KG",
+        "price": 23900,
         "inStock": true
       }
     ],
@@ -3152,7 +3029,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Alimentos Gatos",
     "petType": "gato",
     "lifeStage": "adulto",
-    "price": 31900,
+    "price": 29900,
     "rating": 4.8,
     "reviewsCount": 135,
     "featured": false,
@@ -3166,14 +3043,14 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Nomade Gato Adulto Mix Proteico 10kg.webp"
     ],
     "inStock": true,
-    "stockCount": 16,
+    "stockCount": 5,
     "sku": "PL-021",
     "variants": [
       {
         "id": "v1",
         "label": "Saco 10 kg",
         "weightOrSize": "10 kg",
-        "price": 31900,
+        "price": 29900,
         "inStock": true
       }
     ],
@@ -3234,95 +3111,6 @@ export const PRODUCTS_DATABASE: Product[] = [
     ]
   },
   {
-    "id": "4dkg5n1466d6upy",
-    "name": "Top One Perros Adultos 10kg",
-    "brand": "Top One",
-    "category": "perros",
-    "categoryLabel": "Alimentos Perros",
-    "petType": "perro",
-    "lifeStage": "adulto",
-    "price": 22900,
-    "rating": 4.7,
-    "reviewsCount": 54,
-    "featured": false,
-    "weightOrSize": "10 kg",
-    "icon": "🐕",
-    "bgGradient": "from-amber-500/10 to-orange-500/10 text-orange-600",
-    "description": "Nutrición balanceada con aminoácidos esenciales y prebióticos naturales para energía diaria en perros adultos.",
-    "longDescription": "Diseñado para perros de todas las razas con actividad normal a alta. Aporta calcio y fósforo para huesos sanos y digestión equilibrada.",
-    "imageUrl": "/productos/Top One Perros Adultos 10kg.webp",
-    "galleryImages": [
-      "/productos/Top One Perros Adultos 10kg.webp"
-    ],
-    "inStock": true,
-    "stockCount": 30,
-    "sku": "PL-036",
-    "variants": [
-      {
-        "id": "v1",
-        "label": "Saco 10 kg",
-        "weightOrSize": "10 kg",
-        "price": 22900,
-        "inStock": true
-      }
-    ],
-    "benefits": [
-      "Energía equilibrada para perros activos",
-      "Digestión sin gases con fibras seleccionadas",
-      "Fortalece dientes y mandíbula al masticar",
-      "Excelente relación costo-beneficio"
-    ],
-    "ingredients": [
-      "Harina de carne",
-      "Maíz",
-      "Afrechillo de trigo",
-      "Grasa vacuna",
-      "Minerales"
-    ],
-    "nutritionalAnalysis": {
-      "Proteína bruta": "26.0% mín",
-      "Grasa bruta": "12.0% mín",
-      "Fibra cruda": "3.5% máx",
-      "Humedad": "10.0% máx"
-    },
-    "feedingGuide": [
-      {
-        "weight": "Hasta 5 kg",
-        "dailyAmount": "70 - 100 g"
-      },
-      {
-        "weight": "5 - 10 kg",
-        "dailyAmount": "100 - 160 g"
-      },
-      {
-        "weight": "10 - 25 kg",
-        "dailyAmount": "160 - 320 g"
-      },
-      {
-        "weight": "Más de 25 kg",
-        "dailyAmount": "320 - 520 g"
-      }
-    ],
-    "reviews": [
-      {
-        "id": "rev-1-prod-36",
-        "author": "Carolina M.",
-        "rating": 5,
-        "date": "Hace 4 días",
-        "comment": "Excelente producto, a mi mascota le encantó de inmediato. El despacho llegó al día siguiente.",
-        "verified": true
-      },
-      {
-        "id": "rev-2-prod-36",
-        "author": "Rodrigo S.",
-        "rating": 5,
-        "date": "Hace 2 semanas",
-        "comment": "Muy buena calidad y precio. Se nota la diferencia en su pelaje y energía.",
-        "verified": true
-      }
-    ]
-  },
-  {
     "id": "3hmeg3d80nd9cdg",
     "name": "Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg",
     "brand": "Loops",
@@ -3330,7 +3118,7 @@ export const PRODUCTS_DATABASE: Product[] = [
     "categoryLabel": "Arenas & Higiene",
     "petType": "gato",
     "lifeStage": "todas",
-    "price": 12900,
+    "price": 10900,
     "rating": 4.8,
     "reviewsCount": 82,
     "featured": false,
@@ -3344,14 +3132,14 @@ export const PRODUCTS_DATABASE: Product[] = [
       "/productos/Loops Arena Sanitaria Bentonita Super Aglutinante Lavanda 9kg.webp"
     ],
     "inStock": true,
-    "stockCount": 24,
+    "stockCount": 4,
     "sku": "PL-018",
     "variants": [
       {
         "id": "v1",
         "label": "Bolsa 9 kg",
         "weightOrSize": "9 kg",
-        "price": 12900,
+        "price": 10900,
         "inStock": true
       }
     ],
@@ -3611,11 +3399,11 @@ export const ALL_CATEGORIES = [
 ];
 
 export const FEATURED_PRODUCT_IDS: string[] = [
+  "xcn1a94ruvxd70c",
   "obvp6hzgabnxn20",
   "kgf258k5xohn5n0",
   "hn6kf3bvjn38gy4",
   "em7mjl46b2rsw8c",
-  "edwu1nilon77172",
   "e1conwnaju9p0jz",
   "e0cr1j3e1a8yert",
   "cz0zk4v80m9emgz",

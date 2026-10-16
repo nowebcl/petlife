@@ -157,6 +157,10 @@ export default function App() {
   }, []);
 
   const handleAddToCart = (product: Product, quantity: number = 1) => {
+    if (!product.inStock || (product.stockCount !== undefined && product.stockCount <= 0)) {
+      showToast(`El producto "${product.name}" se encuentra agotado.`);
+      return;
+    }
     const addQty = quantity > 0 ? quantity : 1;
     setCartItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);

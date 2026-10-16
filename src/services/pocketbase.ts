@@ -21,6 +21,7 @@ export interface PocketBaseProductRecord extends PocketBaseRecord {
   petType: 'perro' | 'gato' | 'ambos';
   lifeStage: 'cachorro' | 'adulto' | 'senior' | 'todas';
   price: number;
+  originalPrice?: number;
   weightOrSize: string;
   stockCount: number;
   inStock: boolean;
@@ -166,6 +167,9 @@ export function mapRecordToProduct(r: PocketBaseProductRecord): Product {
     price = Math.round(rawPrice);
   }
 
+  const rawOriginalPrice = r.originalPrice ? Number(r.originalPrice) : undefined;
+  const originalPrice = rawOriginalPrice && rawOriginalPrice > price ? Math.round(rawOriginalPrice) : undefined;
+
   return {
     id: r.id,
     name: r.name,
@@ -185,6 +189,7 @@ export function mapRecordToProduct(r: PocketBaseProductRecord): Product {
     petType: r.petType || (r.category === 'gatos' ? 'gato' : 'perro'),
     lifeStage: r.lifeStage || 'adulto',
     price,
+    originalPrice,
     _needsPriceRepair: needsPriceRepair,
     rating: Number(r.rating) || 4.8,
     reviewsCount: Number(r.reviewsCount) || 10,
@@ -457,8 +462,17 @@ export async function adminCreateProduct(
       if (payload.has('price')) {
         payload.set('price', String(sanitizePrice(payload.get('price'))));
       }
-    } else if (payload.price !== undefined) {
-      payload.price = sanitizePrice(payload.price);
+      if (payload.has('originalPrice')) {
+        const op = sanitizePrice(payload.get('originalPrice'));
+        payload.set('originalPrice', op > 0 ? String(op) : '');
+      }
+    } else {
+      if (payload.price !== undefined) {
+        payload.price = sanitizePrice(payload.price);
+      }
+      if (payload.originalPrice !== undefined) {
+        payload.originalPrice = sanitizePrice(payload.originalPrice) || 0;
+      }
     }
 
     const headers: Record<string, string> = { Authorization: token };
@@ -502,8 +516,17 @@ export async function adminUpdateProduct(
       if (payload.has('price')) {
         payload.set('price', String(sanitizePrice(payload.get('price'))));
       }
-    } else if (payload.price !== undefined) {
-      payload.price = sanitizePrice(payload.price);
+      if (payload.has('originalPrice')) {
+        const op = sanitizePrice(payload.get('originalPrice'));
+        payload.set('originalPrice', op > 0 ? String(op) : '');
+      }
+    } else {
+      if (payload.price !== undefined) {
+        payload.price = sanitizePrice(payload.price);
+      }
+      if (payload.originalPrice !== undefined) {
+        payload.originalPrice = sanitizePrice(payload.originalPrice) || 0;
+      }
     }
 
     const targetId = await findRealPocketBaseId(id, token, sku, name);

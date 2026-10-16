@@ -205,6 +205,12 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
             {filteredProducts.map((product, index) => {
               const isAdded = addedIds[product.id];
               const isFav = favoriteIds[product.id];
+              const isOutOfStock = !product.inStock || (product.stockCount !== undefined && product.stockCount <= 0);
+              const isLowStock = !isOutOfStock && product.stockCount > 0 && product.stockCount <= 5;
+              const hasDiscount = Boolean(product.originalPrice && product.originalPrice > product.price);
+              const discountPercent = hasDiscount
+                ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
+                : 0;
 
               return (
                 <article
@@ -215,13 +221,37 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
                   <div>
                     {/* Realistic Product Package Image Container */}
                     <div className="relative w-full aspect-square rounded-xl bg-slate-50/80 p-2 overflow-hidden mb-2 flex items-center justify-center">
+                      {/* Top Badges (Agotado, Descuento, Pocas Unidades) */}
+                      <div className="absolute top-2 left-2 z-10 flex flex-wrap gap-1 max-w-[calc(100%-36px)]">
+                        {isOutOfStock ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-900/90 text-white border border-slate-700/60 shadow-xs backdrop-blur-xs">
+                            Agotado
+                          </span>
+                        ) : (
+                          <>
+                            {hasDiscount && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500 text-white shadow-xs shadow-rose-500/20">
+                                -{discountPercent}%
+                              </span>
+                            )}
+                            {isLowStock && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white shadow-xs shadow-amber-500/20 animate-pulse">
+                                Pocas unidades
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </div>
+
                       <img
                         src={product.imageUrl}
                         alt={product.name}
                         loading={index < 4 ? 'eager' : 'lazy'}
                         fetchPriority={index < 2 ? 'high' : 'auto'}
                         decoding={index < 4 ? 'sync' : 'async'}
-                        className="w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300"
+                        className={`w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300 ${
+                          isOutOfStock ? 'opacity-55 grayscale-[35%]' : ''
+                        }`}
                         onError={(e) => {
                           if (e.currentTarget.dataset.failed) return;
                           e.currentTarget.dataset.failed = 'true';
@@ -272,37 +302,56 @@ export const ProductsSection: FC<ProductsSectionProps> = ({
 
                   {/* Bottom Price & Add CTA (Always aligned to bottom) */}
                   <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between gap-1.5">
-                    <div>
-                      <span className="text-sm sm:text-base font-black text-[#061F3D]">
-                        {formatPrice(product.price)}
-                      </span>
+                    <div className="flex flex-col">
+                      <div className="flex items-baseline space-x-1.5 flex-wrap">
+                        <span className="text-sm sm:text-base font-black text-[#061F3D]">
+                          {formatPrice(product.price)}
+                        </span>
+                        {hasDiscount && (
+                          <span className="text-[10px] sm:text-[11px] text-slate-400 line-through font-semibold">
+                            {formatPrice(product.originalPrice!)}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Compact Add Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAdd(product);
-                      }}
-                      className={`py-1 sm:py-1.5 px-2.5 sm:px-3 rounded-full font-bold text-xs flex items-center justify-center space-x-1 transition-all duration-200 active:scale-90 cursor-pointer ${
-                        isAdded
-                          ? 'bg-emerald-500 text-white shadow-xs'
-                          : 'bg-[#061F3D] hover:bg-[#FF5200] text-white shadow-xs'
-                      }`}
-                      aria-label={`Añadir ${product.name} al carrito`}
-                    >
-                      {isAdded ? (
-                        <>
-                          <Check className="w-3 h-3 stroke-[3]" />
-                          <span className="hidden sm:inline text-[11px]">Listo</span>
-                        </>
-                      ) : (
-                        <>
-                          <Plus className="w-3 h-3 stroke-[2.5]" />
-                          <span className="hidden sm:inline text-[11px]">Añadir</span>
-                        </>
-                      )}
-                    </button>
+                    {/* Action Button: Disabled when Out of Stock */}
+                    {isOutOfStock ? (
+                      <button
+                        type="button"
+                        disabled
+                        onClick={(e) => e.stopPropagation()}
+                        className="py-1 sm:py-1.5 px-2.5 sm:px-3 rounded-full font-bold text-[11px] bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed select-none"
+                        aria-label={`${product.name} agotado`}
+                      >
+                        Agotado
+                      </button>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAdd(product);
+                        }}
+                        className={`py-1 sm:py-1.5 px-2.5 sm:px-3 rounded-full font-bold text-xs flex items-center justify-center space-x-1 transition-all duration-200 active:scale-90 cursor-pointer ${
+                          isAdded
+                            ? 'bg-emerald-500 text-white shadow-xs'
+                            : 'bg-[#061F3D] hover:bg-[#FF5200] text-white shadow-xs'
+                        }`}
+                        aria-label={`Añadir ${product.name} al carrito`}
+                      >
+                        {isAdded ? (
+                          <>
+                            <Check className="w-3 h-3 stroke-[3]" />
+                            <span className="hidden sm:inline text-[11px]">Listo</span>
+                          </>
+                        ) : (
+                          <>
+                            <Plus className="w-3 h-3 stroke-[2.5]" />
+                            <span className="hidden sm:inline text-[11px]">Añadir</span>
+                          </>
+                        )}
+                      </button>
+                    )}
                   </div>
                 </article>
               );
